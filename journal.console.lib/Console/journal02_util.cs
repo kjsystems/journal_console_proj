@@ -25,7 +25,7 @@ namespace journal.console.lib.Console
       ParseDocumentXml(documentPath);
     }
 
-    #region <w:p>
+    #region <w:r>
     void ParseWr(XmlNode parent)
     {
       foreach (XmlNode child in parent.Cast<XmlNode>()/*.Where(m => m.Name == "w:t")*/)
