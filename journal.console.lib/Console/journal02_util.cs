@@ -1,8 +1,10 @@
 ﻿using kj.kihon;
 using kj.kihon.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using wordxml.Models;
 
 namespace journal.console.lib.Console
 {
@@ -12,68 +14,6 @@ namespace journal.console.lib.Console
 
     public journal02_util(ILogger log) : base(log)
     {
-    }
-
-    void ProcessWordFile(string wordpath)
-    {
-      //解凍する
-      //戻り値は \word\document.xml
-      string documentPath;
-      MeltWordFile(wordpath, out documentPath);
-
-      //xmlをParseする
-      ParseDocumentXml(documentPath);
-    }
-
-    #region <w:r>
-    void ParseWr(XmlNode parent)
-    {
-      foreach (XmlNode child in parent.Cast<XmlNode>()/*.Where(m => m.Name == "w:t")*/)
-      {
-        System.Console.WriteLine($"name={child.Name} xml={child.InnerXml}");
-      }
-    }
-    #endregion
-
-    #region <w:p>
-    void ParseParagraph(XmlNode para)
-    {
-      System.Console.WriteLine($"para={para.InnerXml}");
-      foreach (XmlNode wr in para.ChildNodes)  //<w:r>
-      {
-        ParseWr(wr);
-      }
-    }
-    #endregion
-
-    void ParseDocumentXml(string documentPath)
-    {
-      using (var rd = XmlReader.Create(documentPath))
-      {
-        XmlDocument doc = new XmlDocument();
-        doc.Load(rd);
-        XmlNode root = doc.DocumentElement;
-
-        var w_body = root.FirstChild;//w:body
-        foreach (XmlNode node in w_body.ChildNodes)
-        {
-          if (node.Name != "w:p") continue;
-          ParseParagraph(node);
-        }
-#if false
-        var doc = XNode.ReadFrom(rd);
-        rd.MoveToContent();
-        while (rd.Read())
-        {
-          if (rd.NodeType != XmlNodeType.Element)
-          {
-            continue;
-          }
-          var elem = XElement.ReadFrom(rd) as XElement;
-          System.Console.WriteLine($"element={elem.ToString()}");
-        }
-#endif
-      }
     }
 
     void MeltWordFile(string wordpath, out string documentPath)
@@ -100,15 +40,22 @@ namespace journal.console.lib.Console
       if (srcfiles.Length == 0)
         throw new Exception($"docディレクトリにWORDファイルがない DIR={docdir}");
 
-      foreach (var src in srcfiles)
+      foreach (var wordpath in srcfiles)
       {
-        if (src.getExtension().ToLower() == ".doc")
+        if (wordpath.getExtension().ToLower() == ".doc")
         {
-          Log.err(src, 0, "procword", "docx形式で保存してください");
+          Log.err(wordpath, 0, "procword", "docx形式で保存してください");
           continue;
         }
-        System.Console.WriteLine($"word:{src}");
-        ProcessWordFile(src);
+        System.Console.WriteLine($"word:{wordpath}");
+        //解凍する
+        //戻り値は \word\document.xml
+        string documentPath;
+        MeltWordFile(wordpath, out documentPath);
+
+        var parser = new WordXmlParser();
+        List<WordXmlParaItem> paralst;
+        parser.ProcessWordFile(documentPath, out paralst);
       }
     }
   }

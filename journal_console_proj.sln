@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal02", "journal02\jour
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal.console.lib", "journal.console.lib\journal.console.lib.csproj", "{4FB7A601-D7B8-4A7B-B783-7E9A2DB005EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wordxml", "wordxml\wordxml.csproj", "{0932A1BB-6ACC-4C6D-8855-D6C00B391BFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4FB7A601-D7B8-4A7B-B783-7E9A2DB005EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FB7A601-D7B8-4A7B-B783-7E9A2DB005EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FB7A601-D7B8-4A7B-B783-7E9A2DB005EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0932A1BB-6ACC-4C6D-8855-D6C00B391BFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0932A1BB-6ACC-4C6D-8855-D6C00B391BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0932A1BB-6ACC-4C6D-8855-D6C00B391BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0932A1BB-6ACC-4C6D-8855-D6C00B391BFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
