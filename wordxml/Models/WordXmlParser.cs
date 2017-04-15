@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Xml;
+using kj.kihon;
 
 namespace wordxml.Models
 {
@@ -16,31 +19,43 @@ namespace wordxml.Models
 
       //xmlをParseする
       ParseDocumentXml(documentPath);
-      Console.WriteLine($"==> paras.count={paralst.Count}");
-      //foreach (var para in paralst)
-      //{
-      //  Console.WriteLine($"==> {para.Text}");
-      //}
     }
 
     #region <w:t>の中のテキスト
     string ParseTextElement(XmlNode node)
     {
       var sb = new StringBuilder();
-      if (node.NodeType== XmlNodeType.Text)
+      if (node.NodeType != XmlNodeType.Text)
       {
-        sb.Append(node.Value);
-        return sb.ToString();
+        return $"<!-- 未対応 name=({node.Name}) -->";
       }
-      Console.WriteLine($"text以外 name={node.Name} inner={node.InnerXml}");
-
-      foreach (XmlNode child in node.ChildNodes)
-      {
-        sb.Append(ParseTextElement(child as XmlElement));
-      }
+      sb.Append(node.Value);
       return sb.ToString();
     }
     #endregion
+
+    #region 子供の一覧
+    IEnumerable<XmlNode> getChilds(XmlNode node, string name)
+    {
+      return node.ChildNodes.Cast<XmlNode>().Where(m => m.Name == name);
+    }
+    #endregion
+
+    #region 最初の子供
+    XmlNode getFirstOfChilds(XmlNode node, string name)
+    {
+      return getChilds(node, name)?.FirstOrDefault();
+    }
+    #endregion
+
+    int? getAttrInt(XmlNode node, string attrName)
+    {
+      return getAttrText(node,attrName)?.toInt(0);
+    }
+    string getAttrText(XmlNode node, string attrName)
+    {
+      return node.Attributes?[attrName]?.Value;
+    }
 
     #region <w:p>
     /*
@@ -60,27 +75,87 @@ http://officeopenxml.com/WPparagraph.php
     void ParseParagraph(XmlNode w_para)
     {
       //paraのプロパティはない時もあり
-      if (w_para.ChildNodes.Cast<XmlNode>().Any(m => m.Name == "w:pPr"))
+      var w_prop = getFirstOfChilds(w_para, "w:pPr");
+      if (w_prop!=null)
       {
-        var w_prop = w_para.ChildNodes.Cast<XmlNode>().First();
+        foreach (XmlNode node in w_prop.ChildNodes)
+        {
+          if (node.Name == "w:ind")
+          {
+            //<w:pPr><w:ind w:firstLineChars="500" w:firstLine="1050"/></w:pPr>  //五字下げ
+            var fl = getAttrInt(node, "w:firstLine");  //1050 ==> 210で一字分
+            if (fl != null)
+            {
+              ParaList.Last().Jisage = (int)fl / 210;
+            }
+            //<w:ind w:left="880" w:hanging="440"/>   //2字下げ＋問答２字
+            var left = getAttrInt(node, "w:left");
+            var hanging = getAttrInt(node, "w:hanging");
+            if (left!=null && hanging != null)
+            {
+              ParaList.Last().Jisage = (int)hanging / 210;
+              ParaList.Last().Mondo = ((int)left - (int)hanging) / 210;
+            }
+            else if (left != null)
+            {
+              ParaList.Last().Jisage = (int)left / 210;
+            }
+          }
+        }
       }
 
       //runは複数
       var sb = new StringBuilder();
-      foreach (var w_run in w_para.ChildNodes.Cast<XmlNode>().Where(m => m.Name == "w:r"))  //<w:r>
+      var runlst = getChilds(w_para, "w:r");
+      if (runlst == null)
+        throw new Exception($"<w:r>がない para={w_para.InnerXml}");
+      foreach (var run in runlst)  //<w:r>
       {
-        if (w_run.ChildNodes.Cast<XmlNode>().Any(m => m.Name == "w:t") != true)
-          continue;
-        var w_txt = w_run.ChildNodes.Cast<XmlNode>().First(m => m.Name == "w:t");
-        foreach (XmlNode node in w_txt.ChildNodes)
-        {
-          sb.Append(ParseTextElement(node));  //textとかrubyとか
-        }
+        sb.Append(ParseRun(run));
       }
       ParaList.Last().Text = sb.ToString();
     }
     #endregion
 
+    #region <w:r>
+    private string ParseRun(XmlNode w_run)
+    {
+      var sb = new StringBuilder();
+      //<w:rPr>...</w:rPr>の中にルビ等あり
+      var r_prop = getFirstOfChilds(w_run, "w:rPr");
+      if (r_prop != null)
+      {
+        foreach (XmlNode prop in r_prop.ChildNodes)
+        {
+          Console.WriteLine($"run prop name={prop.Name}");
+          if (prop.Name == "w:u") sb.Append("<下線>");
+        }
+      }
+
+      var w_text = getFirstOfChilds(w_run, "w:t");
+      if (w_text != null)
+      {
+        foreach (XmlNode node in w_text.ChildNodes)
+        {
+          var text = ParseTextElement(node);
+          sb.Append(text); //textとかrubyとか
+        }
+      }
+
+      if (r_prop != null)
+      {
+        foreach (XmlNode prop in r_prop.ChildNodes)
+        {
+          Console.WriteLine($"run prop name={prop.Name}");
+          if (prop.Name == "w:u") sb.Append("</下線>");
+        }
+      }
+
+      return sb.ToString();
+    }
+    #endregion
+
+    #region Parse Xml Path
     void ParseDocumentXml(string documentPath)
     {
       using (var rd = XmlReader.Create(documentPath))
@@ -98,5 +173,6 @@ http://officeopenxml.com/WPparagraph.php
         }
       }
     }
+    #endregion
   }
 }

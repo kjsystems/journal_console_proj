@@ -3,6 +3,7 @@ using kj.kihon.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using wordxml.Models;
 
@@ -53,9 +54,43 @@ namespace journal.console.lib.Console
         string documentPath;
         MeltWordFile(wordpath, out documentPath);
 
+        //document.xmlをParseする
         var parser = new WordXmlParser();
         List<WordXmlParaItem> paralst;
         parser.ProcessWordFile(documentPath, out paralst);
+
+        var sb = new StringBuilder();
+        int preJisage = -1;
+        int preMondo = -1;
+        foreach (var para in paralst)
+        {
+          if(para.Jisage>0)
+            sb.Append($"<字下 {para.Jisage}>");
+          if (para.Jisage == 0 && preJisage > 0)
+          {
+            sb.Append($"<字下 0>");
+            preJisage = -1;
+          }
+          if (para.Mondo > 0)
+            sb.Append($"<問答 {para.Mondo}>");
+          if (para.Mondo == 0 && preMondo > 0)
+          {
+            sb.Append($"<問答 0>");
+            preMondo = -1;
+          }
+
+          sb.AppendLine($"{para.Text}<改行>");
+          if (para.Jisage > 0)
+            preJisage = para.Jisage;
+          if (para.Mondo > 0)
+            preMondo = para.Mondo;
+        }
+        var outpath = jobdir
+          .combine("out")
+          .createDirIfNotExist()
+          .combine(wordpath.getFileNameWithoutExtension()+".txt");
+        System.Console.WriteLine($"==>{outpath}");
+        FileUtil.writeTextToFile(sb.ToString(),Encoding.UTF8,outpath);
       }
     }
   }
