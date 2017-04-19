@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal02", "journal02\journal02.csproj", "{14416FB3-7EA5-4019-8AB2-9283AD793638}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal.console.lib", "journal.console.lib\journal.console.lib.csproj", "{4FB7A601-D7B8-4A7B-B783-7E9A2DB005EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wordxml", "wordxml\wordxml.csproj", "{0932A1BB-6ACC-4C6D-8855-D6C00B391BFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal03", "journal03\journal03.csproj", "{9B82199B-3156-4A17-A6DE-D7BCCD7FA3B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{0932A1BB-6ACC-4C6D-8855-D6C00B391BFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0932A1BB-6ACC-4C6D-8855-D6C00B391BFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0932A1BB-6ACC-4C6D-8855-D6C00B391BFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B82199B-3156-4A17-A6DE-D7BCCD7FA3B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B82199B-3156-4A17-A6DE-D7BCCD7FA3B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B82199B-3156-4A17-A6DE-D7BCCD7FA3B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B82199B-3156-4A17-A6DE-D7BCCD7FA3B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
