@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal02", "journal02\journal02.csproj", "{14416FB3-7EA5-4019-8AB2-9283AD793638}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wordxml", "wordxml\wordxml.csproj", "{0932A1BB-6ACC-4C6D-8855-D6C00B391BFC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal03", "journal03\journal03.csproj", "{9B82199B-3156-4A17-A6DE-D7BCCD7FA3B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal04", "journal04\journal04.csproj", "{AB0C6129-DA54-4943-BE5A-AE880888CA01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{9B82199B-3156-4A17-A6DE-D7BCCD7FA3B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B82199B-3156-4A17-A6DE-D7BCCD7FA3B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B82199B-3156-4A17-A6DE-D7BCCD7FA3B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB0C6129-DA54-4943-BE5A-AE880888CA01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB0C6129-DA54-4943-BE5A-AE880888CA01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB0C6129-DA54-4943-BE5A-AE880888CA01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB0C6129-DA54-4943-BE5A-AE880888CA01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
