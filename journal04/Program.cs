@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using kj.kihon;
-using journal.console.lib.Console;
+using journal.console.lib.Consoles;
 
 namespace journal04
 {
@@ -12,7 +12,7 @@ namespace journal04
   {
     static void Main(string[] args)
     {
-      var log = new ErrorLogger("{AppUtil.AppName }:XMLからAzureSearchへの登録");
+      var log = new ErrorLogger("{AppUtil.AppName }:XMLからAzureSearch用JOSNの作成");
       try
       {
         var lst = ArgListUtil.createArgList(args);

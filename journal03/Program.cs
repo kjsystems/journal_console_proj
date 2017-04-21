@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using journal.console.lib.Console;
+using journal.console.lib.Consoles;
 using kj.kihon;
 
 namespace journal03

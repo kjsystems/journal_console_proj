@@ -7,7 +7,7 @@ using System.Text;
 using System.Xml;
 using wordxml.Models;
 
-namespace journal.console.lib.Console
+namespace journal.console.lib.Consoles
 {
   public class journal02_util : kihon_base
   {

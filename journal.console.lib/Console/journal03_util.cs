@@ -7,7 +7,7 @@ using journal.console.lib.Models;
 using kj.kihon;
 using wordxml.Models;
 
-namespace journal.console.lib.Console
+namespace journal.console.lib.Consoles
 {
   public class journal03_util : kihon_base
   {
