@@ -7,8 +7,9 @@ using System.Xml;
 using journal.console.lib.Models;
 using kj.kihon;
 using Newtonsoft.Json;
+using Formatting = Newtonsoft.Json.Formatting;
 
-namespace journal.console.lib.Console
+namespace journal.console.lib.Consoles
 {
   public class journal04_util : kihon_base
   {
@@ -21,8 +22,9 @@ namespace journal.console.lib.Console
       srcdir.existDir();
       var xmldir=srcdir.combine("xml");
       xmldir.existDir();
-      var idxdir = srcdir.combine("SearchIndex").createDirIfNotExist();
+      var idxdir = srcdir.combine("index").createDirIfNotExist();
 
+      Console.WriteLine(xmldir);
       var idlst = new List<SearchIndex>();
       foreach (var xmlpath in xmldir.getFiles("*.xml"))
       {
@@ -35,8 +37,9 @@ namespace journal.console.lib.Console
       }
 
       //JSONで書き出す
-      var outpath = idxdir.combine("SearchIndex.txt");
-      FileUtil.writeTextToFile(JsonConvert.SerializeObject(idlst),Encoding.UTF8,outpath);
+      var outpath = idxdir.combine("index.txt");
+      Console.WriteLine($"==>{outpath}");
+      FileUtil.writeTextToFile(JsonConvert.SerializeObject(idlst, Formatting.Indented),Encoding.UTF8,outpath);
     }
 
     #region XMLファイルの<文章>タグから本文だけを抽出する
