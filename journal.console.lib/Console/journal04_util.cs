@@ -13,8 +13,10 @@ namespace journal.console.lib.Consoles
 {
   public class journal04_util : kihon_base
   {
+    public int Id { get; set; }
     public journal04_util(ILogger log) : base(log)
     {
+      Id = 1;
     }
 
     public void Run(string srcdir)
@@ -25,27 +27,21 @@ namespace journal.console.lib.Consoles
       var idxdir = srcdir.combine("index").createDirIfNotExist();
 
       Console.WriteLine(xmldir);
-      var idlst = new List<SearchIndex>();
+      var idxlst = new List<BunshoItem>();
       foreach (var xmlpath in xmldir.getFiles("*.xml"))
       {
-        //タグから文字列だけを抽出する
-        idlst.Add(new SearchIndex
-        {
-          Id=xmlpath.getFileNameWithoutExtension(),  //01-001
-          Honbun = GetHonbunTextFromXmlPath(xmlpath)  //<文章>ないから本文だけ抽出する
-        });
+        AddIndexFromXmlPath(xmlpath,ref idxlst);
       }
 
       //JSONで書き出す
       var outpath = idxdir.combine("index.txt");
       Console.WriteLine($"==>{outpath}");
-      FileUtil.writeTextToFile(JsonConvert.SerializeObject(idlst, Formatting.Indented),Encoding.UTF8,outpath);
+      FileUtil.writeTextToFile(JsonConvert.SerializeObject(idxlst, Formatting.Indented),Encoding.UTF8,outpath);
     }
 
     #region XMLファイルの<文章>タグから本文だけを抽出する
-    public string GetHonbunTextFromXmlPath(string xmlpath)
+    public void AddIndexFromXmlPath(string xmlpath,ref List<BunshoItem> idxlst)
     {
-      var sb=new StringBuilder();
       using (var rd = XmlReader.Create(xmlpath))
       {
         XmlDocument doc = new XmlDocument();
@@ -56,13 +52,18 @@ namespace journal.console.lib.Consoles
         {
           //ルビとかさぼってる
           if (bunsho.Name != "文章") continue;
-          //foreach (var child in node.ChildNodes.Cast<XmlElement>().Where(n => n.NodeType==XmlNodeType.Text))
+          //foreach (XmlElement child in bunsho.ChildNodes.Cast<XmlElement>().Where(n => n.NodeType==XmlNodeType.Text))
           //{
-            sb.Append(bunsho.InnerText);
+            idxlst.Add(new BunshoItem
+            {
+              Id=Id.ToString(),
+              FileName = xmlpath.getFileNameWithoutExtension(),
+              Text= bunsho.InnerText,
+            } );
           //}
+          Id++;
         }
       }
-      return sb.ToString();
     }
     #endregion  
   }
