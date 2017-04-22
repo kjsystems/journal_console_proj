@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using journal.console.lib.Models;
+using journal.lib.Models;
+using journal.lib.Services;
+using journal.search.lib.Models;
 using kj.kihon;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -14,6 +17,7 @@ namespace journal.console.lib.Consoles
   public class journal04_util : kihon_base
   {
     public int Id { get; set; }
+    public string ContentsPath { get; set; }
     public journal04_util(ILogger log) : base(log)
     {
       Id = 1;
@@ -22,25 +26,38 @@ namespace journal.console.lib.Consoles
     public void Run(string srcdir)
     {
       srcdir.existDir();
-      var xmldir=srcdir.combine("xml");
+      var xmldir = srcdir.combine("xml");
       xmldir.existDir();
+      ContentsPath = srcdir.combine("list").combine("contents.txt");
+      ContentsPath.existFile();
       var idxdir = srcdir.combine("index").createDirIfNotExist();
 
+      //contents一覧を読み込み
+      ReadContents(out List<JournalContent> conlst);
+
       Console.WriteLine(xmldir);
-      var idxlst = new List<BunshoItem>();
+      var idxlst = new List<BunshoResult>();
       foreach (var xmlpath in xmldir.getFiles("*.xml"))
       {
-        AddIndexFromXmlPath(xmlpath,ref idxlst);
+        AddIndexFromXmlPath(xmlpath,conlst, ref idxlst);
       }
 
       //JSONで書き出す
       var outpath = idxdir.combine("index.txt");
       Console.WriteLine($"==>{outpath}");
-      FileUtil.writeTextToFile(JsonConvert.SerializeObject(idxlst, Formatting.Indented),Encoding.UTF8,outpath);
+      FileUtil.writeTextToFile(JsonConvert.SerializeObject(idxlst, Formatting.Indented), Encoding.UTF8, outpath);
     }
 
+    #region list/contents.txtを読み込み
+    void ReadContents(out List<JournalContent> conlst)
+    {
+      var rd = new JournalContentsReader(Log);
+      rd.ReadFromPath(ContentsPath, out conlst);
+    }
+    #endregion
+
     #region XMLファイルの<文章>タグから本文だけを抽出する
-    public void AddIndexFromXmlPath(string xmlpath,ref List<BunshoItem> idxlst)
+    public void AddIndexFromXmlPath(string xmlpath,List<JournalContent>conlst, ref List<BunshoResult> idxlst)
     {
       using (var rd = XmlReader.Create(xmlpath))
       {
@@ -48,19 +65,36 @@ namespace journal.console.lib.Consoles
         doc.Load(rd);
         XmlNode root = doc.DocumentElement;
 
+        var fileName = xmlpath.getFileNameWithoutExtension();
+        var curPage = "";
         foreach (XmlNode bunsho in root.ChildNodes)
         {
           //ルビとかさぼってる
           if (bunsho.Name != "文章") continue;
-          //foreach (XmlElement child in bunsho.ChildNodes.Cast<XmlElement>().Where(n => n.NodeType==XmlNodeType.Text))
-          //{
-            idxlst.Add(new BunshoItem
-            {
-              Id=Id.ToString(),
-              FileName = xmlpath.getFileNameWithoutExtension(),
-              Text= bunsho.InnerText,
-            } );
-          //}
+          var nodePage = bunsho.ChildNodes
+            .Cast<XmlNode>()
+            .FirstOrDefault(n => n.Name == "頁");
+          if(nodePage!=null)
+            curPage= nodePage.Attributes["内容"].Value;
+
+          var content = conlst.FirstOrDefault(m => m.FileName==fileName);
+          if (content == null)
+          {
+            Log.err(ContentsPath,0,"adindex",$"contents.txtにファイル名がない FileName={fileName}");
+            continue;
+          }
+
+          idxlst.Add(new BunshoResult
+          {
+            Id = Id.ToString(),
+            FileName = fileName,
+            Text = bunsho.InnerText,
+            Chosha=content.Chosha,
+            Title=content.Title,
+            SubTitle = content.SubTitle,
+            Page = curPage,
+            JumpId = bunsho.Attributes["ID"].Value.toInt(0)
+          });
           Id++;
         }
       }

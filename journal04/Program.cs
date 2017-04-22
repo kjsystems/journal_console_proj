@@ -12,7 +12,7 @@ namespace journal04
   {
     static void Main(string[] args)
     {
-      var log = new ErrorLogger("{AppUtil.AppName }:XMLからAzureSearch用JOSNの作成");
+      var log = new ErrorLogger();
       try
       {
         var lst = ArgListUtil.createArgList(args);

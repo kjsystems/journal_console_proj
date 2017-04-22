@@ -76,7 +76,6 @@
     <Compile Include="Console\journal04_util.cs" />
     <Compile Include="Console\journal05_util.cs" />
     <Compile Include="Models\ParaItem.cs" />
-    <Compile Include="Models\BunshoItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +83,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\journalwpf_proj\journal.lib\journal.lib.csproj">
+      <Project>{B1CC53AF-2E06-4207-AF01-E342ED1F9B95}</Project>
+      <Name>journal.lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\journalwpf_proj\journal.search.lib\journal.search.lib.csproj">
+      <Project>{75D03E75-4006-486B-A842-204EF3207D5F}</Project>
+      <Name>journal.search.lib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\wordxml\wordxml.csproj">
       <Project>{0932a1bb-6acc-4c6d-8855-d6c00b391bfc}</Project>
       <Name>wordxml</Name>

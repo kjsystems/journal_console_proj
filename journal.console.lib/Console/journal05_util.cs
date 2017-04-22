@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using journal.console.lib.Models;
+using journal.lib.Models;
+using journal.search.lib.Models;
 using kj.kihon;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
@@ -43,10 +45,6 @@ namespace journal.console.lib.Consoles
       Console.WriteLine("{0}", "Uploading documents...");
       UploadDocuments(indexClient, idxpath);
 
-      ISearchIndexClient indexClientForQueries = CreateSearchIndexClient(tblname);
-
-      //return;
-      RunQueries(indexClientForQueries);
     }
 
     SearchServiceClient CreateSearchServiceClient()
@@ -69,7 +67,7 @@ namespace journal.console.lib.Consoles
       var definition = new Index()
       {
         Name = tblname,
-        Fields = FieldBuilder.BuildForType<BunshoItem>(),
+        Fields = FieldBuilder.BuildForType<BunshoResult>(),
         //Tokenizers = new List<Tokenizer> { new NGramTokenizer("my") },
       };
       serviceClient.Indexes.Create(definition);
@@ -78,7 +76,7 @@ namespace journal.console.lib.Consoles
     }
     private void UploadDocuments(ISearchIndexClient indexClient, string idxpath)
     {
-      var lst = JsonConvert.DeserializeObject<List<BunshoItem>>(FileUtil.getTextFromPath(idxpath, Encoding.UTF8));
+      var lst = JsonConvert.DeserializeObject<List<BunshoResult>>(FileUtil.getTextFromPath(idxpath, Encoding.UTF8));
       Console.WriteLine($"UploadDocuments num={lst.Count}");
 
       var batch = IndexBatch.Upload(lst.Take(1000));
@@ -106,36 +104,6 @@ namespace journal.console.lib.Consoles
       var queryApiKey = "487BA0BE8FC7CA3133DA972481222D40";
       var indexClient = new SearchIndexClient(searchServiceName, tblname, new SearchCredentials(queryApiKey));
       return indexClient;
-    }
-
-    void RunQueries(ISearchIndexClient indexClient)
-    {
-      SearchParameters parameters;
-      DocumentSearchResult<BunshoItem> results;
-
-      parameters =
-        new SearchParameters()
-        {
-          SearchMode= SearchMode.All,
-          HighlightFields = new[] { "text" },
-          Select = new[] { "id", "fileName", "text" }  //探すフィールド
-        };
-
-      results = indexClient.Documents.Search<BunshoItem>("\"藤原定家\" \"古今和歌集\"", parameters);
-
-      WriteDocuments(results);
-    }
-    private static void WriteDocuments(DocumentSearchResult<BunshoItem> searchResults)
-    {
-      foreach (SearchResult<BunshoItem> result in searchResults.Results)
-      {
-        Console.WriteLine($"id={result.Document.Id} filename={result.Document.FileName} text={result.Document.Text}");
-        /*foreach (var hl in result.Highlights)
-        {
-          Console.WriteLine($"key={hl.Key} value={string.Join("|", hl.Value)}");
-        }*/
-      }
-      Console.WriteLine($"==>{searchResults.Results.Count}件");
     }
 
   }
