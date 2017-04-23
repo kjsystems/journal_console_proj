@@ -79,20 +79,26 @@ namespace journal.console.lib.Consoles
       var lst = JsonConvert.DeserializeObject<List<BunshoResult>>(FileUtil.getTextFromPath(idxpath, Encoding.UTF8));
       Console.WriteLine($"UploadDocuments num={lst.Count}");
 
-      var batch = IndexBatch.Upload(lst.Take(1000));
-
-      try
+      var page = 0;
+      const int per = 1000;
+      while (page*per < lst.Count)
       {
-        indexClient.Documents.Index(batch);
-      }
-      catch (IndexBatchException e)
-      {
-        // Sometimes when your Search service is under load, indexing will fail for some of the documents in
-        // the batch. Depending on your application, you can take compensating actions like delaying and
-        // retrying. For this simple demo, we just log the failed document keys and continue.
-        Console.WriteLine(
-          "Failed to index some of the documents: {0}",
-          String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+        Console.WriteLine($"UploadDocuments Create Index page*{per}={(page+1)*per}");
+        var batch = IndexBatch.Upload(lst.Skip(page*per).Take(per));
+        try
+        {
+          indexClient.Documents.Index(batch);
+        }
+        catch (IndexBatchException e)
+        {
+          // Sometimes when your Search service is under load, indexing will fail for some of the documents in
+          // the batch. Depending on your application, you can take compensating actions like delaying and
+          // retrying. For this simple demo, we just log the failed document keys and continue.
+          Console.WriteLine(
+            "Failed to index some of the documents: {0}",
+            String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+        }
+        page++;
       }
 
       Console.WriteLine("Waiting for documents to be indexed...");

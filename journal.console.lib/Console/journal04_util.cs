@@ -65,8 +65,9 @@ namespace journal.console.lib.Consoles
         doc.Load(rd);
         XmlNode root = doc.DocumentElement;
 
-        var fileName = xmlpath.getFileNameWithoutExtension();
-        var curPage = "";
+        var fileName = xmlpath.getFileNameWithoutExtension();   //001-01
+        var go = fileName.Substring(0, 3).toInt(0);   //001 ==> 1
+        var curPage = 0;
         foreach (XmlNode bunsho in root.ChildNodes)
         {
           //ルビとかさぼってる
@@ -75,7 +76,7 @@ namespace journal.console.lib.Consoles
             .Cast<XmlNode>()
             .FirstOrDefault(n => n.Name == "頁");
           if(nodePage!=null)
-            curPage= nodePage.Attributes["内容"].Value;
+            curPage= nodePage.Attributes["内容"].Value.toInt(0);
 
           var content = conlst.FirstOrDefault(m => m.FileName==fileName);
           if (content == null)
@@ -88,6 +89,7 @@ namespace journal.console.lib.Consoles
           {
             Id = Id.ToString(),
             FileName = fileName,
+            Go=go,
             Text = bunsho.InnerText,
             Chosha=content.Chosha,
             Title=content.Title,
