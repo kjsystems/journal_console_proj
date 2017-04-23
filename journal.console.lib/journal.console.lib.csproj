@@ -54,6 +54,10 @@
       <HintPath>..\packages\Microsoft.Spatial.6.15.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=8.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\azureblob_proj\packages\WindowsAzure.Storage.8.1.1\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -83,6 +87,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\azureblob_proj\azureblob.lib\azureblob.lib.csproj">
+      <Project>{D8FC7122-452B-40D5-AC11-D7EE0D15538C}</Project>
+      <Name>azureblob.lib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\journalwpf_proj\journal.lib\journal.lib.csproj">
       <Project>{B1CC53AF-2E06-4207-AF01-E342ED1F9B95}</Project>
       <Name>journal.lib</Name>
