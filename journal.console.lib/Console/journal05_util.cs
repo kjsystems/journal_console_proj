@@ -23,14 +23,23 @@ namespace journal.console.lib.Consoles
     {
     }
 
+    #region index/index.jsonを読みこんでAzure Searchに登録
     public void Run(string srcdir)
     {
       srcdir.existDir();
       var idxdir = srcdir.combine("index");
       idxdir.existDir();
-      var idxpath = idxdir.combine("index.txt");
-      idxpath.existFile();
 
+      //Azure Searchにインデックスを登録
+      var idxpath = idxdir.combine(journal04_util.FILENAME_INDEX_JSON);
+      idxpath.existFile();
+      CreateAzureSearchIndex(idxpath);
+    }
+    #endregion
+
+    #region Azure Searchにインデックスを登録
+    private void CreateAzureSearchIndex(string idxpath)
+    {
       var serviceClient = CreateSearchServiceClient();
       Console.WriteLine("{0}", "Deleting index...");
 
@@ -44,12 +53,11 @@ namespace journal.console.lib.Consoles
 
       Console.WriteLine("{0}", "Uploading documents...");
       UploadDocuments(indexClient, idxpath);
-
     }
+    #endregion
 
     SearchServiceClient CreateSearchServiceClient()
     {
-
       var serviceClient = new SearchServiceClient(searchServiceName, new SearchCredentials(adminApiKey));
       serviceClient.AcceptLanguage = "ja-JP";
       return serviceClient;
@@ -74,6 +82,8 @@ namespace journal.console.lib.Consoles
 
       Console.WriteLine($"index {tblname} exists={serviceClient.Indexes.Exists(tblname)}");
     }
+
+    #region JSONをアップロードする
     private void UploadDocuments(ISearchIndexClient indexClient, string idxpath)
     {
       var lst = JsonConvert.DeserializeObject<List<BunshoResult>>(FileUtil.getTextFromPath(idxpath, Encoding.UTF8));
@@ -81,10 +91,10 @@ namespace journal.console.lib.Consoles
 
       var page = 0;
       const int per = 1000;
-      while (page*per < lst.Count)
+      while (page * per < lst.Count)
       {
-        Console.WriteLine($"UploadDocuments Create Index page*{per}={(page+1)*per}");
-        var batch = IndexBatch.Upload(lst.Skip(page*per).Take(per));
+        Console.WriteLine($"UploadDocuments Create Index page*{per}={(page + 1) * per}");
+        var batch = IndexBatch.Upload(lst.Skip(page * per).Take(per));
         try
         {
           indexClient.Documents.Index(batch);
@@ -104,6 +114,7 @@ namespace journal.console.lib.Consoles
       Console.WriteLine("Waiting for documents to be indexed...");
       Thread.Sleep(2000);
     }
+    #endregion  
 
     ISearchIndexClient CreateSearchIndexClient(string tblname)
     {

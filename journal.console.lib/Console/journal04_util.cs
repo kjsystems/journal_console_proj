@@ -16,6 +16,9 @@ namespace journal.console.lib.Consoles
 {
   public class journal04_util : kihon_base
   {
+    public const string FILENAME_INDEX_JSON = "index.json";
+    public const string FILENAME_CONTENTS_JSON = "contents.json";
+
     public int Id { get; set; }
     public string ContentsPath { get; set; }
     public journal04_util(ILogger log) : base(log)
@@ -43,9 +46,14 @@ namespace journal.console.lib.Consoles
       }
 
       //JSONで書き出す
-      var outpath = idxdir.combine("index.txt");
+      var outpath = idxdir.combine(FILENAME_INDEX_JSON);
       Console.WriteLine($"==>{outpath}");
       FileUtil.writeTextToFile(JsonConvert.SerializeObject(idxlst, Formatting.Indented), Encoding.UTF8, outpath);
+
+      outpath = idxdir.combine(FILENAME_CONTENTS_JSON);
+      Console.WriteLine($"==>{outpath}");
+      FileUtil.writeTextToFile(JsonConvert.SerializeObject(conlst, Formatting.Indented), Encoding.UTF8, outpath);
+
     }
 
     #region list/contents.txtを読み込み
@@ -90,7 +98,7 @@ namespace journal.console.lib.Consoles
             Id = Id.ToString(),
             FileName = fileName,
             Go=go,
-            Text = bunsho.InnerText,
+            Text = bunsho.InnerText.trimZen(),
             Chosha=content.Chosha,
             Title=content.Title,
             SubTitle = content.SubTitle,
