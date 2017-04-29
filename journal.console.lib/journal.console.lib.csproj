@@ -41,18 +41,6 @@
     <Reference Include="kjlib.winfrm, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>..\packages\kjsystems.kjlib.1.0.9\lib\kjlib.winfrm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Azure.Search, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.Search.3.0.3\lib\net45\Microsoft.Azure.Search.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.4\lib\net45\Microsoft.Rest.ClientRuntime.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Rest.ClientRuntime.Azure, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Rest.ClientRuntime.Azure.3.3.4\lib\net45\Microsoft.Rest.ClientRuntime.Azure.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Spatial, Version=6.15.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Spatial.6.15.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=8.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -90,6 +78,10 @@
     <ProjectReference Include="..\..\azureblob_proj\azureblob.lib\azureblob.lib.csproj">
       <Project>{D8FC7122-452B-40D5-AC11-D7EE0D15538C}</Project>
       <Name>azureblob.lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\azuresearch_proj\azuresearch.lib\azuresearch.lib.csproj">
+      <Project>{5003BC94-A21B-4B42-AE4F-C54E6A00C71A}</Project>
+      <Name>azuresearch.lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\journalwpf_proj\journal.lib\journal.lib.csproj">
       <Project>{B1CC53AF-2E06-4207-AF01-E342ED1F9B95}</Project>
