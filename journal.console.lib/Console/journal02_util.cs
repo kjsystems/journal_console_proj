@@ -41,18 +41,18 @@ namespace journal.console.lib.Consoles
       if (srcfiles.Length == 0)
         throw new Exception($"docディレクトリにWORDファイルがない DIR={docdir}");
 
-      foreach (var wordpath in srcfiles)
+      foreach (var wordpath in srcfiles.Select((v,i)=>new{v,i}))
       {
-        if (wordpath.getExtension().ToLower() == ".doc")
+        if (wordpath.v.getExtension().ToLower() == ".doc")
         {
-          Log.err(wordpath, 0, "procword", "docx形式で保存してください");
+          Log.err(wordpath.v, 0, "procword", "docx形式で保存してください");
           continue;
         }
-        System.Console.WriteLine($"word:{wordpath}");
+        System.Console.WriteLine($"{wordpath.i+1}/{srcfiles.Length} word:{wordpath}");
         //解凍する
         //戻り値は \word\document.xml
         string documentPath;
-        MeltWordFile(wordpath, out documentPath);
+        MeltWordFile(wordpath.v, out documentPath);
 
         //document.xmlをParseする
         var parser = new WordXmlParser();
@@ -88,7 +88,7 @@ namespace journal.console.lib.Consoles
         var outpath = jobdir
           .combine("out")
           .createDirIfNotExist()
-          .combine(wordpath.getFileNameWithoutExtension()+".txt");
+          .combine(wordpath.v.getFileNameWithoutExtension()+".txt");
         System.Console.WriteLine($"==>{outpath}");
         FileUtil.writeTextToFile(sb.ToString(),Encoding.UTF8,outpath);
       }

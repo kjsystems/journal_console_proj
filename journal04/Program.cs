@@ -12,7 +12,7 @@ namespace journal04
   {
     static void Main(string[] args)
     {
-      var log = new ErrorLogger();
+      var log = new ErrorLogger("{AppUtil.AppName }:xmlから抽出");
       try
       {
         var lst = ArgListUtil.createArgList(args);

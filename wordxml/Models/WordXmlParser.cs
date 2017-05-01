@@ -127,7 +127,6 @@ http://officeopenxml.com/WPparagraph.php
       {
         foreach (XmlNode prop in r_prop.ChildNodes)
         {
-          Console.WriteLine($"run prop name={prop.Name}");
           if (prop.Name == "w:u") sb.Append("<下線>");
         }
       }
@@ -146,7 +145,6 @@ http://officeopenxml.com/WPparagraph.php
       {
         foreach (XmlNode prop in r_prop.ChildNodes)
         {
-          Console.WriteLine($"run prop name={prop.Name}");
           if (prop.Name == "w:u") sb.Append("</下線>");
         }
       }
