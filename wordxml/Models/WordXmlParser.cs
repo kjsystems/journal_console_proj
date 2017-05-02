@@ -6,15 +6,38 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Xml;
 using kj.kihon;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace wordxml.Models
 {
   public class WordXmlParser
   {
     List<WordXmlParaItem> ParaList { get; set; }
+    /*
+     * 縦中横などはフィールド文字列
+  <w:r><w:rPr><w:rFonts w:ascii="ＭＳ 明朝" w:cs="Times New Roman"/><w:color w:val="auto"/></w:rPr>
+    <w:fldChar w:fldCharType="begin"/></w:r>
+    <w:r><w:rPr><w:rFonts w:ascii="ＭＳ 明朝" w:cs="Times New Roman"/><w:color w:val="auto"/></w:rPr>
+    <w:instrText>eq \o(\s\do5(</w:instrText></w:r>
+    <w:r><w:rPr><w:rFonts w:hint="eastAsia"/></w:rPr>
+    <w:instrText>１</w:instrText></w:r>
+    <w:r><w:rPr><w:rFonts w:ascii="ＭＳ 明朝" w:cs="Times New Roman"/><w:color w:val="auto"/></w:rPr>
+    <w:instrText>),\s\do-5(</w:instrText></w:r>
+    <w:r><w:rPr><w:rFonts w:hint="eastAsia"/></w:rPr>
+    <w:instrText>１</w:instrText></w:r>
+    <w:r><w:rPr><w:rFonts w:ascii="ＭＳ 明朝" w:cs="Times New Roman"/><w:color w:val="auto"/></w:rPr>
+    <w:instrText>))</w:instrText></w:r>
+    <w:r><w:rPr><w:rFonts w:ascii="ＭＳ 明朝" w:cs="Times New Roman"/><w:color w:val="auto"/></w:rPr>
+    <w:fldChar w:fldCharType="end"/></w:r>
+     * */
+    private bool IsFldChar { get; set; }
+
+    private List<string> InstrList { get; set; }
+
     public void ProcessWordFile(string documentPath, out List<WordXmlParaItem> paralst)
     {
       ParaList = new List<WordXmlParaItem>();
+      InstrList = new List<string>();
       paralst = ParaList;
 
       //xmlをParseする
@@ -50,7 +73,7 @@ namespace wordxml.Models
 
     int? getAttrInt(XmlNode node, string attrName)
     {
-      return getAttrText(node,attrName)?.toInt(0);
+      return getAttrText(node, attrName)?.toInt(0);
     }
     string getAttrText(XmlNode node, string attrName)
     {
@@ -76,7 +99,7 @@ http://officeopenxml.com/WPparagraph.php
     {
       //paraのプロパティはない時もあり
       var w_prop = getFirstOfChilds(w_para, "w:pPr");
-      if (w_prop!=null)
+      if (w_prop != null)
       {
         foreach (XmlNode node in w_prop.ChildNodes)
         {
@@ -91,7 +114,7 @@ http://officeopenxml.com/WPparagraph.php
             //<w:ind w:left="880" w:hanging="440"/>   //2字下げ＋問答２字
             var left = getAttrInt(node, "w:left");
             var hanging = getAttrInt(node, "w:hanging");
-            if (left!=null && hanging != null)
+            if (left != null && hanging != null)
             {
               ParaList.Last().Jisage = (int)hanging / 210;
               ParaList.Last().Mondo = ((int)left - (int)hanging) / 210;
@@ -117,20 +140,108 @@ http://officeopenxml.com/WPparagraph.php
     }
     #endregion
 
+    string getInstrTextFromWR(XmlNode wrun)
+    {
+      foreach (XmlNode node in wrun.ChildNodes)
+      {
+        if (node.Name == "w:instrText")
+        {
+          return node.InnerText;
+        }
+      }
+      return "";
+    }
+
+    string getInstrText()
+    {
+      //ルビ
+      if (InstrList.Count == 5 && InstrList[0].IndexOf(@"eq \o\ac(\s\up") >= 0)
+      {
+        return $"<ruby>{InstrList[3]}<rt>{InstrList[1]}</rt></ruby>";
+      }
+      //ルビ以外は記号を除いて出力
+      var sb = new StringBuilder();
+      foreach (var txt in InstrList)
+      {
+        if (string.IsNullOrEmpty(txt))
+          continue;
+        //foreach (var ch in new[] {"eq", ")", "(" })
+        //{
+        if (txt.IndexOf("eq") >= 0)
+          continue;
+        if (txt.IndexOf("(") >= 0)
+          continue;
+        if (txt.IndexOf(")") >= 0)
+          continue;
+        sb.Append(txt);
+        //}
+      }
+      return sb.ToString();
+    }
+
+    void SetFldChar(XmlNode w_run, out bool isTextOut)
+    {
+      isTextOut = false;
+      if (!w_run.HasChildNodes) return;
+      var fldChar = w_run.ChildNodes.Cast<XmlNode>()
+        .FirstOrDefault(n => n.Name == "w:fldChar");
+      if (fldChar?.Attributes == null) return;
+      var fldValue = fldChar.Attributes["w:fldCharType"].Value;
+      if (fldValue == "begin") IsFldChar = true;
+      if (fldValue == "end")
+      {
+        IsFldChar = false;
+        isTextOut = true;
+      }
+    }
+
     #region <w:r>
     private string ParseRun(XmlNode w_run)
     {
       var sb = new StringBuilder();
       //<w:rPr>...</w:rPr>の中にルビ等あり
       var r_prop = getFirstOfChilds(w_run, "w:rPr");
+      var isUnderline = false;
+      var isBold = false;
+
+      //フィールド文字列内かどうか endの時にまとめて出力
+      SetFldChar(w_run, out bool isTextOut);
+      if (isTextOut)
+      {
+        sb.Append(getInstrText());
+        InstrList.Clear();
+        return sb.ToString();
+      }
+      //フィールド文字列を取得 ==> 積み重ねて最後に出力
+      //<w:r>...<w:rPr>...</w:rPr><w:instrText>６</w:instrText ></w:r>
+      var instrText = getInstrTextFromWR(w_run);
+      if (IsFldChar == true)
+      {
+        if (!string.IsNullOrEmpty(instrText))
+        {
+          InstrList.Add(instrText);
+        }
+        return sb.ToString();  //結果空
+      }
+
       if (r_prop != null)
       {
         foreach (XmlNode prop in r_prop.ChildNodes)
         {
-          if (prop.Name == "w:u") sb.Append("<下線>");
+          if (prop.Name == "w:u")
+          {
+            sb.Append("<下線>");
+            isUnderline = true;
+          }
+          if (prop.Name == "w:b")
+          {
+            sb.Append("<太字>");
+            isBold = true;
+          }
         }
       }
-
+      if (!string.IsNullOrEmpty(instrText))
+        sb.Append("<ruby>");
       var w_text = getFirstOfChilds(w_run, "w:t");
       if (w_text != null)
       {
@@ -140,15 +251,12 @@ http://officeopenxml.com/WPparagraph.php
           sb.Append(text); //textとかrubyとか
         }
       }
-
-      if (r_prop != null)
-      {
-        foreach (XmlNode prop in r_prop.ChildNodes)
-        {
-          if (prop.Name == "w:u") sb.Append("</下線>");
-        }
-      }
-
+      if (!string.IsNullOrEmpty(instrText))
+        sb.Append($"<rt>{instrText}</rt></ruby>");
+      if (isUnderline)
+        sb.Append("</下線>");
+      if (isBold)
+        sb.Append("</太字>");
       return sb.ToString();
     }
     #endregion

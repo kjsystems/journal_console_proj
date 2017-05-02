@@ -20,8 +20,8 @@ namespace journal.console.lib.Consoles
     void MeltWordFile(string wordpath, out string documentPath)
     {
       var zip = new ZIPUtil();
-      var xmlDir = JobDir.combine("xml").createDirIfNotExist();
-      var outDir = xmlDir.combine(wordpath.getFileNameWithoutExtension());
+      var wordxmlDir = JobDir.combine("wordxml").createDirIfNotExist();  //解凍するディレクトリ
+      var outDir = wordxmlDir.combine(wordpath.getFileNameWithoutExtension());
       zip.meltZip(wordpath, outDir);
       System.Console.WriteLine($"==>zip:{outDir}");
 
