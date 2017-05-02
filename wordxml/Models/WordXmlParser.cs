@@ -10,8 +10,14 @@ using Microsoft.VisualBasic.ApplicationServices;
 
 namespace wordxml.Models
 {
-  public class WordXmlParser
+  public class WordXmlParser : kihon_base
   {
+    public WordXmlParser(int paragraphFontSize, ILogger log) : base(log)
+    {
+      ParagraphFontSize = paragraphFontSize;
+    }
+
+    private int ParagraphFontSize { get; set; }
     List<WordXmlParaItem> ParaList { get; set; }
     /*
      * 縦中横などはフィールド文字列
@@ -50,6 +56,9 @@ namespace wordxml.Models
       var sb = new StringBuilder();
       if (node.NodeType != XmlNodeType.Text)
       {
+        if (node.Name == "#significant-whitespace")
+          return " ";
+        Log.err("parse", $"未対応のタグ name={node.Name} inner={node.InnerXml}");
         return $"<!-- 未対応 name=({node.Name}) -->";
       }
       sb.Append(node.Value);
@@ -97,6 +106,7 @@ http://officeopenxml.com/WPparagraph.php
      * */
     void ParseParagraph(XmlNode w_para)
     {
+      var fontSize = ParagraphFontSize;
       //paraのプロパティはない時もあり
       var w_prop = getFirstOfChilds(w_para, "w:pPr");
       if (w_prop != null)
@@ -105,23 +115,43 @@ http://officeopenxml.com/WPparagraph.php
         {
           if (node.Name == "w:ind")
           {
+            ParaList.Last().Jisage = 0;
+            //<w:p w:rsidR="006F4F91" w:rsidRDefault="008D23FE" w:rsidP="00967B89"><w:pPr><w:ind w:leftChars="200" w:left="3465" w:hangingChars="900" w:hanging="2835"/>
+            var lc = getAttrInt(node, "w:leftChars");  //200 //字下げ ==> 2字
+            if (lc != null)
+            {
+              ParaList.Last().Jisage = (int)lc / 100;
+            }
+            var flc = getAttrInt(node, "w:firstLineChars");  //200 //字下げ ==> 2字
+            if (flc != null)
+            {
+              ParaList.Last().Jisage += (int)flc / 100;  //足し算なので注意
+            }
+            var hc = getAttrInt(node, "w:hangingChars");  //900 //ぶらさげ ==> 9字
+            if (hc != null)
+            {
+              //lc = getAttrInt(node, "w:leftChars");  //200 //字下げ ==> 2字
+              ParaList.Last().Mondo = (int)hc / 100 - ParaList.Last().Jisage;
+            }
+            break;
+
             //<w:pPr><w:ind w:firstLineChars="500" w:firstLine="1050"/></w:pPr>  //五字下げ
             var fl = getAttrInt(node, "w:firstLine");  //1050 ==> 210で一字分
             if (fl != null)
             {
-              ParaList.Last().Jisage = (int)fl / 210;
+              ParaList.Last().Jisage = (int)fl / fontSize;
             }
             //<w:ind w:left="880" w:hanging="440"/>   //2字下げ＋問答２字
             var left = getAttrInt(node, "w:left");
             var hanging = getAttrInt(node, "w:hanging");
             if (left != null && hanging != null)
             {
-              ParaList.Last().Jisage = (int)hanging / 210;
-              ParaList.Last().Mondo = ((int)left - (int)hanging) / 210;
+              ParaList.Last().Mondo = (int)hanging / fontSize;
+              ParaList.Last().Jisage = ((int)left - (int)hanging) / fontSize;
             }
             else if (left != null)
             {
-              ParaList.Last().Jisage = (int)left / 210;
+              ParaList.Last().Jisage = (int)left / fontSize;
             }
           }
         }
@@ -230,8 +260,24 @@ http://officeopenxml.com/WPparagraph.php
         {
           if (prop.Name == "w:u")
           {
-            sb.Append("<下線>");
-            isUnderline = true;
+            sb.Append("<下線");
+            var value = prop.Attributes["w:val"]?.Value;
+            if (!string.IsNullOrEmpty(value))
+            {
+              switch (value)
+              {
+                case "dash":
+                  sb.Append(" 種類=破線");
+                  break;
+                case "single":
+                  break;
+                default:
+                  Log.err("underline", $"無効な下線種類 {value}");
+                  break;
+              }
+              sb.Append(">");
+              isUnderline = true;
+            }
           }
           if (prop.Name == "w:b")
           {

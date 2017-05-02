@@ -12,12 +12,13 @@ namespace journal.console.lib.Consoles
   public class journal02_util : kihon_base
   {
     public string JobDir { get; set; }
+    public int ParagraphFontSize { get; set; }  //210とか180とか
 
     public journal02_util(ILogger log) : base(log)
     {
     }
 
-    void MeltWordFile(string wordpath, out string documentPath)
+    void MeltWordFile(string wordpath, out string documentPath, out string stylePath)
     {
       var zip = new ZIPUtil();
       var wordxmlDir = JobDir.combine("wordxml").createDirIfNotExist();  //解凍するディレクトリ
@@ -27,8 +28,35 @@ namespace journal.console.lib.Consoles
 
       documentPath = outDir.combine("word").combine("document.xml");
       documentPath.existFile();
+      stylePath = outDir.combine("word").combine("styles.xml");
+      stylePath.existFile();
       System.Console.WriteLine($"==>xml:{documentPath}");
     }
+
+    void GetParagraphFontSize(string stylePath)
+    {
+      using (var rd = XmlReader.Create(stylePath))
+      {
+        XmlDocument doc = new XmlDocument();
+        doc.Load(rd);
+        XmlNode root = doc.DocumentElement;
+
+        ParagraphFontSize = 210;
+        var sz = root //w:styles
+          .ChildNodes.Cast<XmlNode>() //w:stylesの子供
+          .FirstOrDefault(s => s.Name == "w:style" && s.Attributes["w:type"].Value== "paragraph")?
+          .ChildNodes.Cast<XmlNode>() //w:styleの子供
+          .FirstOrDefault(s => s.Name == "w:rPr")?
+          .ChildNodes.Cast<XmlNode>() //w:rPrの子供
+          .FirstOrDefault(s => s.Name == "w:sz")?
+          .Attributes["w:val"]
+          .Value.toInt(0)*10;
+        if (sz != null)
+          ParagraphFontSize = (int)sz;
+        Console.WriteLine($"ParagraphFontSize={ParagraphFontSize}");
+      }
+    }
+
 
     public void Run(string jobdir)
     {
@@ -43,6 +71,9 @@ namespace journal.console.lib.Consoles
 
       foreach (var wordpath in srcfiles.Select((v,i)=>new{v,i}))
       {
+        //開いているファイルは使わない
+        if (wordpath.v.getFileNameWithoutExtension().StartsWith("~$"))
+          continue;
         if (wordpath.v.getExtension().ToLower() == ".doc")
         {
           Log.err(wordpath.v, 0, "procword", "docx形式で保存してください");
@@ -51,11 +82,13 @@ namespace journal.console.lib.Consoles
         System.Console.WriteLine($"{wordpath.i+1}/{srcfiles.Length} word:{wordpath}");
         //解凍する
         //戻り値は \word\document.xml
-        string documentPath;
-        MeltWordFile(wordpath.v, out documentPath);
+        MeltWordFile(wordpath.v, out string documentPath, out string stylePath);
+
+        //paragraphの文字サイズを取得する（字下げ用）
+        GetParagraphFontSize(stylePath);
 
         //document.xmlをParseする
-        var parser = new WordXmlParser();
+        var parser = new WordXmlParser(ParagraphFontSize,Log);
         List<WordXmlParaItem> paralst;
         parser.ProcessWordFile(documentPath, out paralst);
 

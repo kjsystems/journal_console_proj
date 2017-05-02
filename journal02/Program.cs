@@ -12,9 +12,10 @@ namespace journal02
   {
     static void Main(string[] args)
     {
-      ErrorLogger log = new ErrorLogger("{AppUtil.AppName }:Word/一太郎からテキスト変換");
+      ErrorLogger log = new ErrorLogger();
       try
       {
+        Console.WriteLine($"Word(docx)からテキストへの変換");
         var lst = ArgListUtil.createArgList(args);
         var srcdir = lst.getText('i');
         srcdir.existDir();
