@@ -260,7 +260,7 @@ http://officeopenxml.com/WPparagraph.php
         {
           if (prop.Name == "w:u")
           {
-            sb.Append("<下線");
+            sb.Append("<上線");
             var value = prop.Attributes["w:val"]?.Value;
             if (!string.IsNullOrEmpty(value))
             {
@@ -300,7 +300,7 @@ http://officeopenxml.com/WPparagraph.php
       if (!string.IsNullOrEmpty(instrText))
         sb.Append($"<rt>{instrText}</rt></ruby>");
       if (isUnderline)
-        sb.Append("</下線>");
+        sb.Append("</上線>");
       if (isBold)
         sb.Append("</太字>");
       return sb.ToString();
