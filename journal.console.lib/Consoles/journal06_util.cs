@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using kj.kihon;
 
 namespace journal.console.lib.Consoles
@@ -18,6 +19,7 @@ namespace journal.console.lib.Consoles
 
       foreach (var srcpath in txtdir.getFiles("*.txt"))
       {
+        Path = srcpath;
         var outpath = kjpdir.combine(srcpath.getFileNameWithoutExtension() + ".kjp");
         System.Console.WriteLine($"{srcpath}");
         System.Console.WriteLine($"==>{outpath}");
@@ -26,6 +28,7 @@ namespace journal.console.lib.Consoles
       }
     }
 
+    private TagBase PreTag { get; set; }
     string CreateTextFromPath(string path)
     {
       var util=new TagTextUtil(Log);
@@ -34,10 +37,26 @@ namespace journal.console.lib.Consoles
       var sb=new StringBuilder();
       foreach (TagBase tag in taglst)
       {
+        const string TAG_KASEN = "下線";
+        const string TAG_RUBY = "ruby";
+        if (tag.getName() == "上線")
+        {
+          if (tag.isClose())
+            ((TagItem)tag).name_ = "/" + TAG_KASEN;
+          else
+            ((TagItem) tag).name_ = TAG_KASEN;
+        }
+
+        if (Array.IndexOf(new[] { TAG_KASEN, TAG_RUBY }, tag.getName()) >= 0)
+        {
+          if (PreTag != null && PreTag.getName() == tag.getName() && PreTag.isOpen() == tag.isOpen())
+            Log.err(Path, tag.GyoNo, "parsetag", $"タグの組み合わせがおかしい tag={tag.ToString()} isopen={tag.isOpen()} pre={PreTag.isOpen()}");
+        }
         if (tag.isText())
         {
           var txt = tag.ToString()
             .Replace("", "&#x3033;")
+            .Replace("〱", "α")
             .Replace("α", "&#x3033;&#x3035;")
             .Replace("&#12349;", "ヽ")
             .Replace("", "&#x3035;")
@@ -46,10 +65,18 @@ namespace journal.console.lib.Consoles
             .Replace("￥", "")
             .Replace("$", "＄")
             .Replace("＄", "&#x25e6;");
-          sb.Append(txt);
+          sb.Append(CharUtil.sjis2utf(txt));  //namespaceをUTFに変換
           continue;
         }
+        //if (tag.getName() == "上線")
+        //{
+        //  ((TagItem) tag).name_ = "下線";
+        //}
         sb.Append(tag.ToString());
+        if (tag.isTag())
+        {
+          PreTag = tag;
+        }
       }
       return sb.ToString();
     }

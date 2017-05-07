@@ -12,9 +12,15 @@ namespace journal06
   {
     static void Main(string[] args)
     {
-      var log = new ErrorLogger("{AppUtil.AppName }:入稿テキストをKJPへ変換");
+      var log = new ErrorLogger();
       try
       {
+        if (args.Length == 0)
+        {
+          Console.WriteLine($"{AppUtil.AppName }:入稿テキストをKJPへ変換");
+          return;
+        }
+
         var lst = ArgListUtil.createArgList(args);
         var srcdir = lst.getText('i');
         srcdir.existDir();
