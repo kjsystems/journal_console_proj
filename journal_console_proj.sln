@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "azureblob.lib", "..\azurebl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "azuresearch.lib", "..\azuresearch_proj\azuresearch.lib\azuresearch.lib.csproj", "{5003BC94-A21B-4B42-AE4F-C54E6A00C71A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal06", "journal06\journal06.csproj", "{3E31AF65-A394-4B16-A4E4-7A24EDDE8205}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{5003BC94-A21B-4B42-AE4F-C54E6A00C71A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5003BC94-A21B-4B42-AE4F-C54E6A00C71A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5003BC94-A21B-4B42-AE4F-C54E6A00C71A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E31AF65-A394-4B16-A4E4-7A24EDDE8205}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E31AF65-A394-4B16-A4E4-7A24EDDE8205}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E31AF65-A394-4B16-A4E4-7A24EDDE8205}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E31AF65-A394-4B16-A4E4-7A24EDDE8205}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,5 +103,6 @@ Global
 		{B1CC53AF-2E06-4207-AF01-E342ED1F9B95} = {D005BBF8-8885-44E5-B0B6-ECDB0726C672}
 		{D8FC7122-452B-40D5-AC11-D7EE0D15538C} = {D005BBF8-8885-44E5-B0B6-ECDB0726C672}
 		{5003BC94-A21B-4B42-AE4F-C54E6A00C71A} = {D005BBF8-8885-44E5-B0B6-ECDB0726C672}
+		{3E31AF65-A394-4B16-A4E4-7A24EDDE8205} = {9EEB87C4-D554-4F6D-B8DD-59D3D78968ED}
 	EndGlobalSection
 EndGlobal
