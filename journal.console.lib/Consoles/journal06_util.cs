@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using kj.kihon;
 
 namespace journal.console.lib.Consoles
@@ -65,6 +66,13 @@ namespace journal.console.lib.Consoles
             .Replace("￥", "")
             .Replace("$", "＄")
             .Replace("＄", "&#x25e6;");
+          //2桁全角を変換
+          var reg=new Regex("＊([０-９]{2,3})");
+          while (reg.IsMatch(txt))
+          {
+            var m = reg.Match(txt);
+            txt = txt.Replace("＊"+RegexUtil.getGroup(m, 1), "＊" + VBUtil.toHankaku(RegexUtil.getGroup(m,1)));
+          }
           sb.Append(CharUtil.sjis2utf(txt));  //namespaceをUTFに変換
           continue;
         }
