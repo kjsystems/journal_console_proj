@@ -65,9 +65,11 @@ namespace journal.console.lib.Consoles
             .Replace("β", "&#x303b;")
             .Replace("￥", "")
             .Replace("$", "＄")
-            .Replace("＄", "&#x25e6;");
+            .Replace("＄", "&#x25e6;")
+            .Replace(")", "）")
+            .Replace("(", "（");
           //2桁全角を変換
-          var reg=new Regex("＊([０-９]{2,3})");
+          var reg =new Regex("＊([０-９]{2,3})");
           while (reg.IsMatch(txt))
           {
             var m = reg.Match(txt);
