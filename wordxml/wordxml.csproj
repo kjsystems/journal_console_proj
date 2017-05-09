@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\WordXmlCharStatus.cs" />
     <Compile Include="Models\WordXmlParaItem.cs" />
     <Compile Include="Models\WordXmlParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

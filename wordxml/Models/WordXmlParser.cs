@@ -216,16 +216,84 @@ namespace wordxml.Models
             }
         }
 
+        void SetCharStatus(XmlNode r_prop, ref List<WordXmlCharStatus> statusLst)
+        {
+            foreach (XmlNode prop in r_prop.ChildNodes)
+            {
+                if (prop.Name == "w:u")
+                {
+                    //sb.Append("<上線");
+                    var value = prop.Attributes?["w:val"]?.Value;
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        var status = new WordXmlCharStatus
+                        {
+                            AttrType = WordXmlCharStatus.EnumAttrType.Underline
+                        };
+                        switch (value)
+                        {
+                            case "dash":
+                                status.AttrList.Add("種類", "破線");
+                                break;
+                            case "dotted":
+                                status.AttrList.Add("種類", "点線");
+                                break;
+                            case "wave":
+                                status.AttrList.Add("種類", "波線");
+                                break;
+                            case "double":
+                                status.AttrList.Add("種類", "二重");
+                                break;
+                            case "single":
+                                break;
+                            default:
+                                Log.err("underline", $"無効な下線種類 {value}");
+                                break;
+                        }
+                        statusLst.Add(status);
+                    }
+                }
+                if (prop.Name == "w:b")
+                {
+                    //sb.Append("<太字>");
+                    statusLst.Add(new WordXmlCharStatus
+                    {
+                        AttrType = WordXmlCharStatus.EnumAttrType.Bold
+                    });
+                }
+                if (prop.Name == "w:vertAlign")
+                {
+                    var value = prop.Attributes?["w:val"]?.Value;
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        if (value == "subscript")
+                        {
+                            //sb.Append("<下付>");
+                            statusLst.Add(new WordXmlCharStatus
+                            {
+                                AttrType = WordXmlCharStatus.EnumAttrType.Subscript
+                            });
+                        }
+                        if (value == "superscript")
+                        {
+                            //sb.Append("<上付>");
+                            statusLst.Add(new WordXmlCharStatus
+                            {
+                                AttrType = WordXmlCharStatus.EnumAttrType.Superscript
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
         #region <w:r>
         public string ParseRun(XmlNode w_run)
         {
             var sb = new StringBuilder();
             //<w:rPr>...</w:rPr>の中にルビ等あり
             var r_prop = getFirstOfChilds(w_run, "w:rPr");
-            var isUnderline = false;
-            var isBold = false;
-            var isSubscript = false;  //上付
-            var isSuperscript = false;  //下付
+            var statusLst = new List<WordXmlCharStatus>();
 
             //フィールド文字列内かどうか endの時にまとめて出力
             SetFldChar(w_run, out bool isTextOut);
@@ -249,55 +317,13 @@ namespace wordxml.Models
 
             if (r_prop != null)
             {
-                foreach (XmlNode prop in r_prop.ChildNodes)
-                {
-                    if (prop.Name == "w:u")
-                    {
-                        sb.Append("<上線");
-                        var value = prop.Attributes?["w:val"]?.Value;
-                        if (!string.IsNullOrEmpty(value))
-                        {
-                            switch (value)
-                            {
-                                case "dash":
-                                    sb.Append(" 種類=破線");
-                                    break;
-                                case "single":
-                                    break;
-                                default:
-                                    Log.err("underline", $"無効な下線種類 {value}");
-                                    break;
-                            }
-                            sb.Append(">");
-                            isUnderline = true;
-                        }
-                    }
-                    if (prop.Name == "w:b")
-                    {
-                        sb.Append("<太字>");
-                        isBold = true;
-                    }
-                    if (prop.Name == "w:vertAlign")
-                    {
-                        var value = prop.Attributes?["w:val"]?.Value;
-                        if (!string.IsNullOrEmpty(value))
-                        {
-                            if (value == "subscript")
-                            {
-                                sb.Append("<下付>");
-                                isSubscript = true;
-                            }
-                            if (value == "superscript")
-                            {
-                                sb.Append("<上付>");
-                                isSuperscript = true;
-                            }
-                        }
-                    }
-                }
+                SetCharStatus(r_prop, ref statusLst);
             }
+            sb.Append(WordXmlCharStatus.GetText(statusLst, true));
+
             if (!string.IsNullOrEmpty(instrText))
                 sb.Append("<ruby>");
+
             var w_text = getFirstOfChilds(w_run, "w:t");
             if (w_text != null)
             {
@@ -321,7 +347,7 @@ namespace wordxml.Models
             {
                 var w_rt = w_ruby
                     .Cast<XmlNode>()
-                    .FirstOrDefault(n => n.Name== "w:rt");
+                    .FirstOrDefault(n => n.Name == "w:rt");
                 var ruby = w_rt
                     .Cast<XmlNode>()
                     .FirstOrDefault(n => n.Name == "w:r")
@@ -340,14 +366,7 @@ namespace wordxml.Models
 
             if (!string.IsNullOrEmpty(instrText))
                 sb.Append($"<rt>{instrText}</rt></ruby>");
-            if (isSuperscript)
-                sb.Append("</上付>");
-            if (isSubscript)
-                sb.Append("</下付>");
-            if (isBold)
-                sb.Append("</太字>");
-            if (isUnderline)
-                sb.Append("</上線>");
+            sb.Append(WordXmlCharStatus.GetText(statusLst, false));
             return sb.ToString();
         }
         #endregion

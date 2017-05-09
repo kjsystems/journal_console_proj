@@ -26,6 +26,17 @@ namespace journal.Test
         }
 
         [Test]
+        public void TestWordRun_下線点線()
+        {
+            var xml = @"<w:r w:rsidRPr=""0057566F""><w:rPr>
+                <w:szCs w:val=""21""/><w:u w:val=""dotted""/></w:rPr>
+                <w:t>レ</w:t></w:r>";
+            var n = CreateDocument(xml).DocumentElement.FirstChild;
+            Assert.AreEqual("w:r", n.Name);
+            var parser = new WordXmlParser(210, new ErrorLogger());
+            Assert.AreEqual("<上線 種類=点線>レ</上線>", parser.ParseRun(n));
+        }
+        [Test]
         public void TestWordRun_上付き()
         {
             var xml = @"<w:r w:rsidRPr=""0057566F""><w:rPr>
