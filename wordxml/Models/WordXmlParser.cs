@@ -15,6 +15,8 @@ namespace wordxml.Models
         public WordXmlParser(int paragraphFontSize, ILogger log) : base(log)
         {
             ParagraphFontSize = paragraphFontSize;
+            ParaList = new List<WordXmlParaItem>();
+            InstrList = new List<string>();
         }
 
         private int ParagraphFontSize { get; set; }
@@ -42,12 +44,9 @@ namespace wordxml.Models
 
         public void ProcessWordFile(string documentPath, out List<WordXmlParaItem> paralst)
         {
-            ParaList = new List<WordXmlParaItem>();
-            InstrList = new List<string>();
-            paralst = ParaList;
-
             //xmlをParseする
             ParseDocumentXml(documentPath);
+            paralst = ParaList;
         }
 
         #region <w:t>の中のテキスト
@@ -115,6 +114,10 @@ namespace wordxml.Models
                 {
                     if (node.Name == "w:ind")
                     {
+                        if (ParaList.Count == 0)
+                        {
+                            ParaList.Add(new WordXmlParaItem());
+                        }
                         ParaList.Last().Jisage = 0;
                         //<w:p w:rsidR="006F4F91" w:rsidRDefault="008D23FE" w:rsidP="00967B89"><w:pPr><w:ind w:leftChars="200" w:left="3465" w:hangingChars="900" w:hanging="2835"/>
                         var lc = getAttrInt(node, "w:leftChars");  //200 //字下げ ==> 2字
@@ -122,36 +125,17 @@ namespace wordxml.Models
                         {
                             ParaList.Last().Jisage = (int)lc / 100;
                         }
-                        var flc = getAttrInt(node, "w:firstLineChars");  //200 //字下げ ==> 2字
+                        var flc = getAttrInt(node, "w:firstLineChars");  //200 //1行目 字下げ ==> 2字
                         if (flc != null)
                         {
                             ParaList.Last().Jisage += (int)flc / 100;  //足し算なので注意
+                            ParaList.Last().Mondo -= (int)flc / 100;
                         }
                         var hc = getAttrInt(node, "w:hangingChars");  //900 //ぶらさげ ==> 9字
                         if (hc != null)
                         {
                             //lc = getAttrInt(node, "w:leftChars");  //200 //字下げ ==> 2字
                             ParaList.Last().Mondo = (int)hc / 100 - ParaList.Last().Jisage;
-                        }
-                        break;
-
-                        //<w:pPr><w:ind w:firstLineChars="500" w:firstLine="1050"/></w:pPr>  //五字下げ
-                        var fl = getAttrInt(node, "w:firstLine");  //1050 ==> 210で一字分
-                        if (fl != null)
-                        {
-                            ParaList.Last().Jisage = (int)fl / fontSize;
-                        }
-                        //<w:ind w:left="880" w:hanging="440"/>   //2字下げ＋問答２字
-                        var left = getAttrInt(node, "w:left");
-                        var hanging = getAttrInt(node, "w:hanging");
-                        if (left != null && hanging != null)
-                        {
-                            ParaList.Last().Mondo = (int)hanging / fontSize;
-                            ParaList.Last().Jisage = ((int)left - (int)hanging) / fontSize;
-                        }
-                        else if (left != null)
-                        {
-                            ParaList.Last().Jisage = (int)left / fontSize;
                         }
                     }
                 }
@@ -323,12 +307,37 @@ namespace wordxml.Models
                     sb.Append(text); //textとかrubyとか
                 }
             }
+            //注釈番号（＊１）
             var w_endn = getFirstOfChilds(w_run, "w:endnoteReference");  //<w:endnoteReference w:id=""1""/>
-            if (w_endn != null && w_endn.Attributes?["w:id"]!=null)
+            if (w_endn != null && w_endn.Attributes?["w:id"] != null)
             {
                 var sujiZen = VBUtil.toZenkaku(w_endn.Attributes?["w:id"].Value);
                 sb.Append($"<上付>{sujiZen}</上付>");
             }
+
+            //ルビ
+            var w_ruby = getFirstOfChilds(w_run, "w:ruby");
+            if (w_ruby != null)
+            {
+                var w_rt = w_ruby
+                    .Cast<XmlNode>()
+                    .FirstOrDefault(n => n.Name== "w:rt");
+                var ruby = w_rt
+                    .Cast<XmlNode>()
+                    .FirstOrDefault(n => n.Name == "w:r")
+                    .Cast<XmlNode>()
+                    .FirstOrDefault(n => n.Name == "w:t");
+                var w_rubyBase = w_ruby
+                    .Cast<XmlNode>()
+                    .FirstOrDefault(n => n.Name == "w:rubyBase");
+                var oya = w_rubyBase
+                    .Cast<XmlNode>()
+                    .FirstOrDefault(n => n.Name == "w:r")
+                    .Cast<XmlNode>()
+                    .FirstOrDefault(n => n.Name == "w:t");
+                sb.Append($"<ruby>{ParseTextElement(oya.FirstChild)}<rt>{ParseTextElement(ruby.FirstChild)}</rt></ruby>");
+            }
+
             if (!string.IsNullOrEmpty(instrText))
                 sb.Append($"<rt>{instrText}</rt></ruby>");
             if (isSuperscript)
