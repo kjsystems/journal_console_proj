@@ -23,7 +23,7 @@ namespace journal.Test
       Assert.AreEqual(1, result[0].Go);
       Assert.AreEqual(38, result[0].Page,"Page");
       Assert.AreEqual("001-04", result[0].FileName,"FileName");
-      Assert.AreEqual("　　今宵は越えぬ逢坂の関（初逢恋・一七一）", result[0].Text,"Text");
+      Assert.AreEqual("今宵は越えぬ逢坂の関（初逢恋・一七一）", result[0].Text,"Text");
       Assert.AreEqual("藤原重家の詠法", result[0].Title,"Title");
       Assert.AreEqual("―典拠のある作を中心に―", result[0].SubTitle,"SubTitle");
 
