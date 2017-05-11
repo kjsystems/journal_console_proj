@@ -11,6 +11,13 @@ namespace wordxml.Models
     public int Gyo { get; set; }
     public int Jisage { get; set; }
     public int Mondo { get; set; }
+
+    public enum AlignType
+    {
+      Left,Center,Right
+    }
+    public AlignType Align { get; set; } = AlignType.Left;
+
     public string Text { get; set; }//ルビタグを含むタグテキスト
 
   }
