@@ -129,7 +129,13 @@ namespace journal.console.lib.Consoles
         {
           sb.Append($"<字揃 右>");
         }
-        sb.AppendLine($"{para.Text}<改行>");
+        if(para.IsMidashi)
+          sb.Append($"<見出>");
+        sb.Append($"{para.Text}");
+        if (para.IsMidashi)
+          sb.AppendLine($"</見出>");
+        if (!para.IsMidashi)
+          sb.AppendLine($"<改行>");
         if (para.Jisage > 0)
           preJisage = para.Jisage;
         if (para.Mondo > 0)

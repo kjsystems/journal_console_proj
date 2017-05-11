@@ -17,7 +17,7 @@ namespace wordxml.Models
       Left,Center,Right
     }
     public AlignType Align { get; set; } = AlignType.Left;
-
+    public bool IsMidashi { get; set; }
     public string Text { get; set; }//ルビタグを含むタグテキスト
 
   }

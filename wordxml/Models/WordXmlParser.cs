@@ -126,7 +126,14 @@ http://officeopenxml.com/WPparagraph.php
                 ParaList.Last().Align = WordXmlParaItem.AlignType.Right;  //下揃え
                 break;
             }
-
+          }
+          if (node.Name == "w:rPr" &&
+              node.Cast<XmlNode>()
+                .FirstOrDefault(m => m.Name == "w:rFonts")?
+                .Attributes?["w:eastAsiaTheme"]?
+                .Value == "majorEastAsia")
+          {
+            ParaList.Last().IsMidashi = true;
           }
 
           if (node.Name == "w:ind")
