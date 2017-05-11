@@ -112,7 +112,24 @@ namespace wordxml.Models
             {
                 foreach (XmlNode node in w_prop.ChildNodes)
                 {
-                    if (node.Name == "w:ind")
+                  if (node.Name == "w:jc" && !string.IsNullOrEmpty(node.Attributes?["w:val"].Value))
+                  {
+                    switch (node.Attributes["w:val"].Value)
+                    {
+                      case "left":
+                        ParaList.Last().Align = WordXmlParaItem.AlignType.Left;
+                        break;
+                      case "center":
+                        ParaList.Last().Align = WordXmlParaItem.AlignType.Center;
+                        break;
+                      case "right":
+                        ParaList.Last().Align = WordXmlParaItem.AlignType.Right;  //下揃え
+                        break;
+                    }
+
+                  }
+
+          if (node.Name == "w:ind")
                     {
                         if (ParaList.Count == 0)
                         {
