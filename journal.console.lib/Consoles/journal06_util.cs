@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using kj.kihon;
@@ -53,41 +54,59 @@ namespace journal.console.lib.Consoles
           if (PreTag != null && PreTag.getName() == tag.getName() && PreTag.isOpen() == tag.isOpen())
             Log.err(Path, tag.GyoNo, "parsetag", $"タグの組み合わせがおかしい tag={tag.ToString()} isopen={tag.isOpen()} pre={PreTag.isOpen()}");
         }
+        //文字列
         if (tag.isText())
         {
-          var txt = tag.ToString()
-            .Replace("", "&#x3033;")
-            .Replace("〱", "α")
-            .Replace("α", "&#x3033;&#x3035;")
-            .Replace("&#12349;", "ヽ")
-            .Replace("", "&#x3035;")
-            .Replace("", "&#x303b;")
-            .Replace("β", "&#x303b;")
-            .Replace("￥", "")
-            .Replace("$", "＄")
-            .Replace("＄", "&#x25e6;")
-            .Replace(")", "）")
-            .Replace("(", "（");
-          //2桁全角を変換
-          var reg =new Regex("＊([０-９]{2,3})");
-          while (reg.IsMatch(txt))
-          {
-            var m = reg.Match(txt);
-            txt = txt.Replace("＊"+RegexUtil.getGroup(m, 1), "＊" + VBUtil.toHankaku(RegexUtil.getGroup(m,1)));
-          }
-          sb.Append(CharUtil.sjis2utf(txt));  //namespaceをUTFに変換
+          sb.Append(ToText(tag));
           continue;
         }
-        //if (tag.getName() == "上線")
-        //{
-        //  ((TagItem) tag).name_ = "下線";
-        //}
-        sb.Append(tag.ToString());
+        //タグ
+        sb.Append(ToTag(tag));
         if (tag.isTag())
         {
           PreTag = tag;
         }
       }
+      return sb.ToString();
+    }
+
+    string ToTag(TagBase tag)
+    {
+      //<大字>は<ス字 大字>
+      if (tag.getName() == "大字")
+      {
+        if (tag.isOpen() != true)
+          return "</ス字>";
+        return $"<ス字 大字>";
+      }
+      return tag.ToString();
+    }
+
+    string ToText(TagBase tag)
+    {
+      var sb=new StringBuilder();
+
+      var txt = tag.ToString()
+        .Replace("", "&#x3033;")
+        .Replace("〱", "α")
+        .Replace("α", "&#x3033;&#x3035;")
+        .Replace("&#12349;", "ヽ")
+        .Replace("", "&#x3035;")
+        .Replace("", "&#x303b;")
+        .Replace("β", "&#x303b;")
+        .Replace("￥", "")
+        .Replace("$", "＄")
+        .Replace("＄", "&#x25e6;")
+        .Replace(")", "）")
+        .Replace("(", "（");
+      //2桁全角を変換
+      var reg = new Regex("＊([０-９]{2,3})");
+      while (reg.IsMatch(txt))
+      {
+        var m = reg.Match(txt);
+        txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1), "＊" + VBUtil.toHankaku(RegexUtil.getGroup(m, 1)));
+      }
+      sb.Append(CharUtil.sjis2utf(txt));  //namespaceをUTFに変換
       return sb.ToString();
     }
   }
