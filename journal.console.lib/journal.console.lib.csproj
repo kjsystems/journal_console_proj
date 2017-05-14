@@ -83,6 +83,7 @@
     <Compile Include="Consoles\journal04_util.cs" />
     <Compile Include="Consoles\journal05_util.cs" />
     <Compile Include="Consoles\journal06_util.cs" />
+    <Compile Include="Consoles\journal07_util.cs" />
     <Compile Include="Models\ParaItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
