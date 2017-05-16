@@ -25,7 +25,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -62,6 +62,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ind2idml_proj\indcc2pdf\indcc2pdf.csproj">
+      <Project>{C8DF7B0A-7923-4079-964F-51CCF1E23A32}</Project>
+      <Name>indcc2pdf</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\kjp2idml_proj\kjp2idml.lib\kjp2idml.lib.csproj">
       <Project>{9CD641B9-4326-45D8-AA68-C608AABF19FF}</Project>
       <Name>kjp2idml.lib</Name>

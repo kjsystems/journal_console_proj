@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using indcc2pdf.Models;
 using journal.console.lib.Consoles;
 using kj.kihon;
 using kjp2idml.lib;
@@ -27,6 +28,9 @@ namespace journal08
 
         Console.WriteLine("KJPからIDMLの作成");
         new CreateIdmlFromKjpFile(log).Run(srcdir,"template.idml");
+
+        Console.WriteLine("IDMLからPDFの作成");
+        new CreatePdfFilesFromInddDir().Run(srcdir.combine("outidml"), "", srcdir.combine("pdf").createDirIfNotExist());
       }
       catch (Exception ex)
       {
