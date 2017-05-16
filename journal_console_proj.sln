@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal02", "journal02\journal02.csproj", "{14416FB3-7EA5-4019-8AB2-9283AD793638}"
 EndProject
@@ -47,7 +47,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "idml.lib", "..\idml_proj\id
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "indcc2pdf", "..\ind2idml_proj\indcc2pdf\indcc2pdf.csproj", "{C8DF7B0A-7923-4079-964F-51CCF1E23A32}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "InddAppLibCC", "..\ind2idml_proj\InddAppLibCC\InddAppLibCC.vbproj", "{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\ind2idml_proj\inddapp.shard.vb\inddapp.shard.vb.projitems*{0f4b4a91-db5b-45bd-b666-a8e00cd47e9d}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -125,6 +130,10 @@ Global
 		{C8DF7B0A-7923-4079-964F-51CCF1E23A32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8DF7B0A-7923-4079-964F-51CCF1E23A32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8DF7B0A-7923-4079-964F-51CCF1E23A32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -148,5 +157,6 @@ Global
 		{9CD641B9-4326-45D8-AA68-C608AABF19FF} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
 		{0FFCAC80-0EB4-4F40-AE64-F14B2C30AC8F} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
 		{C8DF7B0A-7923-4079-964F-51CCF1E23A32} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
+		{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
 	EndGlobalSection
 EndGlobal
