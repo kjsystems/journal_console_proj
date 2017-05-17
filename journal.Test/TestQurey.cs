@@ -42,6 +42,13 @@ namespace journal.Test
             Assert.AreEqual(50, result.Count);
         }
         [Test]
+        public void TestQureyHonbun_正徹あああ()
+        {
+            var ser = new SearchManager();
+            var result = ser.QueryHonbun(new[] { "正徹あああ" }.ToList());
+            Assert.AreEqual(0, result.Count);
+        }
+        [Test]
         public void TestQureyHonbun_And_逢恋_正徹()
         {
             var ser = new SearchManager();
