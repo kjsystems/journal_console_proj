@@ -91,8 +91,7 @@ namespace journal.console.lib.Consoles
 
                 //document.xmlをParseする
                 var parser = new WordXmlParser(ParagraphFontSize, Log);
-                parser.ProcessWordFile(documentPath);
-                parser.ProcessWordFile(endnotesPath);
+                parser.ProcessWordFile(documentPath, endnotesPath);
 
                 //テキストを作成する
                 var sb = CreateTextFromParaList(parser.ParaList);
