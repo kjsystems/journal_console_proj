@@ -42,11 +42,10 @@ namespace wordxml.Models
 
     private List<string> InstrList { get; set; }
 
-    public void ProcessWordFile(string documentPath, out List<WordXmlParaItem> paralst)
+    public void ProcessWordFile(string documentPath)
     {
       //xmlをParseする
       ParseDocumentXml(documentPath);
-      paralst = ParaList;
     }
 
     #region <w:t>の中のテキスト
