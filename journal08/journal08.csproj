@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;INDD_VERSION_CS6</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -62,9 +62,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ind2idml_proj\indcc2pdf\indcc2pdf.csproj">
-      <Project>{C8DF7B0A-7923-4079-964F-51CCF1E23A32}</Project>
-      <Name>indcc2pdf</Name>
+    <ProjectReference Include="..\..\ind2idml_proj\InddAppLibCS6\InddAppLibCS6.vbproj">
+      <Project>{bc99c27d-8eb9-4c81-86c6-627f36318f1d}</Project>
+      <Name>InddAppLibCS6</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\kjp2idml_proj\kjp2idml.lib\kjp2idml.lib.csproj">
       <Project>{9CD641B9-4326-45D8-AA68-C608AABF19FF}</Project>
@@ -75,5 +75,6 @@
       <Name>journal.console.lib</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\..\ind2idml_proj\idmltool.shared\idmltool.shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

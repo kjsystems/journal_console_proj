@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.4
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal02", "journal02\journal02.csproj", "{14416FB3-7EA5-4019-8AB2-9283AD793638}"
 EndProject
@@ -45,13 +45,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kjp2idml.lib", "..\kjp2idml
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "idml.lib", "..\idml_proj\idml.lib\idml.lib.csproj", "{0FFCAC80-0EB4-4F40-AE64-F14B2C30AC8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "indcc2pdf", "..\ind2idml_proj\indcc2pdf\indcc2pdf.csproj", "{C8DF7B0A-7923-4079-964F-51CCF1E23A32}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "idmltool.shared", "..\ind2idml_proj\idmltool.shared\idmltool.shared.shproj", "{CA66966F-C038-40DE-856D-C48F72F23629}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "InddAppLibCC", "..\ind2idml_proj\InddAppLibCC\InddAppLibCC.vbproj", "{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "InddAppLibCS6", "..\ind2idml_proj\InddAppLibCS6\InddAppLibCS6.vbproj", "{BC99C27D-8EB9-4C81-86C6-627F36318F1D}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\ind2idml_proj\inddapp.shard.vb\inddapp.shard.vb.projitems*{0f4b4a91-db5b-45bd-b666-a8e00cd47e9d}*SharedItemsImports = 4
+		..\ind2idml_proj\inddapp.shard.vb\inddapp.shard.vb.projitems*{bc99c27d-8eb9-4c81-86c6-627f36318f1d}*SharedItemsImports = 4
+		..\ind2idml_proj\idmltool.shared\idmltool.shared.projitems*{c1ae51c8-3915-4d5f-87f2-e5666c24bf88}*SharedItemsImports = 4
+		..\ind2idml_proj\idmltool.shared\idmltool.shared.projitems*{ca66966f-c038-40de-856d-c48f72f23629}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,14 +128,10 @@ Global
 		{0FFCAC80-0EB4-4F40-AE64-F14B2C30AC8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FFCAC80-0EB4-4F40-AE64-F14B2C30AC8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FFCAC80-0EB4-4F40-AE64-F14B2C30AC8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8DF7B0A-7923-4079-964F-51CCF1E23A32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8DF7B0A-7923-4079-964F-51CCF1E23A32}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8DF7B0A-7923-4079-964F-51CCF1E23A32}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8DF7B0A-7923-4079-964F-51CCF1E23A32}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC99C27D-8EB9-4C81-86C6-627F36318F1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC99C27D-8EB9-4C81-86C6-627F36318F1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC99C27D-8EB9-4C81-86C6-627F36318F1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC99C27D-8EB9-4C81-86C6-627F36318F1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,7 +154,7 @@ Global
 		{5BA4B3D2-C15E-4948-BB1F-3694DDB55690} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
 		{9CD641B9-4326-45D8-AA68-C608AABF19FF} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
 		{0FFCAC80-0EB4-4F40-AE64-F14B2C30AC8F} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
-		{C8DF7B0A-7923-4079-964F-51CCF1E23A32} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
-		{0F4B4A91-DB5B-45BD-B666-A8E00CD47E9D} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
+		{CA66966F-C038-40DE-856D-C48F72F23629} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
+		{BC99C27D-8EB9-4C81-86C6-627F36318F1D} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
 	EndGlobalSection
 EndGlobal
