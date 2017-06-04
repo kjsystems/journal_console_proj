@@ -1,10 +1,11 @@
 ﻿using kj.kihon;
-using kj.kihon.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using kjlib.zip.Models;
 using wordxml.Models;
 
 namespace journal.console.lib.Consoles
@@ -12,27 +13,49 @@ namespace journal.console.lib.Consoles
     public class journal02_util : kihon_base
     {
         public string JobDir { get; set; }
-        public int ParagraphFontSize { get; set; }  //210とか180とか
+        public int ParagraphFontSize { get; set; } //210とか180とか
+
+        private string OutMeltWordDir { get; set; }
+        private string OutMeltWordDirSubWord => OutMeltWordDir.combine("word");
+
+        public string WordXmlDocumentPath => OutMeltWordDirSubWord.combine("document.xml");
+        public string WordXmlEndnotesPath => OutMeltWordDirSubWord.combine("endnotes.xml");
+        public string WordXmlStylesPath => OutMeltWordDirSubWord.combine("styles.xml");
 
         public journal02_util(ILogger log) : base(log)
         {
         }
 
-        void MeltWordFile(string wordpath, out string documentPath, out string endnotesPath, out string stylePath)
+        public void MeltFromStream(Stream wordStream, string outMeltDir)
         {
             var zip = new ZIPUtil();
-            var wordxmlDir = JobDir.combine("wordxml").createDirIfNotExist();  //解凍するディレクトリ
-            var outDir = wordxmlDir.combine(wordpath.getFileNameWithoutExtension());
-            zip.meltZip(wordpath, outDir);
-            System.Console.WriteLine($"==>zip:{outDir}");
+            //var wordxmlDir = JobDir.combine("wordxml").createDirIfNotExist(); //解凍するディレクトリ
+            //var outMeltDir = outDir.combine(wordpath.getFileNameWithoutExtension());
+            OutMeltWordDir = outMeltDir;
 
-            documentPath = outDir.combine("word").combine("document.xml");
-            documentPath.existFile();
-            endnotesPath = outDir.combine("word").combine("endnotes.xml");
-            endnotesPath.existFile();
-            stylePath = outDir.combine("word").combine("styles.xml");
-            stylePath.existFile();
-            System.Console.WriteLine($"==>xml:{documentPath}");
+            zip.meltZip(wordStream, outMeltDir);
+            System.Console.WriteLine($"==>zip:{outMeltDir}");
+
+        }
+
+        void MeltFromWordFile(
+            string wordpath /*, out string documentPath, out string endnotesPath, out string stylePath*/)
+        {
+            var zip = new ZIPUtil();
+            var wordxmlDir = JobDir.combine("wordxml").createDirIfNotExist(); //解凍するディレクトリ
+            var outMeltDir = wordxmlDir.combine(wordpath.getFileNameWithoutExtension());
+            OutMeltWordDir = outMeltDir;
+
+            zip.meltZip(wordpath, outMeltDir);
+            System.Console.WriteLine($"==>zip:{outMeltDir}");
+
+            //documentPath = outMeltDir.combine("word").combine("document.xml");
+            //documentPath.existFile();
+            //endnotesPath = outMeltDir.combine("word").combine("endnotes.xml");
+            //endnotesPath.existFile();
+            //stylePath = outMeltDir.combine("word").combine("styles.xml");
+            //stylePath.existFile();
+            //System.Console.WriteLine($"==>xml:{documentPath}");
         }
 
         void GetParagraphFontSize(string stylePath)
@@ -45,20 +68,33 @@ namespace journal.console.lib.Consoles
 
                 ParagraphFontSize = 210;
                 var sz = root //w:styles
-                  .ChildNodes.Cast<XmlNode>() //w:stylesの子供
-                  .FirstOrDefault(s => s.Name == "w:style" && s.Attributes["w:type"].Value == "paragraph")?
-                  .ChildNodes.Cast<XmlNode>() //w:styleの子供
-                  .FirstOrDefault(s => s.Name == "w:rPr")?
-                  .ChildNodes.Cast<XmlNode>() //w:rPrの子供
-                  .FirstOrDefault(s => s.Name == "w:sz")?
-                  .Attributes["w:val"]
-                  .Value.toInt(0) * 10;
+                             .ChildNodes.Cast<XmlNode>() //w:stylesの子供
+                             .FirstOrDefault(s => s.Name == "w:style" && s.Attributes["w:type"].Value == "paragraph")?
+                             .ChildNodes.Cast<XmlNode>() //w:styleの子供
+                             .FirstOrDefault(s => s.Name == "w:rPr")?
+                             .ChildNodes.Cast<XmlNode>() //w:rPrの子供
+                             .FirstOrDefault(s => s.Name == "w:sz")?
+                             .Attributes["w:val"]
+                             .Value.toInt(0) * 10;
                 if (sz != null)
-                    ParagraphFontSize = (int)sz;
+                    ParagraphFontSize = (int) sz;
                 Console.WriteLine($"ParagraphFontSize={ParagraphFontSize}");
             }
         }
 
+        //Wordの解凍ディレクトリからテキストを取得する
+        public void ParseWordMeltDir(out string sb)
+        {
+            //paragraphの文字サイズを取得する（字下げ用）
+            GetParagraphFontSize(WordXmlStylesPath);
+
+            //document.xmlをParseする
+            var parser = new WordXmlParser(ParagraphFontSize, Log);
+            parser.ProcessWordFile(WordXmlDocumentPath, WordXmlEndnotesPath);
+
+            //テキストを作成する
+            sb = CreateTextFromParaList(parser.ParaList);
+        }
 
         public void Run(string jobdir)
         {
@@ -84,17 +120,10 @@ namespace journal.console.lib.Consoles
                 System.Console.WriteLine($"{wordpath.i + 1}/{srcfiles.Length} word:{wordpath}");
                 //解凍する
                 //戻り値は \word\document.xml
-                MeltWordFile(wordpath.v, out string documentPath, out string endnotesPath, out string stylePath);
+                MeltFromWordFile(wordpath.v);
 
-                //paragraphの文字サイズを取得する（字下げ用）
-                GetParagraphFontSize(stylePath);
-
-                //document.xmlをParseする
-                var parser = new WordXmlParser(ParagraphFontSize, Log);
-                parser.ProcessWordFile(documentPath, endnotesPath);
-
-                //テキストを作成する
-                var sb = CreateTextFromParaList(parser.ParaList);
+                //Wordの解凍ディレクトリからテキストを取得する
+                ParseWordMeltDir(out string sb);
 
                 var outpath = jobdir
                 .combine("txt")
@@ -105,7 +134,7 @@ namespace journal.console.lib.Consoles
             }
         }
 
-        public static StringBuilder CreateTextFromParaList(List<WordXmlParaItem> paralst)
+        public static string CreateTextFromParaList(List<WordXmlParaItem> paralst)
         {
             var sb = new StringBuilder();
             int preJisage = -1;
@@ -142,7 +171,7 @@ namespace journal.console.lib.Consoles
                 if (para.Mondo > 0)
                     preMondo = para.Mondo;
             }
-            return sb;
+            return sb.ToString();
         }
     }
 }

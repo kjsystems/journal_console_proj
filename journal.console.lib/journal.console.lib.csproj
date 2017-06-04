@@ -37,10 +37,10 @@
       <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
     </Reference>
     <Reference Include="kjlib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\kjsystems.kjlib.1.0.9\lib\kjlib.dll</HintPath>
+      <HintPath>..\..\doc2idmlfunctionapp\packages\kjsystems.kjlib.1.0.12\lib\kjlib.dll</HintPath>
     </Reference>
-    <Reference Include="kjlib.winfrm, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\kjsystems.kjlib.1.0.9\lib\kjlib.winfrm.dll</HintPath>
+    <Reference Include="kjlib.zip, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\doc2idmlfunctionapp\packages\kjsystems.kjlib.zip.1.0.2\lib\kjlib.zip.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
