@@ -31,6 +31,14 @@ namespace journal.console.lib.Consoles
             }
         }
 
+        public void RunFromPath(string srcpath, string outpath)
+        {
+            Path = srcpath;
+            System.Console.WriteLine($"{srcpath}");
+            System.Console.WriteLine($"==>{outpath}");
+            FileUtil.writeTextToFile(CreateTextFromPath(srcpath), Encoding.UTF8, outpath);
+        }
+
         private TagBase PreTag { get; set; }
         string CreateTextFromPath(string path)
         {
