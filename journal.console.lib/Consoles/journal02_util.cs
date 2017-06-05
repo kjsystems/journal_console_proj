@@ -1,11 +1,12 @@
-﻿using kj.kihon;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using kj.kihon;
 using kjlib.zip.Models;
+using Microsoft.VisualBasic.Logging;
 using wordxml.Models;
 
 namespace journal.console.lib.Consoles

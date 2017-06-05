@@ -32,14 +32,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="kjlib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\kjsystems.kjlib.1.0.9\lib\kjlib.dll</HintPath>
-    </Reference>
-    <Reference Include="kjlib.winfrm, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\kjsystems.kjlib.1.0.9\lib\kjlib.winfrm.dll</HintPath>
+      <HintPath>..\packages\kjsystems.kjlib.1.0.12\lib\kjlib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
