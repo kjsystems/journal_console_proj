@@ -21,6 +21,10 @@ namespace journal08
 
                 Console.WriteLine("TXTからKJPの作成");
                 new journal06_util(log).Run(srcdir);
+                if (log.ErrorCount>0)
+                {
+                    throw new Exception("journal08 中断します");
+                }
 
                 Console.WriteLine("KJPからIDMLの作成");
                 new CreateIdmlFromKjpFile(log).Run(srcdir, "template.idml");

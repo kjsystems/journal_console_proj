@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using kj.kihon;
@@ -41,9 +42,13 @@ namespace journal.console.lib.Consoles
         private TagBase PreTag { get; set; }
         string CreateTextFromPath(string path)
         {
+            Path = path;
             var util = new TagTextUtil(Log);
             var taglst = util.parseTextFromPath(path, Encoding.UTF8);
 
+            var dict=new Dictionary<string,int>();
+            dict["ruby"] = 0;
+            dict["rt"] = 0;
             var sb = new StringBuilder();
             foreach (TagBase tag in taglst)
             {
@@ -65,9 +70,21 @@ namespace journal.console.lib.Consoles
                 //文字列
                 if (tag.isText())
                 {
+                    if (dict["ruby"]>0 && dict["rt"]==2)
+                    {
+                        Log.err(Path,tag.GyoNo,"journal06",$"<rt>の文字列は無効 [{tag.ToString()}]");
+                    }
+
                     sb.Append(ToText(tag));
                     continue;
                 }
+                if (tag.getName() == "ruby")
+                {
+                    dict["ruby"] = tag.isOpen() ? 1 : 0;
+                    dict["rt"] = 0;  //reset
+                }
+                if (tag.getName() == "rt")
+                    dict["rt"] = tag.isOpen() ? 1 : 2;  //閉じたら2
                 //タグ
                 sb.Append(ToTag(tag));
                 if (tag.isTag())
