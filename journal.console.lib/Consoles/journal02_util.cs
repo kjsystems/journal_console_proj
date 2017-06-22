@@ -29,6 +29,9 @@ namespace journal.console.lib.Consoles
 
         public void MeltFromStream(Stream wordStream, string outMeltDir)
         {
+            if(wordStream==null || wordStream.Length==0)
+                throw new ArgumentNullException("Streamgaがnullまたは長さがゼロ");
+
             var zip = new ZIPUtil();
             //var wordxmlDir = JobDir.combine("wordxml").createDirIfNotExist(); //解凍するディレクトリ
             //var outMeltDir = outDir.combine(wordpath.getFileNameWithoutExtension());
@@ -39,13 +42,17 @@ namespace journal.console.lib.Consoles
 
         }
 
-        void MeltFromWordFile(
-            string wordpath /*, out string documentPath, out string endnotesPath, out string stylePath*/)
+        public void MeltFromWordFile(
+            string wordpath, /*, out string documentPath, out string endnotesPath, out string stylePath*/
+            string outMeltDir)
         {
             var zip = new ZIPUtil();
-            var wordxmlDir = JobDir.combine("wordxml").createDirIfNotExist(); //解凍するディレクトリ
-            var outMeltDir = wordxmlDir.combine(wordpath.getFileNameWithoutExtension());
+            //var wordxmlDir = JobDir.combine("wordxml").createDirIfNotExist(); //解凍するディレクトリ
+            //var outMeltDir = wordxmlDir.combine(wordpath.getFileNameWithoutExtension());
             OutMeltWordDir = outMeltDir;
+
+            wordpath.existFile();
+            outMeltDir.existDir();
 
             zip.meltZip(wordpath, outMeltDir);
             System.Console.WriteLine($"==>zip:{outMeltDir}");
@@ -121,7 +128,8 @@ namespace journal.console.lib.Consoles
                 System.Console.WriteLine($"{wordpath.i + 1}/{srcfiles.Length} word:{wordpath}");
                 //解凍する
                 //戻り値は \word\document.xml
-                MeltFromWordFile(wordpath.v);
+                var wordMeltDir = wordpath.v.getDirectoryName().combine("wordxml").createDirIfNotExist();
+                MeltFromWordFile(wordpath.v,wordMeltDir);
 
                 //Wordの解凍ディレクトリからテキストを取得する
                 ParseWordMeltDir(out string sb);
