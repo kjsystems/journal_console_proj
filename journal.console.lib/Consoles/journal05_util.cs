@@ -37,7 +37,7 @@ namespace journal.console.lib.Consoles
       Console.WriteLine("{0}", "Upload json to Blob ...");
       Console.WriteLine("{0}", conpath);
       var az = new AzureBlobUtil();
-      az.CreateClient("webtoshoConnectionString");
+      az.CreateBlobClient("webtoshoConnectionString");
       var container = az.CreateDirectory("journal");
       az.UploadFile(container,conpath);
     }
