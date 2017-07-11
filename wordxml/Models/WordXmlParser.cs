@@ -363,8 +363,7 @@ namespace wordxml.Models
             var w_endn = getFirstOfChilds(w_run, "w:endnoteReference");  //<w:endnoteReference w:id=""1""/>
             if (w_endn != null && w_endn.Attributes?["w:id"] != null)
             {
-                var util = new ZenHanUtil();
-                var sujiZen = util.ToZenkaku(w_endn.Attributes?["w:id"].Value);
+                var sujiZen = ZenHanUtil.ToZenkaku(w_endn.Attributes?["w:id"].Value);
                 sb.Append($"{sujiZen}");
             }
 
@@ -372,8 +371,7 @@ namespace wordxml.Models
             w_endn = getFirstOfChilds(w_run, "w:endnoteRef");  //<w:endnoteReference w:id=""1""/>
             if (w_endn != null)
             {
-                var util = new ZenHanUtil();
-                var sujiZen = util.ToZenkaku(ChushakuIndex.ToString());
+                var sujiZen = ZenHanUtil.ToZenkaku(ChushakuIndex.ToString());
                 sb.Append($"{sujiZen}");
                 ChushakuIndex++;
             }

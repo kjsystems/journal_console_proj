@@ -129,8 +129,7 @@ namespace journal.console.lib.Consoles
             while (reg.IsMatch(txt))
             {
                 var m = reg.Match(txt);
-                var util = new ZenHanUtil();
-                txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1), "＊" + util.ToHankaku(RegexUtil.getGroup(m, 1)));
+                txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1), "＊" + ZenHanUtil.ToHankaku(RegexUtil.getGroup(m, 1)));
             }
             sb.Append(CharUtil.sjis2utf(txt));  //namespaceをUTFに変換
             return sb.ToString();
