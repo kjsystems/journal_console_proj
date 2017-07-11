@@ -92,7 +92,7 @@ namespace journal.console.lib.Consoles
                     PreTag = tag;
                 }
             }
-            return sb.ToString();
+            return sb.ToString().Replace("――", "<分禁>――</分禁>");
         }
 
         string ToTag(TagBase tag)
