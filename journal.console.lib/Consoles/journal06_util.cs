@@ -129,7 +129,14 @@ namespace journal.console.lib.Consoles
             while (reg.IsMatch(txt))
             {
                 var m = reg.Match(txt);
-                txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1), "＊" + ZenHanUtil.ToHankaku(RegexUtil.getGroup(m, 1)));
+                txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1), "＊<ス字 ゴシ>" + ZenHanUtil.ToHankaku(RegexUtil.getGroup(m, 1))+ "</ス字>");
+            }
+            //1桁全角を変換
+            reg = new Regex("＊([０-９]{1})");
+            while (reg.IsMatch(txt))
+            {
+                var m = reg.Match(txt);
+                txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1), "＊<ス字 ゴシ>" + RegexUtil.getGroup(m, 1) + "</ス字>");
             }
             sb.Append(CharUtil.sjis2utf(txt));  //namespaceをUTFに変換
             return sb.ToString();
