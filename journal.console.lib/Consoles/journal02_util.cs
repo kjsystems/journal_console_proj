@@ -8,6 +8,7 @@ using kj.kihon;
 using kjlib.zip.Models;
 using Microsoft.VisualBasic.Logging;
 using wordxml.Models;
+using kj.wordlib;
 
 namespace journal.console.lib.Consoles
 {
@@ -104,6 +105,26 @@ namespace journal.console.lib.Consoles
             sb = CreateTextFromParaList(parser.ParaList);
         }
 
+        // docxで保存する
+        void SaveDocx(string docdir)
+        {
+            var util = new WordUtil(Log);
+            foreach (var docpath in docdir.getFiles("*.doc", false))
+            {
+                if (docpath.getExtension().ToLower() == ".docx")
+                    continue;
+                var docxpath = docpath.getDirectoryName().combine(docpath.getFileNameWithoutExtension() + ".docx");
+                Console.WriteLine($"==>{docxpath}");
+
+                //docxで保存
+                util.SaveAsDocx(docpath, docxpath);
+
+                //docは移動する
+                //System.IO.File.Move(docpath,docdir.combine("out").createDirIfNotExist().combine((docpath.getFileName())));
+            }
+            util.quit();
+        }
+
         public void Run(string jobdir)
         {
             jobdir.existDir();
@@ -111,7 +132,11 @@ namespace journal.console.lib.Consoles
 
             var docdir = jobdir.combine("doc");
             docdir.existDir();
-            string[] srcfiles = docdir.getFiles("*.doc", false);
+
+            //docをdocxで保存する
+            SaveDocx(docdir);
+
+            string[] srcfiles = docdir.getFiles("*.docx", false);
             if (srcfiles.Length == 0)
                 throw new Exception($"docディレクトリにWORDファイルがない DIR={docdir}");
 
@@ -120,12 +145,7 @@ namespace journal.console.lib.Consoles
                 //開いているファイルは使わない
                 if (wordpath.v.getFileNameWithoutExtension().StartsWith("~$"))
                     continue;
-                if (wordpath.v.getExtension().ToLower() == ".doc")
-                {
-                    Log.err(wordpath.v, 0, "procword", "docx形式で保存してください");
-                    continue;
-                }
-                System.Console.WriteLine($"{wordpath.i + 1}/{srcfiles.Length} word:{wordpath}");
+                System.Console.WriteLine($"{wordpath.i + 1}/{srcfiles.Length} word:{wordpath.v}");
                 //解凍する
                 //戻り値は \word\document.xml
                 var wordMeltDir = wordpath.v.getDirectoryName().combine("wordxml").createDirIfNotExist();
