@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal02", "journal02\journal02.csproj", "{14416FB3-7EA5-4019-8AB2-9283AD793638}"
 EndProject
@@ -48,6 +48,8 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "idmltool.shared", "..\ind2idml_proj\idmltool.shared\idmltool.shared.shproj", "{CA66966F-C038-40DE-856D-C48F72F23629}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "InddAppLibCS6", "..\ind2idml_proj\InddAppLibCS6\InddAppLibCS6.vbproj", "{BC99C27D-8EB9-4C81-86C6-627F36318F1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wordlib", "..\word_proj\wordlib\wordlib.csproj", "{D99827ED-3E0F-4AE5-8CCD-344B39D9137C}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -132,6 +134,10 @@ Global
 		{BC99C27D-8EB9-4C81-86C6-627F36318F1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC99C27D-8EB9-4C81-86C6-627F36318F1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC99C27D-8EB9-4C81-86C6-627F36318F1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D99827ED-3E0F-4AE5-8CCD-344B39D9137C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D99827ED-3E0F-4AE5-8CCD-344B39D9137C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D99827ED-3E0F-4AE5-8CCD-344B39D9137C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D99827ED-3E0F-4AE5-8CCD-344B39D9137C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,5 +162,6 @@ Global
 		{0FFCAC80-0EB4-4F40-AE64-F14B2C30AC8F} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
 		{CA66966F-C038-40DE-856D-C48F72F23629} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
 		{BC99C27D-8EB9-4C81-86C6-627F36318F1D} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
+		{D99827ED-3E0F-4AE5-8CCD-344B39D9137C} = {D005BBF8-8885-44E5-B0B6-ECDB0726C672}
 	EndGlobalSection
 EndGlobal

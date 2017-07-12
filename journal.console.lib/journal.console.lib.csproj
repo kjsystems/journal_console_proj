@@ -108,6 +108,10 @@
       <Project>{75D03E75-4006-486B-A842-204EF3207D5F}</Project>
       <Name>journal.search.lib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\word_proj\wordlib\wordlib.csproj">
+      <Project>{d99827ed-3e0f-4ae5-8ccd-344b39d9137c}</Project>
+      <Name>wordlib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\wordxml\wordxml.csproj">
       <Project>{0932a1bb-6acc-4c6d-8855-d6c00b391bfc}</Project>
       <Name>wordxml</Name>
