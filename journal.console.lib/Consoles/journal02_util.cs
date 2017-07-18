@@ -163,42 +163,62 @@ namespace journal.console.lib.Consoles
             }
         }
 
-        public static string CreateTextFromParaList(List<WordXmlParaItem> paralst)
+        int _preJisage = 0;
+        int _preMondo = 0;
+        public string CreateTextFromPara(WordXmlParaItem para)
         {
             var sb = new StringBuilder();
-            int preJisage = -1;
-            int preMondo = -1;
-            foreach (var para in paralst)
+            //1行目だけインデント
+            if (para.Jisage == -para.Mondo)
             {
-                if (para.Jisage != 0)  //マイナスもあり
-                    sb.Append($"<字下 {para.Jisage}>");
-                if (para.Jisage == 0 && preJisage > 0)
-                {
-                    sb.Append($"<字下 0>");
-                    preJisage = -1;
-                }
-                if (para.Mondo != 0)  //マイナスもあり
-                    sb.Append($"<問答 {para.Mondo}>");
-                if (para.Mondo == 0 && preMondo > 0)
-                {
-                    sb.Append($"<問答 0>");
-                    preMondo = -1;
-                }
-                if (para.Align == WordXmlParaItem.AlignType.Right)
+                if (para.Jisage >= 20)
                 {
                     sb.Append($"<字揃 右>");
                 }
-                if (para.IsMidashi)
-                    sb.Append($"<見出>");
-                sb.Append($"{para.Text}");
-                if (para.IsMidashi)
-                    sb.AppendLine($"</見出>");
-                if (!para.IsMidashi)
-                    sb.AppendLine($"<改行>");
-                if (para.Jisage > 0)
-                    preJisage = para.Jisage;
-                if (para.Mondo > 0)
-                    preMondo = para.Mondo;
+                else
+                {
+                    if(_preJisage!=0)
+                        sb.Append($"<字下 0>");
+                    if (_preMondo != 0)
+                        sb.Append($"<問答 0>");
+                    //全角SPを個数分挿入する
+                    sb.Append(new string('　', para.Jisage));
+                }
+                _preJisage = 0;
+                _preMondo = 0;
+            }
+            else
+            {
+                if (para.Jisage != _preJisage)  //マイナスもあり
+                    sb.Append($"<字下 {para.Jisage}>");
+                if (para.Mondo != _preMondo)  //マイナスもあり
+                    sb.Append($"<問答 {para.Mondo}>");
+                _preJisage = para.Jisage;
+                _preMondo = para.Mondo;
+            }
+
+            if (para.Align == WordXmlParaItem.AlignType.Right)
+            {
+                sb.Append($"<字揃 右>");
+            }
+            if (para.IsMidashi)
+                sb.Append($"<見出>");
+            sb.Append($"{para.Text}");
+            if (para.IsMidashi)
+                sb.AppendLine($"</見出>");
+            if (!para.IsMidashi)
+                sb.AppendLine($"<改行>");
+            //_preJisage = para.Jisage;
+            //_preMondo = para.Mondo;
+            return sb.ToString();
+        }
+        public string CreateTextFromParaList(List<WordXmlParaItem> paralst)
+        {
+            var sb = new StringBuilder();
+            foreach (var para in paralst)
+            {
+                var buf = CreateTextFromPara(para);
+                sb.Append(buf);
             }
             return sb.ToString();
         }
