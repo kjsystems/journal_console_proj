@@ -125,6 +125,29 @@ namespace journal.console.lib.Consoles
             util.quit();
         }
 
+        // Wordファイル単体で処理
+        public void RunWordPath(string jobdir,IEnumerable<string> wordlst)
+        {
+            foreach (string wordpath in wordlst)
+            {
+                //解凍する
+                //戻り値は \word\document.xml
+                var wordMeltDir = wordpath.getDirectoryName().combine("wordxml").createDirIfNotExist();
+                MeltFromWordFile(wordpath, wordMeltDir);
+
+                //Wordの解凍ディレクトリからテキストを取得する
+                ParseWordMeltDir(out string sb);
+
+                var outpath = jobdir
+                    .combine("txt")
+                    .createDirIfNotExist()
+                    .combine(wordpath.getFileNameWithoutExtension() + ".txt");
+                Console.WriteLine($"==>{outpath}");
+                FileUtil.writeTextToFile(sb.ToString(), Encoding.UTF8, outpath);
+            }
+        }
+
+        // Wordファイルをフォルダで処理
         public void Run(string jobdir)
         {
             jobdir.existDir();
@@ -145,21 +168,8 @@ namespace journal.console.lib.Consoles
                 //開いているファイルは使わない
                 if (wordpath.v.getFileNameWithoutExtension().StartsWith("~$"))
                     continue;
-                System.Console.WriteLine($"{wordpath.i + 1}/{srcfiles.Length} word:{wordpath.v}");
-                //解凍する
-                //戻り値は \word\document.xml
-                var wordMeltDir = wordpath.v.getDirectoryName().combine("wordxml").createDirIfNotExist();
-                MeltFromWordFile(wordpath.v,wordMeltDir);
-
-                //Wordの解凍ディレクトリからテキストを取得する
-                ParseWordMeltDir(out string sb);
-
-                var outpath = jobdir
-                .combine("txt")
-                .createDirIfNotExist()
-                .combine(wordpath.v.getFileNameWithoutExtension() + ".txt");
-                System.Console.WriteLine($"==>{outpath}");
-                FileUtil.writeTextToFile(sb.ToString(), Encoding.UTF8, outpath);
+                Console.WriteLine($"{wordpath.i + 1}/{srcfiles.Length} word:{wordpath.v}");
+                RunWordPath(jobdir,new List<string>{ wordpath.v});
             }
         }
 
