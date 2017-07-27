@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using journal.console.lib.Models;
 using kj.kihon;
 using kj.kihon.Utils;
 
@@ -39,19 +40,102 @@ namespace journal.console.lib.Consoles
             FileUtil.writeTextToFile(CreateTextFromPath(srcpath), Encoding.UTF8, outpath);
         }
 
+        // 先頭改行を削除
+        string TrimLeftKaigyo(string buf)
+        {
+            char[] tbl = { '\r', '\n' };
+            while (true)
+            {
+                if (buf.Length > 0 && Array.IndexOf(tbl, buf[0]) >= 0)
+                {
+                    buf = buf.Substring(1);
+                    continue;
+                }
+                break;
+            }
+            return buf;
+        }
+
+        // <改行>LISTを作成 <改行>は最後に入る
+        void CreateKaigyoList(string path, out List<ParaItem> paralst)
+        {
+            paralst = new List<ParaItem>();
+            var util = new TagTextUtil(Log);
+            var taglst = util.parseTextFromPath(path, Encoding.UTF8);
+
+            var sb=new StringBuilder();
+            foreach (var tag in taglst)
+            {
+                // 先頭改行を削除
+                sb.Append(TrimLeftKaigyo( tag.ToString()));
+                if (tag.getName() == "改行")
+                {
+                    paralst.Add(new ParaItem { Gyo = tag.GyoNo, Text = sb.ToString() });
+                    sb.Length = 0;
+                }
+            }
+        }
+
+        void SetJisageMondo(ParaItem para, ref int curJisage, ref int curMondo)
+        {
+
+            var taglst = TagTextUtil.parseText(para.Text);
+            foreach (TagBase tag in taglst)
+            {
+                //<揃字>で字下はリセットしない
+                //if (tag.getName() == "揃字") 
+                //{
+                //    para.IsJisoroe = true;
+                //    curJisage = 0;
+                //    curMondo = 0;
+                //}
+                if (tag.getName() == "字下")
+                    curJisage = tag.getValue("").toInt(0);
+                if (tag.getName() == "問答")
+                    curMondo = tag.getValue("").toInt(0);
+            }
+            para.Jisage = curJisage;
+            para.Mondo = curMondo;
+        }
+
         private TagBase PreTag { get; set; }
         string CreateTextFromPath(string path)
         {
             Path = path;
-            var util = new TagTextUtil(Log);
-            var taglst = util.parseTextFromPath(path, Encoding.UTF8);
 
-            var dict=new Dictionary<string,int>();
+            //改行ごとに処理する
+            CreateKaigyoList(path,out List<ParaItem> paralst);
+
+            var sb = new StringBuilder();
+            var curJisage = 0;
+            var curMondo = 0;
+            foreach (var para in paralst)
+            {
+                //字下,問答を各段落に設定する
+                SetJisageMondo(para,ref curJisage,ref curMondo);
+
+                if(para.IsJisoroe!=true)
+                    sb.Append($"<字下 {para.Jisage}><問答 {para.Mondo}>");
+                sb.Append(CreateTextFromPara(para));
+                sb.Append("\r\n");
+            }
+            return sb.ToString().Replace("――", "<分禁>――</分禁>");
+        }
+
+        string CreateTextFromPara(ParaItem para)
+        {
+            var dict = new Dictionary<string, int>();
             dict["ruby"] = 0;
             dict["rt"] = 0;
+
             var sb = new StringBuilder();
-            foreach (TagBase tag in taglst)
+            var taglst = TagTextUtil.parseText(para.Text);
+            foreach (var tag in taglst)
             {
+                string[] mushi = { "字下", "問答" };
+                if (Array.IndexOf(mushi, tag.getName()) >= 0)
+                    continue;
+
                 const string TAG_KASEN = "下線";
                 const string TAG_RUBY = "ruby";
                 if (tag.getName() == "上線")
@@ -70,9 +154,9 @@ namespace journal.console.lib.Consoles
                 //文字列
                 if (tag.isText())
                 {
-                    if (dict["ruby"]>0 && dict["rt"]==2)
+                    if (dict["ruby"] > 0 && dict["rt"] == 2)
                     {
-                        Log.err(Path,tag.GyoNo,"journal06",$"<rt>の文字列は無効 [{tag.ToString()}]");
+                        Log.err(Path, tag.GyoNo, "journal06", $"<rt>の文字列は無効 [{tag.ToString()}]");
                     }
 
                     sb.Append(ToText(tag));
@@ -92,7 +176,7 @@ namespace journal.console.lib.Consoles
                     PreTag = tag;
                 }
             }
-            return sb.ToString().Replace("――", "<分禁>――</分禁>");
+            return sb.ToString();
         }
 
         string ToTag(TagBase tag)
