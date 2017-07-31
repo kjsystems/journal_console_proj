@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using journal.console.lib.Models;
@@ -111,6 +112,12 @@ namespace journal.console.lib.Consoles
             var curMondo = 0;
             foreach (var para in paralst)
             {
+                //<選択 ラベル名>を先に読み込み
+                var taglst = TagTextUtil.parseText(para.Text);
+                var label = taglst.FirstOrDefault(m => m.getName() == "選択"); 
+                if (label!= null)
+                    sb.Append(label.ToString());
+                
                 //字下,問答を各段落に設定する
                 SetJisageMondo(para,ref curJisage,ref curMondo);
 
@@ -132,7 +139,7 @@ namespace journal.console.lib.Consoles
             var taglst = TagTextUtil.parseText(para.Text);
             foreach (var tag in taglst)
             {
-                string[] mushi = { "字下", "問答" };
+                string[] mushi = { "字下", "問答","選択" };
                 if (Array.IndexOf(mushi, tag.getName()) >= 0)
                     continue;
 
