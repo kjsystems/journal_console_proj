@@ -14,5 +14,6 @@ namespace journal.console.lib.Models
         public int Jisage { get; set; } = 0;
         public int Mondo { get; set; } = 0;
         public bool IsJisoroe { get; set; } = false;
+        public string Label { get; set; }
     }
 }
