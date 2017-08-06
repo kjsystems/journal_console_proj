@@ -25,7 +25,7 @@ namespace journal01
             }
             catch (Exception ex)
             {
-                log.err("kenkyu02", ex.Message);
+                log.err("journal01", ex.Message);
             }
             log.showdosmsg();
         }
