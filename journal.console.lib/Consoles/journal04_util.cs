@@ -18,13 +18,32 @@ namespace journal.console.lib.Consoles
     {
         public const string FILENAME_INDEX_JSON = "index.json";
         public const string FILENAME_CONTENTS_JSON = "contents.json";
+        public const string FILENAME_MOKUJI_JSON = "mokuji.json";
 
         public int Id { get; set; }
         public string ContentsPath { get; set; }
+        public string MokujiPath { get; set; }
 
         public journal04_util(ILogger log) : base(log)
         {
             Id = 1;
+        }
+
+        void ReadMokuji(out List<JoMokuji> mokulst)
+        {
+            mokulst = new List<JoMokuji>();
+            var rd = new CSVFileReader(new ErrorLogger());
+            rd.setupTargetToken('\t');
+            var csv = rd.readFile(MokujiPath, Encoding.UTF8, true);
+            foreach (var row in csv.Rows)
+            {
+                mokulst.Add(new JoMokuji
+                {
+                    Id = row["ID"].toInt(0), Go = row["号数"], Tokushu = row["特集名"], 
+                    Henshu = row["編集委員"],
+                    IsDebug = row["編集中"]=="*"
+                });
+            }
         }
 
         public void Run(string srcdir)
@@ -34,12 +53,19 @@ namespace journal.console.lib.Consoles
             xmldir.existDir();
             ContentsPath = srcdir.combine("list").combine("contents.txt");
             ContentsPath.existFile();
+            MokujiPath = srcdir.combine("list").combine("mokuji.txt");
+            MokujiPath.existFile();
             var idxdir = srcdir.combine("index").createDirIfNotExist();
 
             //contents一覧を読み込み
             Console.WriteLine($"コンテンツの読み込み");
             ReadContents(out List<JournalContent> conlst);
 
+            //mokuji.txtを読み込み
+            Console.WriteLine($"目次の読み込み");
+            ReadMokuji(out List<JoMokuji> mokulst);
+            
+            
             Console.WriteLine(xmldir);
             var idxlst = new List<BunshoResult>();
             Console.WriteLine($"インデックスの作成");
@@ -58,6 +84,10 @@ namespace journal.console.lib.Consoles
             outpath = idxdir.combine(FILENAME_CONTENTS_JSON);
             Console.WriteLine($"==>{outpath}");
             FileUtil.writeTextToFile(JsonConvert.SerializeObject(conlst, Formatting.Indented), Encoding.UTF8, outpath);
+            
+            outpath = idxdir.combine(FILENAME_MOKUJI_JSON);
+            Console.WriteLine($"==>{outpath}");
+            FileUtil.writeTextToFile(JsonConvert.SerializeObject(mokulst, Formatting.Indented), Encoding.UTF8, outpath);
         }
 
         #region list/contents.txtを読み込み
