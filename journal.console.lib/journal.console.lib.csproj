@@ -87,7 +87,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Consoles\journal01_util.cs" />
+    <Compile Include="Consoles\journal09_util.cs" />
     <Compile Include="Consoles\journal02_util.cs" />
     <Compile Include="Consoles\journal03_util.cs" />
     <Compile Include="Consoles\journal04_util.cs" />

@@ -51,7 +51,7 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "InddAppLibCS6", "..\ind2idm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wordlib", "..\word_proj\wordlib\wordlib.csproj", "{D99827ED-3E0F-4AE5-8CCD-344B39D9137C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal01", "journal01\journal01.csproj", "{7F2FA0EB-EBF7-443A-8422-E421106FF8B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal09", "journal09\journal09.csproj", "{7F2FA0EB-EBF7-443A-8422-E421106FF8B4}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

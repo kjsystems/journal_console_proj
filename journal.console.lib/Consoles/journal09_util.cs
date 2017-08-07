@@ -6,7 +6,7 @@ using Microsoft.VisualBasic.Logging;
 
 namespace journal.console.lib.Consoles
 {
-    public class journal01_util : kihon_base
+    public class journal09_util : kihon_base
     {
         public void RunText2Xml(string srcdir)
         {
@@ -40,7 +40,7 @@ namespace journal.console.lib.Consoles
             return fname;
         }
 
-        public journal01_util(ILogger log) : base(log)
+        public journal09_util(ILogger log) : base(log)
         {
         }
     }
