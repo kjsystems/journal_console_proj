@@ -31,6 +31,8 @@ namespace journal.console.lib.Consoles
 
         void ReadMokuji(out List<JoMokuji> mokulst)
         {
+            Console.WriteLine($"{MokujiPath}");
+            
             mokulst = new List<JoMokuji>();
             var rd = new CSVFileReader(new ErrorLogger());
             rd.setupTargetToken('\t');
@@ -39,7 +41,9 @@ namespace journal.console.lib.Consoles
             {
                 mokulst.Add(new JoMokuji
                 {
-                    Id = row["ID"].toInt(0), Go = row["号数"], Tokushu = row["特集名"], 
+                    Id = row["ID"].toInt(0),
+                    Go = row["号数"],
+                    Tokushu = row["特集名"], 
                     Henshu = row["編集委員"],
                     IsDebug = row["編集中"]=="*"
                 });
