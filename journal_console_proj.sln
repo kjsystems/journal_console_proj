@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wordlib", "..\word_proj\wor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal09", "journal09\journal09.csproj", "{7F2FA0EB-EBF7-443A-8422-E421106FF8B4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal10", "journal10\journal10.csproj", "{6CDD5E0B-2FC9-4415-B7FB-ACB90117FAFB}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\ind2idml_proj\inddapp.shard.vb\inddapp.shard.vb.projitems*{bc99c27d-8eb9-4c81-86c6-627f36318f1d}*SharedItemsImports = 4
@@ -144,6 +146,10 @@ Global
 		{7F2FA0EB-EBF7-443A-8422-E421106FF8B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F2FA0EB-EBF7-443A-8422-E421106FF8B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F2FA0EB-EBF7-443A-8422-E421106FF8B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CDD5E0B-2FC9-4415-B7FB-ACB90117FAFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CDD5E0B-2FC9-4415-B7FB-ACB90117FAFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CDD5E0B-2FC9-4415-B7FB-ACB90117FAFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CDD5E0B-2FC9-4415-B7FB-ACB90117FAFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -170,5 +176,6 @@ Global
 		{BC99C27D-8EB9-4C81-86C6-627F36318F1D} = {40D80352-23F5-40B8-8337-AE2A1FAFD2FC}
 		{D99827ED-3E0F-4AE5-8CCD-344B39D9137C} = {D005BBF8-8885-44E5-B0B6-ECDB0726C672}
 		{7F2FA0EB-EBF7-443A-8422-E421106FF8B4} = {9EEB87C4-D554-4F6D-B8DD-59D3D78968ED}
+		{6CDD5E0B-2FC9-4415-B7FB-ACB90117FAFB} = {9EEB87C4-D554-4F6D-B8DD-59D3D78968ED}
 	EndGlobalSection
 EndGlobal
