@@ -31,7 +31,7 @@ namespace journal10
             }
             catch (Exception ex)
             {
-                log.err("journal09", ex.Message);
+                log.err(AppUtil.AppName, ex.Message);
             }
             log.showdosmsg();
         }

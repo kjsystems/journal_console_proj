@@ -27,6 +27,7 @@ namespace journal.console.lib.Consoles
             zipDir.createDirIfNotExist();
             var pdfDir = jobdir.combine("pdf"); //あれば
             var htmDir = jobdir.combine("html"); //あれば
+            var imageDir = jobdir.combine("images"); //あれば
 
             //収載一覧を読み込み
             //var util02 = new kenkyu02_util(Log);
@@ -61,15 +62,10 @@ namespace journal.console.lib.Consoles
                 Console.WriteLine($"==>{item.v.getFileName()}");
                 azure.UploadFile(container, item.v);
             }
-//            foreach (var item in htmDir.getFiles("*.htm").Select((v, i) => new {v, i}))
-//            {
-//                Console.WriteLine($"==>{item.v.getFileName()}");
-//                azure.UploadFile(container, item.v);
-//            }
             if (pdfDir.existDir(false))
             {
                 Console.WriteLine($"Azureへアップロード(PDF)");
-                foreach (var item in pdfDir.getFiles("*.pdf").Select((v, i) => new {v, i}))
+                foreach (var item in pdfDir.getFiles("*.pdf",false).Select((v, i) => new { v, i }))
                 {
                     Console.WriteLine($"==>{item.v.getFileName()}");
                     azure.UploadFile(container, item.v);
@@ -78,6 +74,14 @@ namespace journal.console.lib.Consoles
             else
             {
                 Console.WriteLine("PDFディレクトリはないのでコピーしない");
+            }
+
+            var containerImage = azure.CreateDirectory(appType.ToString() + "-images");
+            Console.WriteLine($"Azureへアップロード container={containerImage.Name}");
+            foreach (var item in imageDir.getFiles("*.*",false).Select((v, i) => new { v, i }))
+            {
+                Console.WriteLine($"==>{item.v.getFileName()}");
+                azure.UploadFile(containerImage, item.v);
             }
         }
     }
