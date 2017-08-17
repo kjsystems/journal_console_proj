@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Remoting.Messaging;
@@ -48,7 +49,8 @@ namespace wordxml.Models
         {
             //xmlをParseする
             ParseDocumentXml(documentPath);
-            ParseEndnotesXml(endnotesPath);
+            if(File.Exists(endnotesPath))
+                ParseEndnotesXml(endnotesPath);
         }
 
         #region <w:t>の中のテキスト
