@@ -77,7 +77,7 @@ namespace journal.console.lib.Consoles
     #endregion
 
     #region Parse Xml Path
-    void ParseDocumentXml(string documentPath)
+    public void ParseDocumentXml(string documentPath)
     {
       var sb = new StringBuilder();
       using (var rd = XmlReader.Create(documentPath))
