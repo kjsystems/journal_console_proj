@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using journal.lib.Models;
 using kj.kihon;
 
@@ -9,6 +10,8 @@ namespace journal.console.lib.Models
 {
     public class CreateWakaXmlCore : kihon_base
     {
+        private string OutPath { get; set; }
+
         public CreateWakaXmlCore(ILogger log) : base(log)
         {
         }
@@ -29,6 +32,21 @@ namespace journal.console.lib.Models
             sb.Append("</窓一覧>\r\n");
             return sb.ToString();
         }
+
+        // 02-001.pdf ==> 002-02-001.pdf
+        string ChangeSanshoFileName(string fname)
+        {
+            var reg = new Regex(@"^([0-9]{2}-[0-9]{3})\..*?");
+            if (reg.IsMatch(fname))
+            {
+                var match = reg.Match(fname);
+                // 出力ファイル名からせ先頭3バイトを取得 001-01.xml ==> 001 
+                var sento = OutPath.getFileNameWithoutExtension().Substring(0, 3);
+                return $"{sento}-{fname}";
+            }
+            return fname;
+        }
+
 
         //<窓左><窓右>を取り除く
         string outWakaXmlBunsho(TagList taglst, ref int jisage, ref bool bFoundJisage, ref int mondo,
@@ -84,7 +102,11 @@ namespace journal.console.lib.Models
                 if (tag.getName() == "参照")
                 {
                     var fname = tag.getValue("");
-                    sb.Append($"<参照 fname=\"{fname}\">{fname}</参照>");
+
+                    // 02-001.pdf ==> 002-02-001.pdf
+                    var linkFname = ChangeSanshoFileName(fname);
+
+                    sb.Append($"<参照 fname=\"{linkFname}\">{fname}</参照>");
                     continue;
                 }
                 string[] tgt = { "上線","下線"};
@@ -274,6 +296,7 @@ namespace journal.console.lib.Models
             try
             {
                 Path = txtpath;
+                OutPath = outpath;
 
                 //文字列をまずは置き換える
                 //出力ファイルを切り替え .out
