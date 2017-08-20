@@ -90,7 +90,19 @@ namespace journal.console.lib.Consoles
                 {
                     if (node.Name == "文章")
                     {
-                        ParaList.Add(new ParaItem());
+                        var para = new ParaItem();
+                        var jisage = node.Attributes?["字下"]?.Value;
+                        if (!string.IsNullOrEmpty(jisage))
+                        {
+                            para.Jisage = jisage.toInt(0);
+                        }
+                        var mondo = node.Attributes?["問答"]?.Value;
+                        if (!string.IsNullOrEmpty(mondo))
+                        {
+                            para.Mondo = mondo.toInt(0);
+                        }
+
+                        ParaList.Add(para);
                         ParseBunsho(node);
 
                     }
