@@ -14,12 +14,44 @@ namespace journal.console.lib.Consoles
         {
         }
 
+        string ChangeText(string txt)
+        {
+            var sb=new StringBuilder();
+            var taglst = TagTextUtil.parseText(txt);
+            foreach (var tag in taglst)
+            {
+                if (tag.getName() == "頁")
+                {
+                    sb.Append($"<頁 {tag.getValue("内容")}>");
+                    continue;
+                }
+                sb.Append(tag.ToString());
+            }
+
+            return sb.ToString();
+        }
+
         string CreateTextFromParaList(List<ParaItem> paralst)
         {
             var sb=new StringBuilder();
+            var preJisage = 0;
+            var preMondo = 0;
             foreach (var para in paralst)
             {
-                sb.AppendLine($"{para.Text}<改行>");
+                if (para.Jisage != preJisage)
+                {
+                    sb.Append($"<字下 {para.Jisage}>");
+                    preJisage = para.Jisage;
+                }
+                if (para.Mondo != preMondo)
+                {
+                    sb.Append($"<問答 {para.Mondo}>");
+                    preMondo = para.Mondo;
+                }
+                //XMLのタグのままなので適宜修正
+                var txt = ChangeText(para.Text);
+
+                sb.AppendLine($"{txt}<改行>");
             }
             return sb.ToString();
         }
