@@ -48,6 +48,11 @@ namespace journal.console.lib.Consoles
                     sb.Append($"<問答 {para.Mondo}>");
                     preMondo = para.Mondo;
                 }
+                if (para.IsJisoroe)
+                {
+                    sb.Append($"<揃字 右>");
+                }
+
                 //XMLのタグのままなので適宜修正
                 var txt = ChangeText(para.Text);
 

@@ -102,6 +102,12 @@ namespace journal.console.lib.Consoles
                             para.Mondo = mondo.toInt(0);
                         }
 
+                        var jisoroe = node.Attributes?["揃え"]?.Value;
+                        if (!string.IsNullOrEmpty(jisoroe) && jisoroe== "下")
+                        {
+                            para.IsJisoroe = true;
+                        }
+
                         ParaList.Add(para);
                         ParseBunsho(node);
 
