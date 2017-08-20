@@ -18,7 +18,7 @@ namespace journal.console.lib.Consoles
                 // ファイル名を変換する
                 // 02-01gomihumihiko.xml ==> 002-01 rename
                 var fname = ChangeFileName( srcpath.getFileNameWithoutExtension());
-                
+
                 var outpath = xmldir.combine(fname + ".xml");
                 Console.WriteLine($"==>{outpath}");
                 //XMLへ出力
@@ -29,8 +29,14 @@ namespace journal.console.lib.Consoles
         }
 
         // 02-01gomihumihiko.xml ==> 002-01
+        // 研究ジャーナル はそのまま001.xml
         string ChangeFileName(string fname)
         {
+            if (Regex.IsMatch(fname, @"[0-9]{3}"))
+            {
+                return fname;
+            }
+
             var match = Regex.Match(fname,@"^([0-9]{2}-[0-9]{2})");
             if (match != null)
             {
