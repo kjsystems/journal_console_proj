@@ -49,8 +49,7 @@ namespace journal.console.lib.Models
 
 
         //<窓左><窓右>を取り除く
-        string outWakaXmlBunsho(TagList taglst, ref int jisage, ref bool bFoundJisage, ref int mondo,
-            ref bool bFoundMondo)
+        string outWakaXmlBunsho(TagList taglst, ref int jisage, ref int mondo)
         {
             bool bMado = false;
             StringBuilder sb = new StringBuilder();
@@ -80,13 +79,13 @@ namespace journal.console.lib.Models
                 if (tag.getName() == "問答")
                 {
                     mondo = tag.getValue("", true).toInt(-1);
-                    bFoundMondo = true;
+                    //bFoundMondo = true;
                     continue;
                 }
                 if (tag.getName() == "字下")
                 {
                     jisage = tag.getValue("", true).toInt(-1);
-                    bFoundJisage = true;
+                    //bFoundJisage = true;
                     continue;
                 }
                 if (tag.getName() == "頁")
@@ -156,19 +155,19 @@ namespace journal.console.lib.Models
                 int gyono = item.i + 1;
                 TagList taglst = TagTextUtil.parseText(item.v, ref gyono, false);
                 int idx = item.i + 1;
-                bool bFoundJisage = false;
-                bool bFoundMondo = false;
-                string buf = outWakaXmlBunsho(taglst, ref jisage, ref bFoundJisage, ref mondo, ref bFoundMondo);
+                //bool bFoundJisage = false;
+                //bool bFoundMondo = false;
+                string buf = outWakaXmlBunsho(taglst, ref jisage, ref mondo);
 
                 //どっちかだけtrueなら一方をリセット
-                if (bFoundJisage == true && bFoundMondo != true) //字下のみ
-                {
-                    mondo = 0; //問答リセット
-                }
-                if (bFoundJisage != true && bFoundMondo == true) //問答のみ
-                {
-                    jisage = 0; //字下リセット
-                }
+                //if (bFoundJisage == true && bFoundMondo != true) //字下のみ
+                //{
+                //    mondo = 0; //問答リセット
+                //}
+                //if (bFoundJisage != true && bFoundMondo == true) //問答のみ
+                //{
+                //    jisage = 0; //字下リセット
+                //}
                 sb.Append($"<文章 ID=\"{idx}\" 行番=\"{idx}\" 組行=\"{idx}\"");
                 if (jisage > 0)
                 {
