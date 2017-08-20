@@ -95,6 +95,7 @@
     <Compile Include="Consoles\journal06_util.cs" />
     <Compile Include="Consoles\journal07_util.cs" />
     <Compile Include="Consoles\journal10_util.cs" />
+    <Compile Include="Consoles\journal11_util.cs" />
     <Compile Include="Models\CreateWakaXmlCore.cs" />
     <Compile Include="Models\ParaItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
