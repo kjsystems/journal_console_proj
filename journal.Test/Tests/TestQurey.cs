@@ -77,5 +77,12 @@ namespace journal.Test
             var result = ser.QueryHonbun(new[] { "藤原定家", "古今和歌集" }.ToList(), SearchManager.JournalSearchMode.Or);
             Assert.AreEqual(33, result.Count);
         }
+        [Test]
+        public void TestQureyHonbun_Or_定家()
+        {
+            var ser = new SearchManager();
+            var result = ser.QueryHonbun(new[] { "定家" }.ToList(), SearchManager.JournalSearchMode.Or);
+            Assert.AreEqual(100, result.Count);
+        }
     }
 }
