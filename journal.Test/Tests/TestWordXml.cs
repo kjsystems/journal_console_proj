@@ -76,7 +76,7 @@ namespace journal.Test
             var n = CreateDocument(xml).DocumentElement.FirstChild;
             Assert.AreEqual("w:p", n.Name);
             var parser = new WordXmlParser(210, new ErrorLogger());
-            Assert.AreEqual("<上付>（＊１）</上付>", parser.ParseParagraph(n));
+            Assert.AreEqual("<上付>（＊</上付>１<上付>）</上付>", parser.ParseParagraph(n));
         }
         [Test]
         public void TestWordPara_最初の行１字下げ()  //（＊１）

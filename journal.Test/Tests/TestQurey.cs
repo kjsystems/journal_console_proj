@@ -12,7 +12,7 @@ namespace journal.Test
         {
             var ser = new SearchManager();
             var result = ser.QueryHonbun(new[] { "藤原定家" }.ToList());
-            Assert.AreEqual(11, result.Count);
+            Assert.AreEqual(19, result.Count);
         }
         [Test]
         public void TestQureyHonbun_逢恋()
@@ -39,7 +39,7 @@ namespace journal.Test
         {
             var ser = new SearchManager();
             var result = ser.QueryHonbun(new[] { "正徹" }.ToList());
-            Assert.AreEqual(50, result.Count);
+            Assert.AreEqual(51, result.Count);
         }
         [Test]
         public void TestQureyHonbun_正徹あああ()
@@ -75,14 +75,14 @@ namespace journal.Test
         {
             var ser = new SearchManager();
             var result = ser.QueryHonbun(new[] { "藤原定家", "古今和歌集" }.ToList(), SearchManager.JournalSearchMode.Or);
-            Assert.AreEqual(33, result.Count);
+            Assert.AreEqual(43, result.Count);
         }
         [Test]
         public void TestQureyHonbun_Or_定家()
         {
             var ser = new SearchManager();
             var result = ser.QueryHonbun(new[] { "定家" }.ToList(), SearchManager.JournalSearchMode.Or);
-            Assert.AreEqual(100, result.Count);
+            Assert.AreEqual(158, result.Count);
         }
     }
 }
