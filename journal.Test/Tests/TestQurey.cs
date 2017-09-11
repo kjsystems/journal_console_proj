@@ -23,6 +23,23 @@ namespace journal.Test
             Assert.AreEqual(5, result.Count);
         }
         [Test]
+        public void Qurey_藤原定家_1巻()
+        {
+            var ser = new SearchManager();
+            ser.AddGoFilter(1);
+            var result = ser.QueryHonbun(new[] { "藤原定家" }.ToList());
+            Assert.AreEqual(11, result.Count);
+        }
+        [Test]
+        public void Qurey_藤原定家_著者_1巻()
+        {
+            var ser = new SearchManager();
+            ser.AddChoshaFilter("久保田　淳");
+            ser.AddGoFilter(1);
+            var result = ser.QueryHonbun(new[] { "藤原定家" }.ToList());
+            Assert.AreEqual(5, result.Count);
+        }
+        [Test]
         public void Qurey_逢恋()
         {
             var ser = new SearchManager();
