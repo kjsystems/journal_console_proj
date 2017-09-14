@@ -11,7 +11,7 @@ namespace journal.console.lib.Consoles
         public enum AppType
         {
             kenkyu,
-            journal
+            journal,none
         }
 
         public journal10_util(ILogger log) : base(log)

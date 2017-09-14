@@ -22,10 +22,15 @@ namespace journal10
                 srcdir.existDir();
                 
                 var appTypeChar = lst.getText('t');
-                var appType = journal10_util.AppType.journal;
-                if(appTypeChar=="k")
+                journal10_util.AppType appType= journal10_util.AppType.none;
+                if(appTypeChar=="kenkyu")
                     appType= journal10_util.AppType.kenkyu;
+                if(appTypeChar=="journal")
+                    appType= journal10_util.AppType.journal;
 
+                if (appType == journal10_util.AppType.none)
+                    throw new Exception($"AppType(/t)が定義されていない kenkyu or journal");
+                
                 var core = new journal10_util(log);
                 core.Run(srcdir,appType);
             }
