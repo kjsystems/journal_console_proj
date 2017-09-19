@@ -24,6 +24,9 @@ namespace journal.console.lib.Consoles
                 //XMLへ出力
                 CreateWakaXmlCore core = new CreateWakaXmlCore(Log);
                 core.run(srcpath, outpath);
+                
+                var xmlutil = new XMLUtil(Log);
+                xmlutil.checkXmlFile(outpath);
             }
 
         }
