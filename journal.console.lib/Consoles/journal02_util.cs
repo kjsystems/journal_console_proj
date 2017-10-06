@@ -131,7 +131,11 @@ namespace journal.console.lib.Consoles
             {
                 //解凍する
                 //戻り値は \word\document.xml
-                var wordMeltDir = wordpath.getDirectoryName().combine("wordxml").createDirIfNotExist();
+                var wordMeltDir = wordpath.getDirectoryName()
+                    .combine("wordxml")
+                    .createDirIfNotExist()
+                    .combine(wordpath.getFileNameWithoutExtension())
+                    .createDirIfNotExist();
                 MeltFromWordFile(wordpath, wordMeltDir);
 
                 //Wordの解凍ディレクトリからテキストを取得する
