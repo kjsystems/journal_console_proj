@@ -273,9 +273,10 @@ namespace wordxml.Models
                                 status.AttrList.Add("種類", "二重");
                                 break;
                             case "single":
+                            case "thick":  //太線
                                 break;
                             default:
-                                Log.err("underline", $"無効な下線種類 {value}");
+                                Log.err(Path,0,"underline", $"無効な下線種類 {value}");
                                 break;
                         }
                         statusLst.Add(status);
@@ -413,6 +414,7 @@ namespace wordxml.Models
         {
             using (var rd = XmlReader.Create(documentPath))
             {
+                Path = documentPath;
                 XmlDocument doc = new XmlDocument();
                 doc.Load(rd);
                 XmlNode root = doc.DocumentElement;
