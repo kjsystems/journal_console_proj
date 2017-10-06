@@ -8,27 +8,26 @@ using kj.kihon;
 
 namespace journal02
 {
-  class Program
-  {
-    static void Main(string[] args)
+    class Program
     {
-      ErrorLogger log = new ErrorLogger();
-      try
-      {
-        Console.WriteLine($"Word(docx)からテキストへの変換");
-        var lst = ArgListUtil.createArgList(args);
-        var srcdir = lst.getText('i');
-        srcdir.existDir();
+        static void Main(string[] args)
+        {
+            ErrorLogger log = new ErrorLogger();
+            try
+            {
+                Console.WriteLine($"Word(docx)からテキストへの変換");
+                var lst = ArgListUtil.createArgList(args);
+                var srcdir = lst.getText('i');
+                srcdir.existDir();
 
-        var core = new journal02_util(log);
-        core.Run(srcdir);
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine("エラーがあります {0}", ex.Message);
-      }
-      log.showdosmsg();
-
+                var core = new journal02_util(log);
+                core.Run(srcdir);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("エラーがあります {0}", ex.Message);
+            }
+            log.showdosmsg();
+        }
     }
-  }
 }

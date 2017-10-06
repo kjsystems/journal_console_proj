@@ -30,7 +30,7 @@ namespace journal.console.lib.Consoles
 
         public void MeltFromStream(Stream wordStream, string outMeltDir)
         {
-            if(wordStream==null || wordStream.Length==0)
+            if (wordStream == null || wordStream.Length == 0)
                 throw new ArgumentNullException("Streamgaがnullまたは長さがゼロ");
 
             var zip = new ZIPUtil();
@@ -40,7 +40,6 @@ namespace journal.console.lib.Consoles
 
             zip.meltZip(wordStream, outMeltDir);
             System.Console.WriteLine($"==>zip:{outMeltDir}");
-
         }
 
         public void MeltFromWordFile(
@@ -126,7 +125,7 @@ namespace journal.console.lib.Consoles
         }
 
         // Wordファイル単体で処理
-        public void RunWordPath(string jobdir,IEnumerable<string> wordlst)
+        public void RunWordPath(string jobdir, IEnumerable<string> wordlst)
         {
             foreach (string wordpath in wordlst)
             {
@@ -163,18 +162,19 @@ namespace journal.console.lib.Consoles
             if (srcfiles.Length == 0)
                 throw new Exception($"docディレクトリにWORDファイルがない DIR={docdir}");
 
-            foreach (var wordpath in srcfiles.Select((v, i) => new { v, i }))
+            foreach (var wordpath in srcfiles.Select((v, i) => new {v, i}))
             {
                 //開いているファイルは使わない
                 if (wordpath.v.getFileNameWithoutExtension().StartsWith("~$"))
                     continue;
                 Console.WriteLine($"{wordpath.i + 1}/{srcfiles.Length} word:{wordpath.v}");
-                RunWordPath(jobdir,new List<string>{ wordpath.v});
+                RunWordPath(jobdir, new List<string> {wordpath.v});
             }
         }
 
         int _preJisage = 0;
         int _preMondo = 0;
+
         public string CreateTextFromPara(WordXmlParaItem para)
         {
             var sb = new StringBuilder();
@@ -187,7 +187,7 @@ namespace journal.console.lib.Consoles
                 }
                 else
                 {
-                    if(_preJisage!=0)
+                    if (_preJisage != 0)
                         sb.Append($"<字下 0>");
                     if (_preMondo != 0)
                         sb.Append($"<問答 0>");
@@ -199,9 +199,9 @@ namespace journal.console.lib.Consoles
             }
             else
             {
-                if (para.Jisage != _preJisage)  //マイナスもあり
+                if (para.Jisage != _preJisage) //マイナスもあり
                     sb.Append($"<字下 {para.Jisage}>");
-                if (para.Mondo != _preMondo)  //マイナスもあり
+                if (para.Mondo != _preMondo) //マイナスもあり
                     sb.Append($"<問答 {para.Mondo}>");
                 _preJisage = para.Jisage;
                 _preMondo = para.Mondo;
@@ -222,6 +222,7 @@ namespace journal.console.lib.Consoles
             //_preMondo = para.Mondo;
             return sb.ToString();
         }
+
         public string CreateTextFromParaList(List<WordXmlParaItem> paralst)
         {
             var sb = new StringBuilder();
