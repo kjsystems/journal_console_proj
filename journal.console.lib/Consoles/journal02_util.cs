@@ -101,9 +101,21 @@ namespace journal.console.lib.Consoles
             parser.ProcessWordFile(WordXmlDocumentPath, WordXmlEndnotesPath);
 
             //テキストを作成する
-            sb = CreateTextFromParaList(parser.ParaList);
+            sb = CreateTextFromParaList(parser.ParaList)
+                .Replace("✱","＊");
+            sb = ReplaceGaijiToShotai(sb);
         }
 
+        string ReplaceGaijiToShotai(string buf)
+        {
+            string[] lst = { "赢"};
+            foreach (var ch in lst)
+            {
+                buf = buf.Replace(ch, $"<書体 \"Adobe Song Std/L\">{ch}</書体>");
+            }
+            return buf;
+        }
+        
         // docxで保存する
         void SaveDocx(string docdir)
         {
