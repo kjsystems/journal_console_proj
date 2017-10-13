@@ -118,5 +118,26 @@ namespace journal.Test
             var parser = new WordXmlParser(210, new ErrorLogger());
             Assert.AreEqual("これら<ruby>ま<rt>（＊にカ）</rt></ruby>", parser.ParseParagraph(n));
         }
+        
+        [Test]
+        public void TestWordPara_一太郎ルビ()  //（＊１）
+        {
+            var xml = @"
+<w:p w:rsidR=""00000000"" w:rsidRDefault=""00B250F1"">
+<w:r><w:rPr><w:rFonts w:hint=""eastAsia""/></w:rPr><w:t xml:space=""preserve"">あ</w:t>
+</w:r>
+<w:r><w:fldChar w:fldCharType=""begin""/></w:r>
+<w:r><w:instrText xml:space=""preserve""> eq \o\ad(\s\up 9(</w:instrText></w:r>
+<w:r><w:instrText>せい</w:instrText></w:r>
+<w:r><w:instrText>),</w:instrText></w:r>
+<w:r><w:instrText>青</w:instrText></w:r>
+<w:r><w:instrText>)</w:instrText></w:r>
+<w:r><w:fldChar w:fldCharType=""end""/></w:r>
+</w:p>";
+            var n = CreateDocument(xml).DocumentElement.FirstChild;
+            Assert.AreEqual("w:p", n.Name);
+            var parser = new WordXmlParser(210, new ErrorLogger());
+            Assert.AreEqual("あ<ruby>青<rt>せい</rt></ruby>", parser.ParseParagraph(n));
+        }        
     }
 }
