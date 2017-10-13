@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using kj.kihon;
 using kj.kihon.Utils;
@@ -204,7 +205,8 @@ namespace wordxml.Models
         string getInstrText()
         {
             //ルビ
-            if (InstrList.Count == 5 && InstrList[0].IndexOf(@"eq \o\ac(\s\up") >= 0)
+//            if (InstrList.Count == 5 && InstrList[0].IndexOf(@"eq \o\ac(\s\up") >= 0)
+              if (InstrList.Count == 5 &&　Regex.IsMatch(InstrList[0],@"eq \\o\\(ac|ad)\(\\s\\up"))
             {
                 return $"<ruby>{InstrList[3]}<rt>{InstrList[1]}</rt></ruby>";
             }
