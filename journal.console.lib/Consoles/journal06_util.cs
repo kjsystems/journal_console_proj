@@ -44,7 +44,7 @@ namespace journal.console.lib.Consoles
         // 先頭改行を削除
         string TrimLeftKaigyo(string buf)
         {
-            char[] tbl = { '\r', '\n' };
+            char[] tbl = {'\r', '\n'};
             while (true)
             {
                 if (buf.Length > 0 && Array.IndexOf(tbl, buf[0]) >= 0)
@@ -62,16 +62,17 @@ namespace journal.console.lib.Consoles
         {
             paralst = new List<ParaItem>();
             var util = new TagTextUtil(Log);
-            var taglst = util.parseTextFromPath(path, Encoding.UTF8);
+            var taglst = new TagList();
+            util.parseTextFromPath(path, Encoding.UTF8,ref taglst,false);
 
-            var sb=new StringBuilder();
+            var sb = new StringBuilder();
             foreach (var tag in taglst)
             {
                 // 先頭改行を削除
-                sb.Append(TrimLeftKaigyo( tag.ToString()));
+                sb.Append(TrimLeftKaigyo(tag.ToString()));
                 if (tag.getName() == "改行")
                 {
-                    paralst.Add(new ParaItem { Gyo = tag.GyoNo, Text = sb.ToString() });
+                    paralst.Add(new ParaItem {Gyo = tag.GyoNo, Text = sb.ToString()});
                     sb.Length = 0;
                 }
             }
@@ -79,7 +80,6 @@ namespace journal.console.lib.Consoles
 
         void SetJisageMondo(ParaItem para, ref int curJisage, ref int curMondo)
         {
-
             var taglst = TagTextUtil.parseText(para.Text);
             foreach (TagBase tag in taglst)
             {
@@ -100,33 +100,39 @@ namespace journal.console.lib.Consoles
         }
 
         private TagBase PreTag { get; set; }
+
         string CreateTextFromPath(string path)
         {
             Path = path;
 
             //改行ごとに処理する
-            CreateKaigyoList(path,out List<ParaItem> paralst);
+            CreateKaigyoList(path, out List<ParaItem> paralst);
 
             var sb = new StringBuilder();
             var curJisage = 0;
             var curMondo = 0;
             foreach (var para in paralst)
             {
+                Gyono = para.Gyo;
                 //<選択 ラベル名>を先に読み込み
                 var taglst = TagTextUtil.parseText(para.Text);
-                var label = taglst.FirstOrDefault(m => m.getName() == "選択"); 
-                if (label!= null)
+                var label = taglst.FirstOrDefault(m => m.getName() == "選択");
+                if (label != null)
                     sb.Append(label.ToString());
-                
-                //字下,問答を各段落に設定する
-                SetJisageMondo(para,ref curJisage,ref curMondo);
 
-                if(para.IsJisoroe!=true)
+                //字下,問答を各段落に設定する
+                SetJisageMondo(para, ref curJisage, ref curMondo);
+
+                if (para.IsJisoroe != true)
                     sb.Append($"<字下 {para.Jisage}><問答 {para.Mondo}>");
                 sb.Append(CreateTextFromPara(para));
                 sb.Append("\r\n");
             }
-            return sb.ToString().Replace("――", "<分禁>――</分禁>");
+            return sb.ToString()
+                    .Replace("――", "<分禁>――</分禁>")
+                    .Replace("</割>", "</割注>")
+                    .Replace("<割>", "<割注>")
+                ;
         }
 
         string CreateTextFromPara(ParaItem para)
@@ -139,7 +145,7 @@ namespace journal.console.lib.Consoles
             var taglst = TagTextUtil.parseText(para.Text);
             foreach (var tag in taglst)
             {
-                string[] mushi = { "字下", "問答","選択" };
+                string[] mushi = {"字下", "問答", "選択"};
                 if (Array.IndexOf(mushi, tag.getName()) >= 0)
                     continue;
 
@@ -148,15 +154,16 @@ namespace journal.console.lib.Consoles
                 if (tag.getName() == "上線")
                 {
                     if (tag.isClose())
-                        ((TagItem)tag).name_ = "/" + TAG_KASEN;
+                        ((TagItem) tag).name_ = "/" + TAG_KASEN;
                     else
-                        ((TagItem)tag).name_ = TAG_KASEN;
+                        ((TagItem) tag).name_ = TAG_KASEN;
                 }
 
-                if (Array.IndexOf(new[] { TAG_KASEN, TAG_RUBY }, tag.getName()) >= 0)
+                if (Array.IndexOf(new[] {TAG_KASEN, TAG_RUBY}, tag.getName()) >= 0)
                 {
                     if (PreTag != null && PreTag.getName() == tag.getName() && PreTag.isOpen() == tag.isOpen())
-                        Log.err(Path, tag.GyoNo, "parsetag", $"タグの組み合わせがおかしい tag={tag.ToString()} isopen={tag.isOpen()} pre={PreTag.isOpen()}");
+                        Log.err(Path, Gyono, "parsetag",
+                            $"タグの組み合わせがおかしい tag={tag.ToString()} isopen={tag.isOpen()} pre={PreTag.isOpen()}");
                 }
                 //文字列
                 if (tag.isText())
@@ -172,10 +179,10 @@ namespace journal.console.lib.Consoles
                 if (tag.getName() == "ruby")
                 {
                     dict["ruby"] = tag.isOpen() ? 1 : 0;
-                    dict["rt"] = 0;  //reset
+                    dict["rt"] = 0; //reset
                 }
                 if (tag.getName() == "rt")
-                    dict["rt"] = tag.isOpen() ? 1 : 2;  //閉じたら2
+                    dict["rt"] = tag.isOpen() ? 1 : 2; //閉じたら2
                 //タグ
                 sb.Append(ToTag(tag));
                 if (tag.isTag())
@@ -203,24 +210,25 @@ namespace journal.console.lib.Consoles
             var sb = new StringBuilder();
 
             var txt = tag.ToString()
-              .Replace("", "&#x3033;")
-              .Replace("〱", "α")
-              .Replace("α", "&#x3033;&#x3035;")
-              .Replace("&#12349;", "ヽ")
-              .Replace("", "&#x3035;")
-              .Replace("", "&#x303b;")
-              .Replace("β", "&#x303b;")
-              .Replace("￥", "")
-              .Replace("$", "＄")
-              .Replace("＄", "&#x25e6;")
-              .Replace(")", "）")
-              .Replace("(", "（");
+                .Replace("", "&#x3033;")
+                .Replace("〱", "α")
+                .Replace("α", "&#x3033;&#x3035;")
+                .Replace("&#12349;", "ヽ")
+                .Replace("", "&#x3035;")
+                .Replace("", "&#x303b;")
+                .Replace("β", "&#x303b;")
+                .Replace("￥", "")
+                .Replace("$", "＄")
+                .Replace("＄", "&#x25e6;")
+                .Replace(")", "）")
+                .Replace("(", "（");
             //2桁全角を変換
             var reg = new Regex("＊([０-９]{2,3})");
             while (reg.IsMatch(txt))
             {
                 var m = reg.Match(txt);
-                txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1), "＊<ス字 ゴシ>" + ZenHanUtil.ToHankaku(RegexUtil.getGroup(m, 1))+ "</ス字>");
+                txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1),
+                    "＊<ス字 ゴシ>" + ZenHanUtil.ToHankaku(RegexUtil.getGroup(m, 1)) + "</ス字>");
             }
             //1桁全角を変換
             reg = new Regex("＊([０-９]{1})");
@@ -229,7 +237,7 @@ namespace journal.console.lib.Consoles
                 var m = reg.Match(txt);
                 txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1), "＊<ス字 ゴシ>" + RegexUtil.getGroup(m, 1) + "</ス字>");
             }
-            sb.Append(CharUtil.sjis2utf(txt));  //namespaceをUTFに変換
+            sb.Append(CharUtil.sjis2utf(txt)); //namespaceをUTFに変換
             return sb.ToString();
         }
     }
