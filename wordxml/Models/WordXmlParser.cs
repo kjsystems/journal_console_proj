@@ -292,6 +292,14 @@ namespace wordxml.Models
                         AttrType = WordXmlCharStatus.EnumAttrType.Bold
                     });
                 }
+                if (prop.Name == "w:em")
+                {
+                    //sb.Append("<圏点>");
+                    statusLst.Add(new WordXmlCharStatus
+                    {
+                        AttrType = WordXmlCharStatus.EnumAttrType.Kenten
+                    });
+                }
                 if (prop.Name == "w:vertAlign")
                 {
                     var value = prop.Attributes?["w:val"]?.Value;

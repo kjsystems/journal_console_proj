@@ -17,6 +17,7 @@ namespace wordxml.Models
                 {EnumAttrType.Bold,"太字"},
                 {EnumAttrType.Subscript,"下付"},
                 {EnumAttrType.Superscript,"上付"},
+                {EnumAttrType.Kenten,"圏点"},
             };
         }
         public Dictionary<string, string> AttrList { get; set; }
@@ -25,7 +26,8 @@ namespace wordxml.Models
             Underline,
             Bold,
             Subscript,
-            Superscript
+            Superscript,
+            Kenten
         }
         public EnumAttrType AttrType { get; set; }
 
