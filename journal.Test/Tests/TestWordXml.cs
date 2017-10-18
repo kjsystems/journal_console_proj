@@ -60,6 +60,17 @@ namespace journal.Test
             Assert.AreEqual("<上付>レ</上付>", parser.ParseRun(n));
         }
         [Test]
+        public void TestWordRun_圏点()
+        {
+            var xml = @"<w:r w:rsidRPr=""0057566F""><w:rPr>
+                <w:szCs w:val=""21""/><w:em w:val=""comma""/></w:rPr>
+                <w:t>勿論</w:t></w:r>";
+            var n = CreateDocument(xml).DocumentElement.FirstChild;
+            Assert.AreEqual("w:r", n.Name);
+            var parser = new WordXmlParser(210, new ErrorLogger());
+            Assert.AreEqual("<圏点>勿論</圏点>", parser.ParseRun(n));
+        }
+        [Test]
         public void TestWordPara_上付き注釈()  //（＊１）
         {
             var xml = @"<w:p w:rsidR=""0091204C"" w:rsidRDefault=""0091204C"" w:rsidP=""00C136F2"">
