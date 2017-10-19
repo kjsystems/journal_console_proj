@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "idml2cs6", "..\ind2idml_pro
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "idmltool.shared", "..\ind2idml_proj\idmltool.shared\idmltool.shared.shproj", "{A2291321-E4E5-4876-9C6B-3BAF8868A217}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "journal12", "journal12\journal12.csproj", "{75DC214D-CAE4-4710-A492-2B06BFDF1965}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\ind2idml_proj\inddapp.shard.vb\inddapp.shard.vb.projitems*{bc99c27d-8eb9-4c81-86c6-627f36318f1d}*SharedItemsImports = 4
@@ -148,6 +150,10 @@ Global
 		{42DDFAB5-4D95-402A-88A0-E5DC07A75FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42DDFAB5-4D95-402A-88A0-E5DC07A75FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42DDFAB5-4D95-402A-88A0-E5DC07A75FE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75DC214D-CAE4-4710-A492-2B06BFDF1965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75DC214D-CAE4-4710-A492-2B06BFDF1965}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75DC214D-CAE4-4710-A492-2B06BFDF1965}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75DC214D-CAE4-4710-A492-2B06BFDF1965}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -173,6 +179,7 @@ Global
 		{C6B83D55-49B2-4306-A235-178CBFCAD336} = {9EEB87C4-D554-4F6D-B8DD-59D3D78968ED}
 		{0FFCAC80-0EB4-4F40-AE64-F14B2C30AC8F} = {D005BBF8-8885-44E5-B0B6-ECDB0726C672}
 		{A2291321-E4E5-4876-9C6B-3BAF8868A217} = {D005BBF8-8885-44E5-B0B6-ECDB0726C672}
+		{75DC214D-CAE4-4710-A492-2B06BFDF1965} = {9EEB87C4-D554-4F6D-B8DD-59D3D78968ED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CABB14F-1FC9-42DF-ADB1-7864F21112CD}
