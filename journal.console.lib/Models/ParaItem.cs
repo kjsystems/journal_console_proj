@@ -14,5 +14,20 @@ namespace journal.console.lib.Models
         public int Jisage { get; set; } = 0;
         public int Mondo { get; set; } = 0;
         public bool IsJisoroe { get; set; } = false;
+
+        public string CreateText()
+        {
+            return $"{Text}<改行>";
+        }
+
+        public static string CreateText(List<ParaItem> paralst)
+        {
+            var sb=new StringBuilder();
+            foreach (var para in paralst)
+            {
+                sb.Append(para.CreateText()+"\r\n");
+            }
+            return sb.ToString();
+        }
     }
 }
