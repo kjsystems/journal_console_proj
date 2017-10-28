@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="kjlib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\kjsystems.kjlib.1.0.20\lib\kjlib.dll</HintPath>
+      <HintPath>..\packages\kjsystems.kjlib.1.0.21\lib\kjlib.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
