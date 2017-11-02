@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using azureblob.Model;
 using kj.kihon;
 using kjlib.zip.Models;
@@ -65,6 +66,20 @@ namespace journal.console.lib.Consoles
             if (pdfDir.existDir(false))
             {
                 Console.WriteLine($"Azureへアップロード(PDF)");
+
+                //ファイル名を変更する
+                foreach (var path in pdfDir.getFiles("*.pdf", false))
+                {
+                    var newFileName = journal09_util.ChangeFileName(path.getFileName());
+                    if(newFileName==path.getFileName())
+                        continue;
+                    var newPath = path
+                        .getDirectoryName()
+                        .combine(newFileName+".pdf");
+                    Console.WriteLine($"==>{newPath}");
+                    System.IO.File.Move(path,newPath);
+                }
+                
                 foreach (var item in pdfDir.getFiles("*.pdf",false).Select((v, i) => new { v, i }))
                 {
                     Console.WriteLine($"==>{item.v.getFileName()}");
