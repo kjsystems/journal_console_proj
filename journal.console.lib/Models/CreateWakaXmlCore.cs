@@ -290,7 +290,7 @@ namespace journal.console.lib.Models
         /**
 
         */
-        public void run(string txtpath, string outpath)
+        public void run(string txtpath, string outpath, bool isCheckOnly=false)
         {
             try
             {
@@ -303,8 +303,11 @@ namespace journal.console.lib.Models
 
                 //<改行>ごとに読み込む
                 var util = new FileUtil(Log);
-                var strlst = util.createKaigyoListFromPath(Path, Enc, true);
+                var strlst = util.CreateKaigyoListFromPath(Path, Enc, true);
 
+                if (isCheckOnly)
+                    return;
+                
                 //strlstに $"<文章>{cur}</文章>\r\n");  して出力
                 FileUtil.writeTextToFile(createWakaXmlFromStrList(strlst), Encoding.UTF8, outpath);
             }
