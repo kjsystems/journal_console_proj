@@ -24,7 +24,8 @@ namespace journal.console.lib.Consoles
             SrcDir = srcdir;
 
             // 入稿の複数ファイルからTXTにまとめる
-            CreateTxtFiles();
+            // 研究L用
+//            CreateTxtFiles();
 
             // txt→xmlに作成する
             CreateXmlFiles();
@@ -98,9 +99,9 @@ namespace journal.console.lib.Consoles
 
         // 02-01gomihumihiko.xml ==> 002-01
         // 研究ジャーナル はそのまま001.xml
-        string ChangeFileName(string fname)
+        public static string ChangeFileName(string fname)
         {
-            if (Regex.IsMatch(fname, @"[0-9]{3}"))
+            if (Regex.IsMatch(fname, @"^[0-9]{3}"))
             {
                 return fname;
             }
