@@ -18,7 +18,7 @@ namespace journal.console.lib.Models
 
         const string MADO_MIGI = "窓右";
         const string MADO_HIDARI = "窓左";
-        Encoding Enc = Encoding.Unicode;
+        Encoding Enc = Encoding.UTF8;
 
         string outMadoList(List<MadoItem> madolst)
         {
@@ -93,7 +93,7 @@ namespace journal.console.lib.Models
                     sb.Append($"<頁 内容=\"{tag.getValue("", true)}\"/>");
                     continue;
                 }
-                if (tag.getName() == "字Ｓ" || (tag.getName() == "揃字" && tag.getValue("") == "右"))
+                if (tag.getName() == "字Ｓ" || ( Array.IndexOf(new string[]{"揃字","字揃"},tag.getName())>=0 && tag.getValue("") == "右"))
                 {
                     sb.Append($"<字エ/>"); //XMLでＳは使えないので
                     continue;
