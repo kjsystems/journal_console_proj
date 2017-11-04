@@ -200,40 +200,35 @@ namespace journal.console.lib.Consoles
         {
             if (tag.getName() == "ruby" || tag.getName() == "添")
             {
+                // </ruby>でルビを出力
                 if (tag.isClose())
                 {
                     if (string.IsNullOrEmpty(OyaText))
                         Log.err(Path, Gyono, "RUBYFLAG", $"<ruby>または<添>に親文字がない");
-                    
+
+                    var res = "";
                     // どっちもあるときは圏点+左ルビ
                     if (!string.IsNullOrEmpty(RubyTextR) && !string.IsNullOrEmpty(RubyTextL))
                     {
-                        return $"<圏点 位置=左 種類=\"{RubyTextL}\"><ruby>{OyaText}<rt>{RubyTextR}</rt></ruby></圏点>";
+                        res= $"<圏点 位置=左 種類=\"{RubyTextL}\"><ruby>{OyaText}<rt>{RubyTextR}</rt></ruby></圏点>";
+                        ResetRubyFlag();
+                        return res;
                     }
                     
                     // 通常ルビ
-                    var res= $"<ruby>{OyaText}";
+                    res= $"<ruby>{OyaText}";
                     if (!string.IsNullOrEmpty(RubyTextL))
                         res += $"<lt>{RubyTextL}</lt>";
                     if (!string.IsNullOrEmpty(RubyTextR))
                         res += $"<rt>{RubyTextR}</rt>";
                     res += $"</ruby>";
 
-                    Flag["ruby"] = false;
-                    Flag["rt"] = false; //reset
-                    Flag["lt"] = false;
-                    OyaText = "";
-                    RubyTextL = "";
-                    RubyTextR = "";
+                    ResetRubyFlag();
                     return res;
                 }
                 // reset
+                ResetRubyFlag();
                 Flag["ruby"] = tag.isOpen();
-                Flag["rt"] = false; //reset
-                Flag["lt"] = false;
-                OyaText = "";
-                RubyTextL = "";
-                RubyTextR = "";
             }
             if (tag.getName() == "rt")
             {
@@ -248,6 +243,16 @@ namespace journal.console.lib.Consoles
                 Flag["lt"] = tag.isOpen();
             }
             return "";
+        }
+
+        private void ResetRubyFlag()
+        {
+            Flag["ruby"] = false;
+            Flag["rt"] = false; //reset
+            Flag["lt"] = false;
+            OyaText = "";
+            RubyTextL = "";
+            RubyTextR = "";
         }
 
         string ToTag(TagBase tag)
