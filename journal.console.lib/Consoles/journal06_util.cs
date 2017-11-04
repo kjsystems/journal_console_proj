@@ -11,8 +11,16 @@ namespace journal.console.lib.Consoles
 {
     public class journal06_util : kihon_base
     {
+        private string OyaText { get; set; }
+        private string RubyTextL { get; set; }  //左ルビ
+        private string RubyTextR { get; set; }  //右ルビ
+        Dictionary<string, bool> Flag = new Dictionary<string, bool>();
+
         public journal06_util(ILogger log) : base(log)
         {
+            Flag["ruby"] = false;
+            Flag["rt"] = false;
+            Flag["lt"] = false;
         }
 
         public void Run(string jobdir)
@@ -108,6 +116,11 @@ namespace journal.console.lib.Consoles
             //改行ごとに処理する
             CreateKaigyoList(path, out List<ParaItem> paralst);
 
+            return CreateTextFromParaList(paralst);
+        }
+
+        public string CreateTextFromParaList(List<ParaItem> paralst)
+        {
             var sb = new StringBuilder();
             var curJisage = 0;
             var curMondo = 0;
@@ -137,14 +150,12 @@ namespace journal.console.lib.Consoles
 
         string CreateTextFromPara(ParaItem para)
         {
-            var dict = new Dictionary<string, int>();
-            dict["ruby"] = 0;
-            dict["rt"] = 0;
-
             var sb = new StringBuilder();
             var taglst = TagTextUtil.parseText(para.Text);
             foreach (var tag in taglst)
             {
+                Gyono = para.Gyo;
+                
                 string[] mushi = {"字下", "問答", "選択"};
                 if (Array.IndexOf(mushi, tag.getName()) >= 0)
                     continue;
@@ -168,21 +179,12 @@ namespace journal.console.lib.Consoles
                 //文字列
                 if (tag.isText())
                 {
-                    if (dict["ruby"] > 0 && dict["rt"] == 2)
-                    {
-                        Log.err(Path, tag.GyoNo, "journal06", $"<rt>の文字列は無効 [{tag.ToString()}]");
-                    }
-
                     sb.Append(ToText(tag));
                     continue;
                 }
-                if (tag.getName() == "ruby")
-                {
-                    dict["ruby"] = tag.isOpen() ? 1 : 0;
-                    dict["rt"] = 0; //reset
-                }
-                if (tag.getName() == "rt")
-                    dict["rt"] = tag.isOpen() ? 1 : 2; //閉じたら2
+                // ルビ
+                sb.Append(SetRubyFlag(tag));
+
                 //タグ
                 sb.Append(ToTag(tag));
                 if (tag.isTag())
@@ -193,8 +195,73 @@ namespace journal.console.lib.Consoles
             return sb.ToString();
         }
 
+        // ルビのフラグをセット、</ruby>で出力
+        private string SetRubyFlag(TagBase tag)
+        {
+            if (tag.getName() == "ruby" || tag.getName() == "添")
+            {
+                if (tag.isClose())
+                {
+                    if (string.IsNullOrEmpty(OyaText))
+                        Log.err(Path, Gyono, "RUBYFLAG", $"<ruby>または<添>に親文字がない");
+                    
+                    // どっちもあるときは圏点+左ルビ
+                    if (!string.IsNullOrEmpty(RubyTextR) && !string.IsNullOrEmpty(RubyTextL))
+                    {
+                        return $"<圏点 位置=左 種類=\"{RubyTextL}\"><ruby>{OyaText}<rt>{RubyTextR}</rt></ruby></圏点>";
+                    }
+                    
+                    // 通常ルビ
+                    var res= $"<ruby>{OyaText}";
+                    if (!string.IsNullOrEmpty(RubyTextL))
+                        res += $"<lt>{RubyTextL}</lt>";
+                    if (!string.IsNullOrEmpty(RubyTextR))
+                        res += $"<rt>{RubyTextR}</rt>";
+                    res += $"</ruby>";
+
+                    Flag["ruby"] = false;
+                    Flag["rt"] = false; //reset
+                    Flag["lt"] = false;
+                    OyaText = "";
+                    RubyTextL = "";
+                    RubyTextR = "";
+                    return res;
+                }
+                // reset
+                Flag["ruby"] = tag.isOpen();
+                Flag["rt"] = false; //reset
+                Flag["lt"] = false;
+                OyaText = "";
+                RubyTextL = "";
+                RubyTextR = "";
+            }
+            if (tag.getName() == "rt")
+            {
+                Flag["rt"] = tag.isOpen();
+            }
+            if (tag.getName() == "GR")
+            {
+                Flag["rt"] = tag.isOpen();
+            }
+            if (tag.getName() == "lt")
+            {
+                Flag["lt"] = tag.isOpen();
+            }
+            return "";
+        }
+
         string ToTag(TagBase tag)
         {
+            // 無視 ルビとして処理
+            string[] mushi = {"添","GR","ruby","rt","lt","見出"};
+            if (Array.IndexOf(mushi, tag.getName()) >= 0)
+                return "";
+            
+            //  そのまま出力
+            string[] valid = { "改行","字揃","太字","縦横","圏点","下線","スタ"};
+            if (Array.IndexOf(valid, tag.getName()) >= 0)
+                return tag.ToString();
+            
             //<大字>は<ス字 大字>
             if (tag.getName() == "大字")
             {
@@ -202,11 +269,28 @@ namespace journal.console.lib.Consoles
                     return "</ス字>";
                 return $"<ス字 大字>";
             }
+            Log.err(Path,Gyono,"tagtext",$"無効なタグ {tag.ToString()}");
             return tag.ToString();
         }
 
         string ToText(TagBase tag)
         {
+//            if (Flag["ruby"] > 0 && Flag["rt"] == 2)
+//            {
+//                Log.err(Path, tag.GyoNo, "journal06", $"<rt>または<GR>の文字列は無効 [{tag.ToString()}]");
+//            }
+
+            if (Flag["ruby"])
+            {
+                if (Flag["lt"])
+                    RubyTextL = tag.ToString();
+                if(Flag["rt"])
+                    RubyTextR = tag.ToString();
+                if (!Flag["lt"] && !Flag["rt"])
+                    OyaText = tag.ToString();
+                return "";
+            }
+            
             var sb = new StringBuilder();
 
             var txt = tag.ToString()
