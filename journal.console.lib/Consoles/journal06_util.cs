@@ -34,6 +34,9 @@ namespace journal.console.lib.Consoles
             Flag["ruby"] = false;
             Flag["rt"] = false;
             Flag["lt"] = false;
+            OyaText = "";
+            RubyTextL = "";
+            RubyTextR = "";
             StyleList = new List<StyleItem>();
         }
 
@@ -201,11 +204,38 @@ namespace journal.console.lib.Consoles
                 sb.Append(CreateTextFromPara(para));
                 sb.Append("\r\n");
             }
-            return sb.ToString()
+            var res = sb.ToString()
                     .Replace("――", "<分禁>――</分禁>")
                     .Replace("</割>", "</割注>")
                     .Replace("<割>", "<割注>")
                 ;
+            
+            //<下付>一</下付><上付>テ</上付> ==> <割注>
+            res = ReplaceWarichu(res);
+            
+            return res;
+        }
+
+        string ReplaceWarichu(string buf)
+        {
+//            var regex=new Regex(@"<下付>(.*?)</下付><上付>(.*?)</上付>");
+            var regex=new Regex(@"<下付>(.?[^<]*)</下付><上付>(.?[^<]*)</上付>");
+            while (regex.IsMatch(buf))
+            {
+                var match = regex.Match(buf);
+                var grp1 = match.Groups[1].ToString();
+                var grp2 = match.Groups[2].ToString();
+                buf = regex.Replace(buf, $"<割注>{grp2}<項段>{grp1}</割注>",1);
+            }
+            regex=new Regex(@"<上付>(.?[^<]*)</上付><下付>(.?[^<]*)</下付>");
+            while (regex.IsMatch(buf))
+            {
+                var match = regex.Match(buf);
+                var grp1 = match.Groups[1].ToString();
+                var grp2 = match.Groups[2].ToString();
+                buf = regex.Replace(buf, $"<割注>{grp1}<項段>{grp2}</割注>",1);
+            }
+            return buf;
         }
 
         string CreateTextFromPara(ParaItem para)
@@ -286,6 +316,11 @@ namespace journal.console.lib.Consoles
                     ResetRubyFlag();
                     return res;
                 }
+                if (tag.isOpen() && Flag["ruby"])
+                {
+                    Log.err(Path, Gyono, "rubyflag", $"<ruby>が閉じないで<ruby>がきた");
+                }
+
                 // reset
                 ResetRubyFlag();
                 Flag["ruby"] = tag.isOpen();
@@ -321,9 +356,15 @@ namespace journal.console.lib.Consoles
             string[] mushi = {"添","GR","ruby","rt","lt","見出"};
             if (Array.IndexOf(mushi, tag.getName()) >= 0)
                 return "";
+
+            if ( tag.getName()!="ruby" && Flag["ruby"])
+            {
+                OyaText += tag.ToString();
+                return "";
+            }
             
             //  そのまま出力
-            string[] valid = { "改行","字揃","縦横","圏点","下線","スタ"};
+            string[] valid = { "改行","字揃","縦横","圏点","下線","スタ","上付","下付","書体"};
             if (Array.IndexOf(valid, tag.getName()) >= 0)
                 return tag.ToString();
             
@@ -348,11 +389,11 @@ namespace journal.console.lib.Consoles
             if (Flag["ruby"])
             {
                 if (Flag["lt"])
-                    RubyTextL = tag.ToString();
+                    RubyTextL += tag.ToString();
                 if(Flag["rt"])
-                    RubyTextR = tag.ToString();
+                    RubyTextR += tag.ToString();
                 if (!Flag["lt"] && !Flag["rt"])
-                    OyaText = tag.ToString();
+                    OyaText += tag.ToString();
                 return "";
             }
             
