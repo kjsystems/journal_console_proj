@@ -263,16 +263,17 @@ namespace journal.console.lib.Consoles
                 return "";
             
             //  そのまま出力
-            string[] valid = { "改行","字揃","太字","縦横","圏点","下線","スタ"};
+            string[] valid = { "改行","字揃","縦横","圏点","下線","スタ"};
             if (Array.IndexOf(valid, tag.getName()) >= 0)
                 return tag.ToString();
             
-            //<大字>は<ス字 大字>
-            if (tag.getName() == "大字")
+            // <ス字>→<ス字 大字>
+            string[] suji = { "大字","太字","ゴシ"};
+            if (Array.IndexOf(suji, tag.getName()) >= 0)
             {
                 if (tag.isOpen() != true)
                     return "</ス字>";
-                return $"<ス字 大字>";
+                return $"<ス字 {tag.getName()}>";
             }
             Log.err(Path,Gyono,"tagtext",$"無効なタグ {tag.ToString()}");
             return tag.ToString();
