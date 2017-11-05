@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -9,18 +10,31 @@ using kj.kihon.Utils;
 
 namespace journal.console.lib.Consoles
 {
+    public class StyleItem
+    {
+        public enum StyleType
+        {
+            ス字,
+            スタ
+        };
+        public StyleType Style { get; set; }
+        public string StyleName { get; set; }
+    }
+    
     public class journal06_util : kihon_base
     {
         private string OyaText { get; set; }
         private string RubyTextL { get; set; }  //左ルビ
         private string RubyTextR { get; set; }  //右ルビ
         Dictionary<string, bool> Flag = new Dictionary<string, bool>();
+        private List<StyleItem> StyleList { get; set; }
 
         public journal06_util(ILogger log) : base(log)
         {
             Flag["ruby"] = false;
             Flag["rt"] = false;
             Flag["lt"] = false;
+            StyleList = new List<StyleItem>();
         }
 
         public void Run(string jobdir)
@@ -34,16 +48,62 @@ namespace journal.console.lib.Consoles
             {
                 Path = srcpath;
                 var outpath = kjpdir.combine(srcpath.getFileNameWithoutExtension() + ".kjp");
-                System.Console.WriteLine($"{srcpath}");
-                System.Console.WriteLine($"==>{outpath}");
+                RunFromPath(srcpath, outpath);
+            }
+        }
 
-                FileUtil.writeTextToFile(CreateTextFromPath(srcpath), Encoding.UTF8, outpath);
+        StyleItem.StyleType GetStyleType(string buf)
+        {
+            var dict = new Dictionary<string, StyleItem.StyleType>
+            {
+                {"ス字", StyleItem.StyleType.ス字},
+                {"スタ", StyleItem.StyleType.スタ},
+            };
+            if (dict.ContainsKey(buf))
+                return dict[buf];
+            throw new Exception($"1コラム目がス字orスタでない");
+        }
+        /**
+         ス字	大字
+        ス字	太字
+        ス字	ゴシ
+        スタ	見出1
+        スタ	見出2
+        スタ	見出3
+         */
+        void ReadStylePath()
+        {
+            var stylePath = Path
+                .getDirectoryName()
+                .getUpDir()
+                .combine("style.txt");
+            if (!File.Exists(stylePath))
+                throw new Exception($"style.txtがない path={stylePath}");
+            Console.WriteLine($"スタイルの読み込み");
+            Console.WriteLine($"==>{stylePath}");
+            
+            var strlst = FileUtil.getTextListFromPath(stylePath, Encoding.UTF8);
+            foreach (var gyo in strlst)
+            {
+                var tokens = gyo.Split('\t');
+                if (tokens.Length >= 2)
+                {
+                    StyleList.Add(new StyleItem
+                    {
+                        Style = GetStyleType(tokens[0]),
+                        StyleName = tokens[1]
+                    });
+                }
             }
         }
 
         public void RunFromPath(string srcpath, string outpath)
         {
             Path = srcpath;
+            
+            // style.txtの読み込み
+            ReadStylePath();
+            
             System.Console.WriteLine($"{srcpath}");
             System.Console.WriteLine($"==>{outpath}");
             FileUtil.writeTextToFile(CreateTextFromPath(srcpath), Encoding.UTF8, outpath);
@@ -267,14 +327,13 @@ namespace journal.console.lib.Consoles
             if (Array.IndexOf(valid, tag.getName()) >= 0)
                 return tag.ToString();
             
-            // <ス字>→<ス字 大字>
-            string[] suji = { "大字","太字","ゴシ"};
-            if (Array.IndexOf(suji, tag.getName()) >= 0)
+            // <ス字>→<ス字 大字>  style.txtを読み込み
+            var suta = StyleList.FirstOrDefault(m => m.StyleName==tag.getName());
+            if (suta != null)
             {
-                if (tag.isOpen() != true)
-                    return "</ス字>";
-                return $"<ス字 {tag.getName()}>";
+                return　tag.isOpen() ? $"<{suta.Style} {suta.StyleName}>" :  $"</{suta.Style}>";
             }
+            
             Log.err(Path,Gyono,"tagtext",$"無効なタグ {tag.ToString()}");
             return tag.ToString();
         }
