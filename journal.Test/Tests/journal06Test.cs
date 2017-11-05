@@ -10,6 +10,17 @@ namespace journal.Test.Tests
     public class journal06Test
     {
         [Test]
+        public void rubyタグ内にタグあり()
+        {
+            var util = new journal06_util(new ErrorLogger());
+            var paralst = new List<ParaItem>();
+            paralst.Add(new ParaItem
+            {
+                Text = "三条<ruby><大字>実</大字>実<rt>さね</rt></ruby>年"
+            });
+            Assert.AreEqual("<字下 0><問答 0>三条<ruby><大字>実</大字>実<rt>さね</rt></ruby>年\r\n"
+                ,util.CreateTextFromParaList(paralst));
+        }
         public void rubyタグ()
         {
             var util = new journal06_util(new ErrorLogger());
@@ -19,6 +30,18 @@ namespace journal.Test.Tests
                 Text = "公家・三条<ruby>実<rt>さね</rt></ruby><ruby>万<rt>つむ</rt></ruby>（享和二〈一八〇二〉年"
             });
             Assert.AreEqual("<字下 0><問答 0>公家・三条<ruby>実<rt>さね</rt></ruby><ruby>万<rt>つむ</rt></ruby>（享和二〈一八〇二〉年\r\n"
+                ,util.CreateTextFromParaList(paralst));
+        }
+        [Test]
+        public void 下付上付が連続する場合は割注()
+        {
+            var util = new journal06_util(new ErrorLogger());
+            var paralst = new List<ParaItem>();
+            paralst.Add(new ParaItem
+            {
+                Text = "流罪<下付>一</下付><上付>テ</上付>配所"
+            });
+            Assert.AreEqual("<字下 0><問答 0>流罪<割注>テ<項段>一</割注>配所\r\n"
                 ,util.CreateTextFromParaList(paralst));
         }
         [Test]
