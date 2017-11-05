@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 using journal.console.lib.Models;
 using kj.kihon;
 using kj.kihon.Utils;
@@ -110,8 +111,67 @@ namespace journal.console.lib.Consoles
             System.Console.WriteLine($"{srcpath}");
             System.Console.WriteLine($"==>{outpath}");
             FileUtil.writeTextToFile(CreateTextFromPath(srcpath), Encoding.UTF8, outpath);
+            
+            // kjpxとして出力
+            WriteKjpxFile(outpath);
         }
 
+        void WriteKjpxFile(string kjppath)
+        {
+            var sb=new StringBuilder();
+            var util = new TagTextUtil(Log);
+            var taglst = util.parseTextFromPath(kjppath, Encoding.UTF8);
+
+            sb.AppendLine($"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            sb.AppendLine("<kjp>");
+            foreach (var tag in taglst)
+            {
+                string[] omit = { "選択","字下","問答","字揃","改行","スタ","ス字","項段"};
+                if (Array.IndexOf(omit, tag.getName())>=0)
+                {
+                    sb.Append($"<{tag.getName()}/>");
+                    continue;
+                }
+                if (tag.isOpen())
+                {
+                    sb.Append($"<{tag.getName()}>");
+                    continue;
+                }
+                if (tag.isClose())
+                {
+                    sb.Append($"</{tag.getName()}>");
+                    continue;
+                }
+                sb.Append($"{tag.ToString()}");
+            }
+            sb.AppendLine("</kjp>");
+            
+            var outpath = kjppath
+                .getDirectoryName()
+                .combine($"{kjppath.getFileNameWithoutExtension()}.kjpx");
+                                            Console.WriteLine($"==>{outpath}");
+            FileUtil.writeTextToFile(sb.ToString(),Encoding.UTF8,outpath);
+            CheckXmlContent(outpath);
+        }
+
+        void CheckXmlContent(string path)
+        {
+            XmlTextReader tr = new XmlTextReader(path);
+            while (!tr.EOF){
+                int gyono = tr.LineNumber;
+                try
+                {
+                    tr.Read();
+                }
+                catch (Exception ex)
+                {
+                    Log.err(path, gyono, "checkxml", "解析できません["+tr.Value+"] "+ex.Message);
+                    break;
+                }
+            }
+            tr.Close();
+        }
+        
         // 先頭改行を削除
         string TrimLeftKaigyo(string buf)
         {
