@@ -148,6 +148,9 @@ namespace journal.console.lib.Consoles
             
             var outpath = kjppath
                 .getDirectoryName()
+                .getUpDir()
+                .combine("kjpx")
+                .createDirIfNotExist()
                 .combine($"{kjppath.getFileNameWithoutExtension()}.kjpx");
                                             Console.WriteLine($"==>{outpath}");
             FileUtil.writeTextToFile(sb.ToString(),Encoding.UTF8,outpath);
