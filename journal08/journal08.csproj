@@ -37,9 +37,6 @@
     <Reference Include="kjlib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\kjsystems.kjlib.1.0.21\lib\kjlib.dll</HintPath>
     </Reference>
-    <Reference Include="kjp2idml.lib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null, ProcessorArchitecture=X86">
-      <HintPath>..\..\idml_proj\kjp2idml.lib\bin\Debug\kjp2idml.lib.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -62,14 +59,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\idml_proj\idml.lib\idml.lib.csproj">
-      <Project>{0ffcac80-0eb4-4f40-ae64-f14b2c30ac8f}</Project>
-      <Name>idml.lib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\idml_proj\kjp2idml\kjp2idml.csproj">
-      <Project>{5ba4b3d2-c15e-4948-bb1f-3694ddb55690}</Project>
-      <Name>kjp2idml</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ind2idml_proj\InddAppLibCS6\InddAppLibCS6.vbproj">
       <Project>{bc99c27d-8eb9-4c81-86c6-627f36318f1d}</Project>
       <Name>InddAppLibCS6</Name>
@@ -80,5 +69,4 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\ind2idml_proj\idmltool.shared\idmltool.shared.projitems" Label="Shared" />
 </Project>

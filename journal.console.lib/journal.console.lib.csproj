@@ -36,11 +36,23 @@
     <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
     </Reference>
+    <Reference Include="idml.lib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\kjp2idml.lib.1.0.2\lib\idml.lib.dll</HintPath>
+    </Reference>
+    <Reference Include="idmltool.lib.cs6, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\idmltool.lib.cs6.1.0.1\lib\idmltool.lib.cs6.dll</HintPath>
+    </Reference>
+    <Reference Include="InddAppLibCS6, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\InddAppLibCS6.1.0.0\lib\InddAppLibCS6.dll</HintPath>
+    </Reference>
     <Reference Include="kjlib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\kjsystems.kjlib.1.0.21\lib\kjlib.dll</HintPath>
     </Reference>
     <Reference Include="kjlib.zip, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\kjsystems.kjlib.zip.1.0.2\lib\kjlib.zip.dll</HintPath>
+    </Reference>
+    <Reference Include="kjp2idml.lib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\kjp2idml.lib.1.0.2\lib\kjp2idml.lib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.2.0.4\lib\net45\Microsoft.Azure.KeyVault.Core.dll</HintPath>
@@ -87,6 +99,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Consoles\journal08_util.cs" />
     <Compile Include="Consoles\journal09_util.cs" />
     <Compile Include="Consoles\journal02_util.cs" />
     <Compile Include="Consoles\journal03_util.cs" />
