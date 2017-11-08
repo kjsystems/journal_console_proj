@@ -15,22 +15,22 @@ namespace journal08
             {
                 Console.WriteLine($"{AppUtil.AppName}:TXTからPDFまで作成");
                 var lst = ArgListUtil.createArgList(args);
-                
+
                 // ディレクトリで処理
                 var srcdir = lst.getText('i');
 
                 // kjpから(TXT→KJPをSKIP)
-                var fromKjp = lst.getText('k').toInt(0)>0 ? true : false;
+                var fromKjp = lst.getText('k').toInt(0) > 0 ? true : false;
 
                 // kjpから(TXT→KJPをSKIP)
-                var fromSjisKjp = lst.getText('s').toInt(0)>0 ? true : false;
-                
+                var fromSjisKjp = lst.getText('s').toInt(0) > 0 ? true : false;
+
                 var templateFileName = !string.IsNullOrEmpty(lst.getText('t')) ? lst.getText('t') : "template.idml";
-                
-                var util=new journal08_util(log);
+
+                var util = new journal08_util(log);
                 if (srcdir.existDir(false))
                 {
-                    util.RunForJobDir(srcdir,templateFileName,fromKjp,fromSjisKjp,log);
+                    util.RunForJobDir(srcdir, templateFileName, fromKjp, fromSjisKjp, log);
                 }
 
                 // テキスト単体で処理
@@ -41,7 +41,7 @@ namespace journal08
                     {
                         throw new Exception("sjisのファイル単体オプションは無効");
                     }
-                    util.RunForTextPath(txtpath,templateFileName,fromKjp,log);
+                    util.RunForTextPath(txtpath, templateFileName, fromKjp, log);
                 }
             }
             catch (Exception ex)

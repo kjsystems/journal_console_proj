@@ -41,7 +41,7 @@ namespace journal.console.lib.Consoles
             for (int m = 0; m < lst.Count; m++)
             {
                 lst[m] = lst[m]
-                        .Replace("<ス字 Ｇ /><改行>","<改行>")
+                        .Replace("<ス字 Ｇ /><改行>", "<改行>")
                         .Replace("<字形 種類=aalt 番号=8 CID=10763>&#x20dd;</字形>", "●")
                         .Replace("<字類 種類=none>", "")
                         .Replace("<字類 種類=\"\">", "")

@@ -8,25 +8,25 @@ using kj.kihon;
 
 namespace journal03
 {
-  class Program
-  {
-    static void Main(string[] args)
+    class Program
     {
-      var log = new ErrorLogger("{AppUtil.AppName }:XMLからHTML(Tategumi用フォーマット)の作成");
-      try
-      {
-        var lst = ArgListUtil.createArgList(args);
-        var srcdir = lst.getText('i');
-        srcdir.existDir();
+        static void Main(string[] args)
+        {
+            var log = new ErrorLogger("{AppUtil.AppName }:XMLからHTML(Tategumi用フォーマット)の作成");
+            try
+            {
+                var lst = ArgListUtil.createArgList(args);
+                var srcdir = lst.getText('i');
+                srcdir.existDir();
 
-        var core = new journal03_util(log);
-        core.Run(srcdir);
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine("エラーがあります {0}", ex.Message);
-      }
-      log.showdosmsg();
+                var core = new journal03_util(log);
+                core.Run(srcdir);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("エラーがあります {0}", ex.Message);
+            }
+            log.showdosmsg();
+        }
     }
-  }
 }

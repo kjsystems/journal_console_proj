@@ -13,14 +13,16 @@ namespace wordxml.Models
             AttrList = new Dictionary<string, string>();
             TagList = new Dictionary<EnumAttrType, string>
             {
-                {EnumAttrType.Underline,"上線"},
-                {EnumAttrType.Bold,"太字"},
-                {EnumAttrType.Subscript,"下付"},
-                {EnumAttrType.Superscript,"上付"},
-                {EnumAttrType.Kenten,"圏点"},
+                {EnumAttrType.Underline, "上線"},
+                {EnumAttrType.Bold, "太字"},
+                {EnumAttrType.Subscript, "下付"},
+                {EnumAttrType.Superscript, "上付"},
+                {EnumAttrType.Kenten, "圏点"},
             };
         }
+
         public Dictionary<string, string> AttrList { get; set; }
+
         public enum EnumAttrType
         {
             Underline,
@@ -29,6 +31,7 @@ namespace wordxml.Models
             Superscript,
             Kenten
         }
+
         public EnumAttrType AttrType { get; set; }
 
         private Dictionary<EnumAttrType, string> TagList { get; set; }
@@ -43,6 +46,7 @@ namespace wordxml.Models
             }
             return sb.ToString();
         }
+
         public string GetText(bool isOpen)
         {
             var sb = new StringBuilder();

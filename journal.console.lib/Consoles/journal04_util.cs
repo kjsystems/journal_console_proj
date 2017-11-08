@@ -32,7 +32,7 @@ namespace journal.console.lib.Consoles
         void ReadMokuji(out List<JoMokuji> mokulst)
         {
             Console.WriteLine($"{MokujiPath}");
-            
+
             mokulst = new List<JoMokuji>();
             var rd = new CSVFileReader(new ErrorLogger());
             rd.setupTargetToken('\t');
@@ -43,9 +43,9 @@ namespace journal.console.lib.Consoles
                 {
                     Id = row["ID"].toInt(0),
                     Go = row["号数"],
-                    Tokushu = row["特集名"], 
+                    Tokushu = row["特集名"],
                     Henshu = row["編集委員"],
-                    IsDebug = row["編集中"]=="*"
+                    IsDebug = row["編集中"] == "*"
                 });
             }
         }
@@ -68,8 +68,8 @@ namespace journal.console.lib.Consoles
             //mokuji.txtを読み込み
             Console.WriteLine($"目次の読み込み");
             ReadMokuji(out List<JoMokuji> mokulst);
-            
-            
+
+
             Console.WriteLine(xmldir);
             var idxlst = new List<BunshoResult>();
             Console.WriteLine($"インデックスの作成");
@@ -88,7 +88,7 @@ namespace journal.console.lib.Consoles
             outpath = idxdir.combine(FILENAME_CONTENTS_JSON);
             Console.WriteLine($"==>{outpath}");
             FileUtil.writeTextToFile(JsonConvert.SerializeObject(conlst, Formatting.Indented), Encoding.UTF8, outpath);
-            
+
             outpath = idxdir.combine(FILENAME_MOKUJI_JSON);
             Console.WriteLine($"==>{outpath}");
             FileUtil.writeTextToFile(JsonConvert.SerializeObject(mokulst, Formatting.Indented), Encoding.UTF8, outpath);
@@ -129,13 +129,14 @@ namespace journal.console.lib.Consoles
             }
             catch (Exception ex)
             {
-                Log.err(Path,0,"addindex",ex.Message);
+                Log.err(Path, 0, "addindex", ex.Message);
             }
         }
 
         #endregion
 
-        void AddBunsho(XmlNode bunsho, string fileName, int go, List<JournalContent>conlst, ref int curPage, ref List<BunshoResult> idxlst)
+        void AddBunsho(XmlNode bunsho, string fileName, int go, List<JournalContent>conlst, ref int curPage,
+            ref List<BunshoResult> idxlst)
         {
             try
             {
@@ -168,7 +169,7 @@ namespace journal.console.lib.Consoles
             }
             catch (Exception ex)
             {
-                 Log.err(Path,0,"addbunsho",ex.Message);   
+                Log.err(Path, 0, "addbunsho", ex.Message);
             }
         }
     }

@@ -16,7 +16,7 @@ namespace journal.console.lib.Consoles
 
         string ChangeText(string txt)
         {
-            var sb=new StringBuilder();
+            var sb = new StringBuilder();
             var taglst = TagTextUtil.parseText(txt);
             foreach (var tag in taglst)
             {
@@ -33,7 +33,7 @@ namespace journal.console.lib.Consoles
 
         string CreateTextFromParaList(List<ParaItem> paralst)
         {
-            var sb=new StringBuilder();
+            var sb = new StringBuilder();
             var preJisage = 0;
             var preMondo = 0;
             foreach (var para in paralst)
@@ -66,7 +66,7 @@ namespace journal.console.lib.Consoles
             srcdir.existDir();
             var xmldir = srcdir.combine("srcxml");
             xmldir.existDir();
-            var outdir = srcdir.combine( "txt").createDirIfNotExist();
+            var outdir = srcdir.combine("txt").createDirIfNotExist();
 
             string[] srcfiles = xmldir.getFiles("*.xml");
             foreach (var path in srcfiles)
@@ -77,11 +77,11 @@ namespace journal.console.lib.Consoles
                 jo03.ParseDocumentXml(path);
 
                 // TXTへ書き出し
-                var outpath = outdir.combine(path.getFileNameWithoutExtension()+".txt");
+                var outpath = outdir.combine(path.getFileNameWithoutExtension() + ".txt");
                 var txt = CreateTextFromParaList(jo03.ParaList);
 
                 Console.WriteLine($"==>{outpath}");
-                FileUtil.writeTextToFile(txt,Encoding.UTF8,outpath);
+                FileUtil.writeTextToFile(txt, Encoding.UTF8, outpath);
             }
         }
     }

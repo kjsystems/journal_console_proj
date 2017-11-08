@@ -12,7 +12,7 @@ namespace journal.Test.Tests
         {
             var manager = new SearchManager();
             manager.AddChoshaFilter("久保田　淳");
-            Assert.AreEqual("chosha eq '久保田　淳'",SearchFilter.CreateFilter( manager.FilterList));
+            Assert.AreEqual("chosha eq '久保田　淳'", SearchFilter.CreateFilter(manager.FilterList));
         }
     }
 }

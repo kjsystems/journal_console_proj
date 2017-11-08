@@ -15,7 +15,7 @@ namespace journal04
             var log = new ErrorLogger("$error.txt");
             try
             {
-                Console.WriteLine($"{AppUtil.AppName }:xmlから抽出");
+                Console.WriteLine($"{AppUtil.AppName}:xmlから抽出");
                 var lst = ArgListUtil.createArgList(args);
                 var srcdir = lst.getText('i');
                 srcdir.existDir();

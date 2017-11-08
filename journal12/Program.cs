@@ -14,9 +14,9 @@ namespace journal12
             {
                 Console.WriteLine($"KJPからテキストの作成");
                 var lst = ArgListUtil.createArgList(args);
-                var srcdir= lst.getText('i');
+                var srcdir = lst.getText('i');
                 srcdir.existDir();
-                
+
                 var util = new journal12_util(log);
                 util.Run(srcdir);
             }

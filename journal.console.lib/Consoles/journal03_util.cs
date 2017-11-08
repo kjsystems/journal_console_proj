@@ -50,6 +50,7 @@ namespace journal.console.lib.Consoles
         }
 
         #region <w:t>の中のテキスト
+
         string ParseRun(XmlNode node)
         {
             var sb = new StringBuilder();
@@ -61,22 +62,26 @@ namespace journal.console.lib.Consoles
             sb.Append(node.OuterXml);
             return sb.ToString();
         }
+
         #endregion
 
         #region <文章>
+
         void ParseBunsho(XmlNode bunsho)
         {
             //runは複数
             var sb = new StringBuilder();
-            foreach (XmlNode run in bunsho.ChildNodes)  //<w:r>
+            foreach (XmlNode run in bunsho.ChildNodes) //<w:r>
             {
                 sb.Append(ParseRun(run));
             }
             ParaList.Last().Text = sb.ToString();
         }
+
         #endregion
 
         #region Parse Xml Path
+
         public void ParseDocumentXml(string documentPath)
         {
             var sb = new StringBuilder();
@@ -103,18 +108,18 @@ namespace journal.console.lib.Consoles
                         }
 
                         var jisoroe = node.Attributes?["揃え"]?.Value;
-                        if (!string.IsNullOrEmpty(jisoroe) && jisoroe== "下")
+                        if (!string.IsNullOrEmpty(jisoroe) && jisoroe == "下")
                         {
                             para.IsJisoroe = true;
                         }
 
                         ParaList.Add(para);
                         ParseBunsho(node);
-
                     }
                 }
             }
         }
+
         #endregion
     }
 }

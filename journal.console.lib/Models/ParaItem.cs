@@ -22,10 +22,10 @@ namespace journal.console.lib.Models
 
         public static string CreateText(List<ParaItem> paralst)
         {
-            var sb=new StringBuilder();
+            var sb = new StringBuilder();
             foreach (var para in paralst)
             {
-                sb.Append(para.CreateText()+"\r\n");
+                sb.Append(para.CreateText() + "\r\n");
             }
             return sb.ToString();
         }

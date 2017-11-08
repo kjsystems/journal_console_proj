@@ -20,19 +20,19 @@ namespace journal10
                 var lst = ArgListUtil.createArgList(args);
                 var srcdir = lst.getText('i');
                 srcdir.existDir();
-                
+
                 var appTypeChar = lst.getText('t');
-                journal10_util.AppType appType= journal10_util.AppType.none;
-                if(appTypeChar=="kenkyu")
-                    appType= journal10_util.AppType.kenkyu;
-                if(appTypeChar=="journal")
-                    appType= journal10_util.AppType.journal;
+                journal10_util.AppType appType = journal10_util.AppType.none;
+                if (appTypeChar == "kenkyu")
+                    appType = journal10_util.AppType.kenkyu;
+                if (appTypeChar == "journal")
+                    appType = journal10_util.AppType.journal;
 
                 if (appType == journal10_util.AppType.none)
                     throw new Exception($"AppType(/t)が定義されていない kenkyu or journal");
-                
+
                 var core = new journal10_util(log);
-                core.Run(srcdir,appType);
+                core.Run(srcdir, appType);
             }
             catch (Exception ex)
             {

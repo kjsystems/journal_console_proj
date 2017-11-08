@@ -12,7 +12,6 @@ namespace journal11
     {
         static void Main(string[] args)
         {
-
             var log = new ErrorLogger();
             if (log.isValid() != true) return;
             try

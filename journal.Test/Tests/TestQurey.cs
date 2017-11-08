@@ -11,39 +11,43 @@ namespace journal.Test
         public void Qurey_藤原定家()
         {
             var ser = new SearchManager();
-            var result = ser.QueryHonbun(new[] { "藤原定家" }.ToList());
+            var result = ser.QueryHonbun(new[] {"藤原定家"}.ToList());
             Assert.AreEqual(19, result.Count);
         }
+
         [Test]
         public void Qurey_藤原定家_著者()
         {
             var ser = new SearchManager();
             ser.AddChoshaFilter("久保田　淳");
-            var result = ser.QueryHonbun(new[] { "藤原定家" }.ToList());
+            var result = ser.QueryHonbun(new[] {"藤原定家"}.ToList());
             Assert.AreEqual(5, result.Count);
         }
+
         [Test]
         public void Qurey_藤原定家_1巻()
         {
             var ser = new SearchManager();
             ser.AddGoFilter(1);
-            var result = ser.QueryHonbun(new[] { "藤原定家" }.ToList());
+            var result = ser.QueryHonbun(new[] {"藤原定家"}.ToList());
             Assert.AreEqual(11, result.Count);
         }
+
         [Test]
         public void Qurey_藤原定家_著者_1巻()
         {
             var ser = new SearchManager();
             ser.AddChoshaFilter("久保田　淳");
             ser.AddGoFilter(1);
-            var result = ser.QueryHonbun(new[] { "藤原定家" }.ToList());
+            var result = ser.QueryHonbun(new[] {"藤原定家"}.ToList());
             Assert.AreEqual(5, result.Count);
         }
+
         [Test]
         public void Qurey_逢恋()
         {
             var ser = new SearchManager();
-            var result = ser.QueryHonbun(new[] { "逢恋" }.ToList());
+            var result = ser.QueryHonbun(new[] {"逢恋"}.ToList());
             Assert.AreEqual(5, result.Count);
             Assert.AreEqual(1, result[0].Go);
             Assert.AreEqual(38, result[0].Page, "Page");
@@ -59,54 +63,61 @@ namespace journal.Test
             Assert.AreEqual(108, result[3].Page);
             Assert.AreEqual(118, result[4].Page);
         }
+
         [Test]
         public void Qurey_正徹()
         {
             var ser = new SearchManager();
-            var result = ser.QueryHonbun(new[] { "正徹" }.ToList());
+            var result = ser.QueryHonbun(new[] {"正徹"}.ToList());
             Assert.AreEqual(51, result.Count);
         }
+
         [Test]
         public void Qurey_正徹あああ()
         {
             var ser = new SearchManager();
-            var result = ser.QueryHonbun(new[] { "正徹あああ" }.ToList());
+            var result = ser.QueryHonbun(new[] {"正徹あああ"}.ToList());
             Assert.AreEqual(0, result.Count);
         }
+
         [Test]
         public void Qurey_And_逢恋_正徹()
         {
             var ser = new SearchManager();
-            var result = ser.QueryHonbun(new[] { "逢恋", "正徹" }.ToList());
+            var result = ser.QueryHonbun(new[] {"逢恋", "正徹"}.ToList());
             Assert.AreEqual(0, result.Count);
         }
+
         [Test]
         public void Qurey_Or_逢恋_正徹()
         {
             var ser = new SearchManager();
-            var result = ser.QueryHonbun(new[] { "逢恋", "正徹" }.ToList());
+            var result = ser.QueryHonbun(new[] {"逢恋", "正徹"}.ToList());
             Assert.AreEqual(0, result.Count);
         }
+
         [Test]
         public void Qurey_And_藤原定家_古今和歌集()
         {
             var ser = new SearchManager();
-            var result = ser.QueryHonbun(new[] { "藤原定家", "古今和歌集" }.ToList());
+            var result = ser.QueryHonbun(new[] {"藤原定家", "古今和歌集"}.ToList());
             Assert.AreEqual(3, result.Count);
             Assert.AreEqual("001-01", result[0].FileName);
         }
+
         [Test]
         public void Qurey_Or_藤原定家_古今和歌集()
         {
             var ser = new SearchManager();
-            var result = ser.QueryHonbun(new[] { "藤原定家", "古今和歌集" }.ToList(), SearchManager.JournalSearchMode.Or);
+            var result = ser.QueryHonbun(new[] {"藤原定家", "古今和歌集"}.ToList(), SearchManager.JournalSearchMode.Or);
             Assert.AreEqual(43, result.Count);
         }
+
         [Test]
         public void Qurey_Or_定家()
         {
             var ser = new SearchManager();
-            var result = ser.QueryHonbun(new[] { "定家" }.ToList(), SearchManager.JournalSearchMode.Or);
+            var result = ser.QueryHonbun(new[] {"定家"}.ToList(), SearchManager.JournalSearchMode.Or);
             Assert.AreEqual(158, result.Count);
         }
     }

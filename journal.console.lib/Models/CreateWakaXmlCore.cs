@@ -93,7 +93,8 @@ namespace journal.console.lib.Models
                     sb.Append($"<頁 内容=\"{tag.getValue("", true)}\"/>");
                     continue;
                 }
-                if (tag.getName() == "字Ｓ" || ( Array.IndexOf(new string[]{"揃字","字揃"},tag.getName())>=0 && tag.getValue("") == "右"))
+                if (tag.getName() == "字Ｓ" || (Array.IndexOf(new string[] {"揃字", "字揃"}, tag.getName()) >= 0 &&
+                                              tag.getValue("") == "右"))
                 {
                     sb.Append($"<字エ/>"); //XMLでＳは使えないので
                     continue;
@@ -108,8 +109,8 @@ namespace journal.console.lib.Models
                     sb.Append($"<参照 fname=\"{linkFname}\">{fname}</参照>");
                     continue;
                 }
-                string[] tgt = { "上線","下線"};
-                if (Array.IndexOf(tgt,tag.getName())>=0 && tag.isOpen())
+                string[] tgt = {"上線", "下線"};
+                if (Array.IndexOf(tgt, tag.getName()) >= 0 && tag.isOpen())
                 {
                     sb.Append($"<{tag.getName()} 種類=\"{tag.getValue("種類")}\">");
                     continue;
@@ -290,7 +291,7 @@ namespace journal.console.lib.Models
         /**
 
         */
-        public void run(string txtpath, string outpath, bool isCheckOnly=false)
+        public void run(string txtpath, string outpath, bool isCheckOnly = false)
         {
             try
             {
@@ -307,7 +308,7 @@ namespace journal.console.lib.Models
 
                 if (isCheckOnly)
                     return;
-                
+
                 //strlstに $"<文章>{cur}</文章>\r\n");  して出力
                 FileUtil.writeTextToFile(createWakaXmlFromStrList(strlst), Encoding.UTF8, outpath);
             }

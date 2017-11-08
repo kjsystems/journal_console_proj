@@ -24,7 +24,9 @@ namespace wordxml.Models
 
         private int ChushakuIndex { get; set; } = 1;
         private int ParagraphFontSize { get; set; }
+
         public List<WordXmlParaItem> ParaList { get; set; }
+
         /*
          * 縦中横などはフィールド文字列
       <w:r><w:rPr><w:rFonts w:ascii="ＭＳ 明朝" w:cs="Times New Roman"/><w:color w:val="auto"/></w:rPr>
@@ -46,15 +48,16 @@ namespace wordxml.Models
 
         private List<string> InstrList { get; set; }
 
-        public void ProcessWordFile(string documentPath,string endnotesPath)
+        public void ProcessWordFile(string documentPath, string endnotesPath)
         {
             //xmlをParseする
             ParseDocumentXml(documentPath);
-            if(File.Exists(endnotesPath))
+            if (File.Exists(endnotesPath))
                 ParseEndnotesXml(endnotesPath);
         }
 
         #region <w:t>の中のテキスト
+
         string ParseTextElement(XmlNode node)
         {
             var sb = new StringBuilder();
@@ -68,32 +71,39 @@ namespace wordxml.Models
             sb.Append(node.Value);
             return sb.ToString();
         }
+
         #endregion
 
         #region 子供の一覧
+
         IEnumerable<XmlNode> getChilds(XmlNode node, string name)
         {
             return node.ChildNodes.Cast<XmlNode>().Where(m => m.Name == name);
         }
+
         #endregion
 
         #region 最初の子供
+
         XmlNode getFirstOfChilds(XmlNode node, string name)
         {
             return getChilds(node, name)?.FirstOrDefault();
         }
+
         #endregion
 
         int? getAttrInt(XmlNode node, string attrName)
         {
             return getAttrText(node, attrName)?.toInt(0);
         }
+
         string getAttrText(XmlNode node, string attrName)
         {
             return node.Attributes?[attrName]?.Value;
         }
 
         #region <w:p>
+
         /*
     http://officeopenxml.com/WPparagraph.php
     <w:p>
@@ -128,15 +138,15 @@ namespace wordxml.Models
                                 ParaList.Last().Align = WordXmlParaItem.AlignType.Center;
                                 break;
                             case "right":
-                                ParaList.Last().Align = WordXmlParaItem.AlignType.Right;  //下揃え
+                                ParaList.Last().Align = WordXmlParaItem.AlignType.Right; //下揃え
                                 break;
                         }
                     }
                     if (node.Name == "w:rPr" &&
                         node.Cast<XmlNode>()
-                          .FirstOrDefault(m => m.Name == "w:rFonts")?
-                          .Attributes?["w:eastAsiaTheme"]?
-                          .Value == "majorEastAsia")
+                            .FirstOrDefault(m => m.Name == "w:rFonts")?
+                            .Attributes?["w:eastAsiaTheme"]?
+                            .Value == "majorEastAsia")
                     {
                         ParaList.Last().IsMidashi = true;
                     }
@@ -149,22 +159,22 @@ namespace wordxml.Models
                         }
                         ParaList.Last().Jisage = 0;
                         //<w:p w:rsidR="006F4F91" w:rsidRDefault="008D23FE" w:rsidP="00967B89"><w:pPr><w:ind w:leftChars="200" w:left="3465" w:hangingChars="900" w:hanging="2835"/>
-                        var lc = getAttrInt(node, "w:leftChars");  //200 //字下げ ==> 2字
+                        var lc = getAttrInt(node, "w:leftChars"); //200 //字下げ ==> 2字
                         if (lc != null)
                         {
-                            ParaList.Last().Jisage = (int)lc / 100;
+                            ParaList.Last().Jisage = (int) lc / 100;
                         }
-                        var flc = getAttrInt(node, "w:firstLineChars");  //200 //1行目 字下げ ==> 2字
+                        var flc = getAttrInt(node, "w:firstLineChars"); //200 //1行目 字下げ ==> 2字
                         if (flc != null)
                         {
-                            ParaList.Last().Jisage += (int)flc / 100;  //足し算なので注意
-                            ParaList.Last().Mondo -= (int)flc / 100;
+                            ParaList.Last().Jisage += (int) flc / 100; //足し算なので注意
+                            ParaList.Last().Mondo -= (int) flc / 100;
                         }
-                        var hc = getAttrInt(node, "w:hangingChars");  //900 //ぶらさげ ==> 9字
+                        var hc = getAttrInt(node, "w:hangingChars"); //900 //ぶらさげ ==> 9字
                         if (hc != null)
                         {
                             //lc = getAttrInt(node, "w:leftChars");  //200 //字下げ ==> 2字
-                            ParaList.Last().Mondo = (int)hc / 100 - ParaList.Last().Jisage;
+                            ParaList.Last().Mondo = (int) hc / 100 - ParaList.Last().Jisage;
                         }
                     }
                 }
@@ -175,7 +185,7 @@ namespace wordxml.Models
             var runlst = getChilds(w_para, "w:r");
             if (runlst == null)
                 throw new Exception($"<w:r>がない para={w_para.InnerXml}");
-            foreach (var run in runlst)  //<w:r>
+            foreach (var run in runlst) //<w:r>
             {
                 sb.Append(ParseRun(run));
             }
@@ -185,9 +195,9 @@ namespace wordxml.Models
                     .Replace("</下付><下付>", "")
                     .Replace("</太字><太字>", "")
                     .Replace("</上線><上線>", "")
-                    ;
-
+                ;
         }
+
         #endregion
 
         string getInstrTextFromWR(XmlNode wrun)
@@ -206,7 +216,7 @@ namespace wordxml.Models
         {
             //ルビ
 //            if (InstrList.Count == 5 && InstrList[0].IndexOf(@"eq \o\ac(\s\up") >= 0)
-              if (InstrList.Count == 5 &&　Regex.IsMatch(InstrList[0],@"eq \\o\\(ac|ad)\(\\s\\up"))
+            if (InstrList.Count == 5 && Regex.IsMatch(InstrList[0], @"eq \\o\\(ac|ad)\(\\s\\up"))
             {
                 return $"<ruby>{InstrList[3]}<rt>{InstrList[1]}</rt></ruby>";
             }
@@ -235,7 +245,7 @@ namespace wordxml.Models
             isTextOut = false;
             if (!w_run.HasChildNodes) return;
             var fldChar = w_run.ChildNodes.Cast<XmlNode>()
-              .FirstOrDefault(n => n.Name == "w:fldChar");
+                .FirstOrDefault(n => n.Name == "w:fldChar");
             if (fldChar?.Attributes == null) return;
             var fldValue = fldChar.Attributes["w:fldCharType"].Value;
             if (fldValue == "begin") IsFldChar = true;
@@ -275,10 +285,10 @@ namespace wordxml.Models
                                 status.AttrList.Add("種類", "二重");
                                 break;
                             case "single":
-                            case "thick":  //太線
+                            case "thick": //太線
                                 break;
                             default:
-                                Log.err(Path,0,"underline", $"無効な下線種類 {value}");
+                                Log.err(Path, 0, "underline", $"無効な下線種類 {value}");
                                 break;
                         }
                         statusLst.Add(status);
@@ -327,6 +337,7 @@ namespace wordxml.Models
         }
 
         #region <w:r>
+
         public string ParseRun(XmlNode w_run)
         {
             var sb = new StringBuilder();
@@ -351,7 +362,7 @@ namespace wordxml.Models
                 {
                     InstrList.Add(instrText);
                 }
-                return sb.ToString();  //結果空
+                return sb.ToString(); //結果空
             }
 
             if (r_prop != null)
@@ -373,7 +384,7 @@ namespace wordxml.Models
                 }
             }
             //注釈番号（＊１）  //本文側
-            var w_endn = getFirstOfChilds(w_run, "w:endnoteReference");  //<w:endnoteReference w:id=""1""/>
+            var w_endn = getFirstOfChilds(w_run, "w:endnoteReference"); //<w:endnoteReference w:id=""1""/>
             if (w_endn != null && w_endn.Attributes?["w:id"] != null)
             {
                 var sujiZen = ZenHanUtil.ToZenkaku(w_endn.Attributes?["w:id"].Value);
@@ -381,7 +392,7 @@ namespace wordxml.Models
             }
 
             //注釈番号（＊１）  //注釈側 番号無し
-            w_endn = getFirstOfChilds(w_run, "w:endnoteRef");  //<w:endnoteReference w:id=""1""/>
+            w_endn = getFirstOfChilds(w_run, "w:endnoteRef"); //<w:endnoteReference w:id=""1""/>
             if (w_endn != null)
             {
                 var sujiZen = ZenHanUtil.ToZenkaku(ChushakuIndex.ToString());
@@ -409,7 +420,8 @@ namespace wordxml.Models
                     .FirstOrDefault(n => n.Name == "w:r")
                     .Cast<XmlNode>()
                     .FirstOrDefault(n => n.Name == "w:t");
-                sb.Append($"<ruby>{ParseTextElement(oya.FirstChild)}<rt>{ParseTextElement(ruby.FirstChild)}</rt></ruby>");
+                sb.Append(
+                    $"<ruby>{ParseTextElement(oya.FirstChild)}<rt>{ParseTextElement(ruby.FirstChild)}</rt></ruby>");
             }
 
             if (!string.IsNullOrEmpty(instrText))
@@ -417,9 +429,11 @@ namespace wordxml.Models
             sb.Append(WordXmlCharStatus.GetText(statusLst, false));
             return sb.ToString();
         }
+
         #endregion
 
         #region Parse Xml Path
+
         void ParseDocumentXml(string documentPath)
         {
             using (var rd = XmlReader.Create(documentPath))
@@ -429,7 +443,7 @@ namespace wordxml.Models
                 doc.Load(rd);
                 XmlNode root = doc.DocumentElement;
 
-                var w_body = root.FirstChild;//w:body
+                var w_body = root.FirstChild; //w:body
                 foreach (XmlNode node in w_body.ChildNodes)
                 {
                     if (node.Name != "w:p") continue;
@@ -438,13 +452,14 @@ namespace wordxml.Models
                 }
             }
         }
+
         void ParseEndnotesXml(string endnotesPath)
         {
             using (var rd = XmlReader.Create(endnotesPath))
             {
                 XmlDocument doc = new XmlDocument();
                 doc.Load(rd);
-                XmlNode root = doc.DocumentElement;  // <w:endnotes
+                XmlNode root = doc.DocumentElement; // <w:endnotes
 
                 //var w_endnote = root.FirstChild;//<w:endnote
                 foreach (XmlNode endnote in root.ChildNodes)
@@ -458,6 +473,7 @@ namespace wordxml.Models
                 }
             }
         }
+
         #endregion
     }
 }

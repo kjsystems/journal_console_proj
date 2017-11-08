@@ -12,14 +12,15 @@ namespace journal.console.lib.Consoles
         public enum AppType
         {
             kenkyu,
-            journal,none
+            journal,
+            none
         }
 
         public journal10_util(ILogger log) : base(log)
         {
         }
 
-        public void Run(string jobdir,journal10_util.AppType appType)
+        public void Run(string jobdir, journal10_util.AppType appType)
         {
             jobdir.existDir();
             var xmlDir = jobdir.combine("xml");
@@ -71,16 +72,16 @@ namespace journal.console.lib.Consoles
                 foreach (var path in pdfDir.getFiles("*.pdf", false))
                 {
                     var newFileName = journal09_util.ChangeFileName(path.getFileName());
-                    if(newFileName==path.getFileName())
+                    if (newFileName == path.getFileName())
                         continue;
                     var newPath = path
                         .getDirectoryName()
-                        .combine(newFileName+".pdf");
+                        .combine(newFileName + ".pdf");
                     Console.WriteLine($"==>{newPath}");
-                    System.IO.File.Move(path,newPath);
+                    System.IO.File.Move(path, newPath);
                 }
-                
-                foreach (var item in pdfDir.getFiles("*.pdf",false).Select((v, i) => new { v, i }))
+
+                foreach (var item in pdfDir.getFiles("*.pdf", false).Select((v, i) => new {v, i}))
                 {
                     Console.WriteLine($"==>{item.v.getFileName()}");
                     azure.UploadFile(container, item.v);
@@ -93,7 +94,7 @@ namespace journal.console.lib.Consoles
 
             var containerImage = azure.CreateDirectory(appType.ToString() + "-images");
             Console.WriteLine($"Azureへアップロード container={containerImage.Name}");
-            foreach (var item in imageDir.getFiles("*.*",false).Select((v, i) => new { v, i }))
+            foreach (var item in imageDir.getFiles("*.*", false).Select((v, i) => new {v, i}))
             {
                 Console.WriteLine($"==>{item.v.getFileName()}");
                 azure.UploadFile(containerImage, item.v);

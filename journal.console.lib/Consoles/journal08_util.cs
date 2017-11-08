@@ -9,6 +9,7 @@ namespace journal.console.lib.Consoles
     public class journal08_util : kihon_base
     {
         InddTool _inddTool;
+
         public journal08_util(ILogger log) : base(log)
         {
         }
@@ -23,10 +24,11 @@ namespace journal.console.lib.Consoles
         {
             _inddTool.FinishApp();
         }
-        
+
 
         // ディレクトリで処理
-        public void RunForJobDir(string srcdir, string templateFileName, bool fromKjp,bool fromSjisKjp, ErrorLogger log)
+        public void RunForJobDir(string srcdir, string templateFileName, bool fromKjp, bool fromSjisKjp,
+            ErrorLogger log)
         {
             var kjpdir = srcdir.combine("kjp");
 
@@ -42,12 +44,12 @@ namespace journal.console.lib.Consoles
                     Console.WriteLine($"==>{outpath}");
 
                     var sb = new StringBuilder();
-                    sb.Append(CharUtil.sjis2utf(FileUtil.getTextFromPath(txtpath,EncodingUtil.SJIS)));
-                    FileUtil.writeTextToFile(sb.ToString(),Encoding.UTF8,outpath);
+                    sb.Append(CharUtil.sjis2utf(FileUtil.getTextFromPath(txtpath, EncodingUtil.SJIS)));
+                    FileUtil.writeTextToFile(sb.ToString(), Encoding.UTF8, outpath);
                 }
             }
-            
-            
+
+
             // TXTはSKIP, KJPから全部処理
             if (fromKjp == true)
             {

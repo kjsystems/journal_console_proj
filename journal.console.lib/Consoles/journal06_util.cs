@@ -18,15 +18,16 @@ namespace journal.console.lib.Consoles
             ス字,
             スタ
         };
+
         public StyleType Style { get; set; }
         public string StyleName { get; set; }
     }
-    
+
     public class journal06_util : kihon_base
     {
         private string OyaText { get; set; }
-        private string RubyTextL { get; set; }  //左ルビ
-        private string RubyTextR { get; set; }  //右ルビ
+        private string RubyTextL { get; set; } //左ルビ
+        private string RubyTextR { get; set; } //右ルビ
         Dictionary<string, bool> Flag = new Dictionary<string, bool>();
         private List<StyleItem> StyleList { get; set; }
 
@@ -67,6 +68,7 @@ namespace journal.console.lib.Consoles
                 return dict[buf];
             throw new Exception($"1コラム目がス字orスタでない");
         }
+
         /**
          ス字	大字
         ス字	太字
@@ -85,7 +87,7 @@ namespace journal.console.lib.Consoles
                 throw new Exception($"style.txtがない path={stylePath}");
             Console.WriteLine($"スタイルの読み込み");
             Console.WriteLine($"==>{stylePath}");
-            
+
             var strlst = FileUtil.getTextListFromPath(stylePath, Encoding.UTF8);
             foreach (var gyo in strlst)
             {
@@ -104,21 +106,21 @@ namespace journal.console.lib.Consoles
         public void RunFromPath(string srcpath, string outpath)
         {
             Path = srcpath;
-            
+
             // style.txtの読み込み
             ReadStylePath();
-            
+
             System.Console.WriteLine($"{srcpath}");
             System.Console.WriteLine($"==>{outpath}");
             FileUtil.writeTextToFile(CreateTextFromPath(srcpath), Encoding.UTF8, outpath);
-            
+
             // kjpxとして出力
             WriteKjpxFile(outpath);
         }
 
         void WriteKjpxFile(string kjppath)
         {
-            var sb=new StringBuilder();
+            var sb = new StringBuilder();
             var util = new TagTextUtil(Log);
             var taglst = util.parseTextFromPath(kjppath, Encoding.UTF8);
 
@@ -126,8 +128,8 @@ namespace journal.console.lib.Consoles
             sb.AppendLine("<kjp>");
             foreach (var tag in taglst)
             {
-                string[] omit = { "選択","字下","問答","字揃","改行","スタ","ス字","項段"};
-                if (Array.IndexOf(omit, tag.getName())>=0)
+                string[] omit = {"選択", "字下", "問答", "字揃", "改行", "スタ", "ス字", "項段"};
+                if (Array.IndexOf(omit, tag.getName()) >= 0)
                 {
                     sb.Append($"<{tag.getName()}/>");
                     continue;
@@ -145,22 +147,23 @@ namespace journal.console.lib.Consoles
                 sb.Append($"{tag.ToString()}");
             }
             sb.AppendLine("</kjp>");
-            
+
             var outpath = kjppath
                 .getDirectoryName()
                 .getUpDir()
                 .combine("kjpx")
                 .createDirIfNotExist()
                 .combine($"{kjppath.getFileNameWithoutExtension()}.kjpx");
-                                            Console.WriteLine($"==>{outpath}");
-            FileUtil.writeTextToFile(sb.ToString(),Encoding.UTF8,outpath);
+            Console.WriteLine($"==>{outpath}");
+            FileUtil.writeTextToFile(sb.ToString(), Encoding.UTF8, outpath);
             CheckXmlContent(outpath);
         }
 
         void CheckXmlContent(string path)
         {
             XmlTextReader tr = new XmlTextReader(path);
-            while (!tr.EOF){
+            while (!tr.EOF)
+            {
                 int gyono = tr.LineNumber;
                 try
                 {
@@ -168,13 +171,13 @@ namespace journal.console.lib.Consoles
                 }
                 catch (Exception ex)
                 {
-                    Log.err(path, gyono, "checkxml", "解析できません["+tr.Value+"] "+ex.Message);
+                    Log.err(path, gyono, "checkxml", "解析できません[" + tr.Value + "] " + ex.Message);
                     break;
                 }
             }
             tr.Close();
         }
-        
+
         // 先頭改行を削除
         string TrimLeftKaigyo(string buf)
         {
@@ -197,7 +200,7 @@ namespace journal.console.lib.Consoles
             paralst = new List<ParaItem>();
             var util = new TagTextUtil(Log);
             var taglst = new TagList();
-            util.parseTextFromPath(path, Encoding.UTF8,ref taglst,false);
+            util.parseTextFromPath(path, Encoding.UTF8, ref taglst, false);
 
             var sb = new StringBuilder();
             foreach (var tag in taglst)
@@ -272,31 +275,31 @@ namespace journal.console.lib.Consoles
                     .Replace("</割>", "</割注>")
                     .Replace("<割>", "<割注>")
                 ;
-            
+
             //<下付>一</下付><上付>テ</上付> ==> <割注>
             res = ReplaceWarichu(res);
-            
+
             return res;
         }
 
         string ReplaceWarichu(string buf)
         {
 //            var regex=new Regex(@"<下付>(.*?)</下付><上付>(.*?)</上付>");
-            var regex=new Regex(@"<下付>(.?[^<]*)</下付><上付>(.?[^<]*)</上付>");
+            var regex = new Regex(@"<下付>(.?[^<]*)</下付><上付>(.?[^<]*)</上付>");
             while (regex.IsMatch(buf))
             {
                 var match = regex.Match(buf);
                 var grp1 = match.Groups[1].ToString();
                 var grp2 = match.Groups[2].ToString();
-                buf = regex.Replace(buf, $"<割注>{grp2}<項段>{grp1}</割注>",1);
+                buf = regex.Replace(buf, $"<割注>{grp2}<項段>{grp1}</割注>", 1);
             }
-            regex=new Regex(@"<上付>(.?[^<]*)</上付><下付>(.?[^<]*)</下付>");
+            regex = new Regex(@"<上付>(.?[^<]*)</上付><下付>(.?[^<]*)</下付>");
             while (regex.IsMatch(buf))
             {
                 var match = regex.Match(buf);
                 var grp1 = match.Groups[1].ToString();
                 var grp2 = match.Groups[2].ToString();
-                buf = regex.Replace(buf, $"<割注>{grp1}<項段>{grp2}</割注>",1);
+                buf = regex.Replace(buf, $"<割注>{grp1}<項段>{grp2}</割注>", 1);
             }
             return buf;
         }
@@ -308,7 +311,7 @@ namespace journal.console.lib.Consoles
             foreach (var tag in taglst)
             {
                 Gyono = para.Gyo;
-                
+
                 string[] mushi = {"字下", "問答", "選択"};
                 if (Array.IndexOf(mushi, tag.getName()) >= 0)
                     continue;
@@ -363,13 +366,13 @@ namespace journal.console.lib.Consoles
                     // どっちもあるときは圏点+左ルビ
                     if (!string.IsNullOrEmpty(RubyTextR) && !string.IsNullOrEmpty(RubyTextL))
                     {
-                        res= $"<圏点 位置=左 種類=\"{RubyTextL}\"><ruby>{OyaText}<rt>{RubyTextR}</rt></ruby></圏点>";
+                        res = $"<圏点 位置=左 種類=\"{RubyTextL}\"><ruby>{OyaText}<rt>{RubyTextR}</rt></ruby></圏点>";
                         ResetRubyFlag();
                         return res;
                     }
-                    
+
                     // 通常ルビ
-                    res= $"<ruby>{OyaText}";
+                    res = $"<ruby>{OyaText}";
                     if (!string.IsNullOrEmpty(RubyTextL))
                         res += $"<lt>{RubyTextL}</lt>";
                     if (!string.IsNullOrEmpty(RubyTextR))
@@ -416,29 +419,29 @@ namespace journal.console.lib.Consoles
         string ToTag(TagBase tag)
         {
             // 無視 ルビとして処理
-            string[] mushi = {"添","GR","ruby","rt","lt","見出"};
+            string[] mushi = {"添", "GR", "ruby", "rt", "lt", "見出"};
             if (Array.IndexOf(mushi, tag.getName()) >= 0)
                 return "";
 
-            if ( tag.getName()!="ruby" && Flag["ruby"])
+            if (tag.getName() != "ruby" && Flag["ruby"])
             {
                 OyaText += tag.ToString();
                 return "";
             }
-            
+
             //  そのまま出力
-            string[] valid = { "改行","字揃","縦横","圏点","下線","スタ","上付","下付","書体"};
+            string[] valid = {"改行", "字揃", "縦横", "圏点", "下線", "スタ", "上付", "下付", "書体"};
             if (Array.IndexOf(valid, tag.getName()) >= 0)
                 return tag.ToString();
-            
+
             // <ス字>→<ス字 大字>  style.txtを読み込み
-            var suta = StyleList.FirstOrDefault(m => m.StyleName==tag.getName());
+            var suta = StyleList.FirstOrDefault(m => m.StyleName == tag.getName());
             if (suta != null)
             {
-                return　tag.isOpen() ? $"<{suta.Style} {suta.StyleName}>" :  $"</{suta.Style}>";
+                return tag.isOpen() ? $"<{suta.Style} {suta.StyleName}>" : $"</{suta.Style}>";
             }
-            
-            Log.err(Path,Gyono,"tagtext",$"無効なタグ {tag.ToString()}");
+
+            Log.err(Path, Gyono, "tagtext", $"無効なタグ {tag.ToString()}");
             return tag.ToString();
         }
 
@@ -453,13 +456,13 @@ namespace journal.console.lib.Consoles
             {
                 if (Flag["lt"])
                     RubyTextL += tag.ToString();
-                if(Flag["rt"])
+                if (Flag["rt"])
                     RubyTextR += tag.ToString();
                 if (!Flag["lt"] && !Flag["rt"])
                     OyaText += tag.ToString();
                 return "";
             }
-            
+
             var sb = new StringBuilder();
 
             var txt = tag.ToString()

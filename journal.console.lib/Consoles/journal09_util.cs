@@ -29,7 +29,6 @@ namespace journal.console.lib.Consoles
 
             // txt→xmlに作成する
             CreateXmlFiles();
-
         }
 
         // テキストファイルをつなげる
