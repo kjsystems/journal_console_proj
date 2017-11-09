@@ -32,6 +32,7 @@ namespace journal.console.lib.Consoles
         {
             var kjpdir = srcdir.combine("kjp");
 
+            // kjp-sjis ==> kjp
             if (fromSjisKjp == true)
             {
                 kjpdir.createDirIfNotExist();
@@ -49,43 +50,46 @@ namespace journal.console.lib.Consoles
                 }
             }
 
-
-            // TXTはSKIP, KJPから全部処理
-            if (fromKjp == true)
+            // txt ==> kjp
+            if (fromKjp != true)
             {
-                kjpdir.existDir();
-                foreach (var txtpath in kjpdir.getFiles("*.kjp"))
+                // TXTから全部処理
+                var txtdir = srcdir.combine("txt");
+                txtdir.existDir();
+                foreach (var txtpath in txtdir.getFiles("*.txt"))
                 {
-                    RunForTextPath(txtpath, templateFileName, fromKjp, log);
+                    var kjppath = kjpdir.combine(txtpath.getFileNameWithoutExtension() + ".kjp");
+                    new journal06_util(log).RunFromPath(txtpath, kjppath);
+                    if (log.ErrorCount > 0)
+                    {
+                        throw new Exception("journal08 中断します");
+                    }
                 }
-                return;
             }
 
-            // TXTから全部処理
-            var txtdir = srcdir.combine("txt");
-            txtdir.existDir();
-            foreach (var txtpath in txtdir.getFiles("*.txt"))
+            //  KJPからあと全部作る
+            foreach (var kjppath in kjpdir.getFiles("*.kjp"))
             {
-                RunForTextPath(txtpath, templateFileName, fromKjp, log);
+                RunForTextPath(kjppath, templateFileName, false/*fromKjp*/, log);
             }
         }
 
         // ファイル1個処理
-        public void RunForTextPath(string txtpath, string templateFileName, bool fromKjp, ErrorLogger log)
+        public void RunForTextPath(string kjppath, string templateFileName, bool fromKjp, ErrorLogger log)
         {
-            var srcdir = txtpath.getDirectoryName().getUpDir();
-            var kjpdir = srcdir.combine("kjp");
-            var kjppath = kjpdir.combine(txtpath.getFileNameWithoutExtension() + ".kjp");
-
-            if (fromKjp != true)
-            {
-                Console.WriteLine("TXTからKJPの作成");
-                new journal06_util(log).RunFromPath(txtpath, kjppath);
-                if (log.ErrorCount > 0)
-                {
-                    throw new Exception("journal08 中断します");
-                }
-            }
+            var srcdir = kjppath.getDirectoryName().getUpDir();
+//            var kjpdir = srcdir.combine("kjp");
+//            var kjppath = kjpdir.combine(txtpath.getFileNameWithoutExtension() + ".kjp");
+//
+//            if (fromKjp != true)
+//            {
+//                Console.WriteLine("TXTからKJPの作成");
+//                new journal06_util(log).RunFromPath(txtpath, kjppath);
+//                if (log.ErrorCount > 0)
+//                {
+//                    throw new Exception("journal08 中断します");
+//                }
+//            }
 
             Console.WriteLine("KJPからIDMLの作成");
             var kjp2idml = new CreateIdmlFromKjpFile(log);
@@ -94,16 +98,22 @@ namespace journal.console.lib.Consoles
                 .combine(templateFileName);
             kjp2idml.InitTemplate(idmlTemplatePath);
 
-            var idmlPath = srcdir.combine("outidml").combine($"{txtpath.getFileNameWithoutExtension()}.idml");
+            var idmlPath = srcdir.combine("outidml").combine($"{kjppath.getFileNameWithoutExtension()}.idml");
             kjp2idml.RunFromKjpPath(kjppath, srcdir, idmlPath);
 
             InitApp();
             Console.WriteLine("IDMLからINDDの作成");
-            var inddPath = srcdir.combine("indd").combine($"{txtpath.getFileNameWithoutExtension()}.indd");
+            var inddPath = srcdir
+                .combine("indd")
+                .createDirIfNotExist()
+                .combine($"{kjppath.getFileNameWithoutExtension()}.indd");
             _inddTool.SaveAsIndd(idmlPath, inddPath);
 
             Console.WriteLine("INDDからPDFの作成");
-            var pdfPath = srcdir.combine("pdf").combine($"{txtpath.getFileNameWithoutExtension()}.pdf");
+            var pdfPath = srcdir
+                .combine("pdf")
+                .createDirIfNotExist()
+                .combine($"{kjppath.getFileNameWithoutExtension()}.pdf");
             _inddTool.ExportPdfFromIndd(inddPath, "" /*preset*/, pdfPath);
 
             FinishApp();
