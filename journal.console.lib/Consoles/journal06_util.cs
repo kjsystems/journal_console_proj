@@ -277,8 +277,9 @@ namespace journal.console.lib.Consoles
                 ;
 
             //<下付>一</下付><上付>テ</上付> ==> <割注>
-            res = ReplaceWarichu(res);
-
+            res = ReplaceWarichu(res)
+                    .Replace("<項段>一レ</割注>", "<項段><ス字 一レ>一レ</ス字></割注>")
+                ;
             return res;
         }
 
