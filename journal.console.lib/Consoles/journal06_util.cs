@@ -128,10 +128,12 @@ namespace journal.console.lib.Consoles
             sb.AppendLine("<kjp>");
             foreach (var tag in taglst)
             {
-                string[] omit = {"選択", "字下", "問答", "字揃", "改行", "スタ", "ス字", "項段"};
+                // 省略タグ
+                string[] omit = {"選択", "字下", "問答", "字揃", "改行", "スタ", "ス字", "項段","字Ｓ"};
                 if (Array.IndexOf(omit, tag.getName()) >= 0)
                 {
-                    sb.Append($"<{tag.getName()}/>");
+                    sb.Append($"<{tag.getName()}/>"
+                    .Replace("字Ｓ","字エ"));
                     continue;
                 }
                 if (tag.isOpen())
@@ -432,7 +434,7 @@ namespace journal.console.lib.Consoles
 
             //  そのまま出力
             string[] valid = {"改行", "字揃", "縦横", "圏点", "下線"
-                , "スタ", "上付", "下付", "書体","項段","割"/*後で置換*/};
+                , "スタ", "上付", "下付", "書体","項段","割"/*後で置換*/, "字Ｓ"};
             if (Array.IndexOf(valid, tag.getName()) >= 0)
                 return tag.ToString();
 
