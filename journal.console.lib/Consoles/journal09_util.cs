@@ -25,7 +25,7 @@ namespace journal.console.lib.Consoles
 
             // 入稿の複数ファイルからTXTにまとめる
             // 研究L用
-//            CreateTxtFiles();
+            CreateTxtFiles();
 
             // txt→xmlに作成する
             CreateXmlFiles();
@@ -61,7 +61,7 @@ namespace journal.console.lib.Consoles
                 string[] filelst = nyukodir.getFiles($"{fileName}*.txt", false);
                 if (filelst.Length == 0)
                 {
-                    Log.err("journal09", $"対象のファイルはない fileName={fileName} dir={nyukodir}");
+                    Log.err("journal09", $"対象のファイルはない(入稿になくてもOK) fileName={fileName} dir={nyukodir}");
                     continue;
                 }
                 //ファイルをつなげる
