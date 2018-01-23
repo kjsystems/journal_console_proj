@@ -34,8 +34,10 @@ namespace journal.console.lib.Models
         }
 
         // 02-001.pdf ==> 002-02-001.pdf
+        // .\image\02-001.pdf ==> 002-02-001.pdf
         string ChangeSanshoFileName(string fname)
         {
+            fname = fname.getFileName();  //参照のディレクトリなど削除する
             var reg = new Regex(@"^([0-9]{2}-[0-9]{3})\..*?");
             if (reg.IsMatch(fname))
             {
@@ -101,12 +103,24 @@ namespace journal.console.lib.Models
                 }
                 if (tag.getName() == "参照")
                 {
+                    if(tag.isOpen()!=true)
+                        continue;
                     var fname = tag.getValue("");
-
+                    if (string.IsNullOrEmpty(fname))
+                    {
+                        fname = tag.getValue("fname");
+                        if (string.IsNullOrEmpty(fname))
+                        {
+                            Log.err(Path, tag.GyoNo, "wakaxml", "<参照>にファイル名がない");
+                            continue;
+                        }
+                    }
+                    
+                    
                     // 02-001.pdf ==> 002-02-001.pdf
                     var linkFname = ChangeSanshoFileName(fname);
 
-                    sb.Append($"<参照 fname=\"{linkFname}\">{fname}</参照>");
+                    sb.Append($"<参照 fname=\"{linkFname}\">{linkFname}</参照>");
                     continue;
                 }
                 string[] tgt = {"上線", "下線"};
