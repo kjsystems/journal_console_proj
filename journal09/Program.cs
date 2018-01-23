@@ -18,7 +18,7 @@ namespace journal09
                 var srcdir = lst.getText('i');
                 srcdir.existDir();
 
-                Console.WriteLine("※TXTからXMLの作成のみ（研究Ｌのsql等は作成しない）");
+//                Console.WriteLine("※TXTからXMLの作成のみ（研究Ｌのsql等は作成しない）");
                 var core = new journal09_util(log);
                 //core.run(srcdir);
                 core.RunText2Xml(srcdir);
