@@ -34,12 +34,12 @@
     <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
     </Reference>
-    <Reference Include="kjlib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\kjsystems.kjlib.1.0.21\lib\kjlib.dll</HintPath>
+    <Reference Include="kjlib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\kjsystems.kjlib.1.0.26\lib\kjlib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -59,10 +59,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ind2idml_proj\InddAppLibCS6\InddAppLibCS6.vbproj">
-      <Project>{bc99c27d-8eb9-4c81-86c6-627f36318f1d}</Project>
-      <Name>InddAppLibCS6</Name>
-    </ProjectReference>
     <ProjectReference Include="..\journal.console.lib\journal.console.lib.csproj">
       <Project>{4FB7A601-D7B8-4A7B-B783-7E9A2DB005EC}</Project>
       <Name>journal.console.lib</Name>

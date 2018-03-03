@@ -45,8 +45,8 @@
     <Reference Include="InddAppLibCS6, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\InddAppLibCS6.1.0.0\lib\InddAppLibCS6.dll</HintPath>
     </Reference>
-    <Reference Include="kjlib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\kjsystems.kjlib.1.0.21\lib\kjlib.dll</HintPath>
+    <Reference Include="kjlib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\kjsystems.kjlib.1.0.26\lib\kjlib.dll</HintPath>
     </Reference>
     <Reference Include="kjlib.zip, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\kjsystems.kjlib.zip.1.0.2\lib\kjlib.zip.dll</HintPath>
@@ -76,11 +76,11 @@
       <HintPath>..\packages\Prism.Mvvm.1.1.1\lib\net45\Microsoft.Practices.Prism.SharedInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=8.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\packages\WindowsAzure.Storage.8.7.0\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.9.1.0\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\doc2idmlfunctionapp\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -97,9 +97,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="wordlib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\..\doc2idmlfunctionapp\packages\wordlib.1.0.0\lib\wordlib.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Consoles\journal08_util.cs" />
@@ -127,7 +124,7 @@
       <Name>azureblob.lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\azuresearch_proj\azuresearch.lib\azuresearch.lib.csproj">
-      <Project>{5003BC94-A21B-4B42-AE4F-C54E6A00C71A}</Project>
+      <Project>{5003bc94-a21b-4b42-ae4f-c54e6a00c71a}</Project>
       <Name>azuresearch.lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\journalwpf_proj\journal.lib\journal.lib.csproj">
@@ -137,6 +134,10 @@
     <ProjectReference Include="..\..\journalwpf_proj\journal.search.lib\journal.search.lib.csproj">
       <Project>{75D03E75-4006-486B-A842-204EF3207D5F}</Project>
       <Name>journal.search.lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\word_proj\wordlib\wordlib.csproj">
+      <Project>{d99827ed-3e0f-4ae5-8ccd-344b39d9137c}</Project>
+      <Name>wordlib</Name>
     </ProjectReference>
     <ProjectReference Include="..\wordxml\wordxml.csproj">
       <Project>{0932a1bb-6acc-4c6d-8855-d6c00b391bfc}</Project>
