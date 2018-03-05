@@ -1,1 +1,1 @@
-xcopy .\Release %DROPBOX%\bin\ /I /E /C /G /R /Y /Q
+xcopy .\Release %DROPBOX%\bin\journal\ /I /E /C /G /R /Y /Q
