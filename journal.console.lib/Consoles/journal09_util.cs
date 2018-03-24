@@ -25,7 +25,7 @@ namespace journal.console.lib.Consoles
 
             // 入稿の複数ファイルからTXTにまとめる
             // 研究L用
-            CreateTxtFiles();
+//            CreateTxtFiles();
 
             // txt→xmlに作成する
             CreateXmlFiles();

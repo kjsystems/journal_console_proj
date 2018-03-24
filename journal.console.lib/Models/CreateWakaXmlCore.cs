@@ -26,7 +26,7 @@ namespace journal.console.lib.Models
             sb.Append("<窓一覧>\r\n");
             foreach (var item in madolst.Select((v, i) => new {v, i}))
             {
-                int level = item.v.IsLeft == true ? 0 : 1;
+                int level = item.v.IsLeft == true ? 1 : 0;
                 sb.Append($"<窓 ID=\"{item.i + 1}\" HREF=\"{item.v.href}\" レベル=\"{level}\" 内容=\"{item.v.text}\" />\r\n");
             }
             sb.Append("</窓一覧>\r\n");
@@ -228,7 +228,7 @@ namespace journal.console.lib.Models
                         lst.Add(new MadoItem()
                         {
                             IsLeft = (mado == MADO_HIDARI),
-                            IsRight = (mado == MADO_MIGI),
+//                            IsRight = (mado == MADO_MIGI),
                             text = tag.ToString(),
                             href = item.i + 1
                         });
