@@ -302,6 +302,20 @@ namespace wordxml.Models
                         AttrType = WordXmlCharStatus.EnumAttrType.Bold
                     });
                 }
+
+                // <ゴシ>を出力
+                if (prop.Name == "w:rFonts")
+                {
+                    var value = prop.Attributes?["w:eastAsia"]?.Value;
+                    if (!string.IsNullOrEmpty(value) && Array.IndexOf(new[] {"ＤＦ平成ゴシック体W5", "ＭＳ ゴシック"}, value) >= 0)
+                    {
+                        statusLst.Add(new WordXmlCharStatus
+                        {
+                            AttrType = WordXmlCharStatus.EnumAttrType.Gothic
+                        });
+                    }
+                }
+
                 if (prop.Name == "w:em")
                 {
                     //sb.Append("<圏点>");

@@ -15,6 +15,7 @@ namespace wordxml.Models
             {
                 {EnumAttrType.Underline, "上線"},
                 {EnumAttrType.Bold, "太字"},
+                {EnumAttrType.Gothic, "ゴシ"},
                 {EnumAttrType.Subscript, "下付"},
                 {EnumAttrType.Superscript, "上付"},
                 {EnumAttrType.Kenten, "圏点"},
@@ -27,6 +28,7 @@ namespace wordxml.Models
         {
             Underline,
             Bold,
+            Gothic,
             Subscript,
             Superscript,
             Kenten
