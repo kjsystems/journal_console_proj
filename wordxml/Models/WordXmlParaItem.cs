@@ -20,7 +20,10 @@ namespace wordxml.Models
         }
 
         public AlignType Align { get; set; } = AlignType.Left;
-        public bool IsMidashi { get; set; }
+        // スタイルが割り当てられている
+        public bool IsParaStyle { get; set; }
+        public string StyleName { get; set; }
+
         public string Text { get; set; } //ルビタグを含むタグテキスト
     }
 }

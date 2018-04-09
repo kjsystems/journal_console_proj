@@ -7,6 +7,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Ionic.BZip2;
 using kj.kihon;
 using kj.kihon.Utils;
 using Microsoft.VisualBasic.ApplicationServices;
@@ -20,12 +21,24 @@ namespace wordxml.Models
             ParagraphFontSize = paragraphFontSize;
             ParaList = new List<WordXmlParaItem>();
             InstrList = new List<string>();
+            StyleList = new List<WordStyle>();
         }
 
         private int ChushakuIndex { get; set; } = 1;
         private int ParagraphFontSize { get; set; }
 
         public List<WordXmlParaItem> ParaList { get; set; }
+        public List<WordStyle> StyleList { get; set; }
+
+        /// <summary>
+        /// インデックスからスタイル名を取得する
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        string FindStyleName(int index)
+        {
+            return StyleList.FirstOrDefault(m => m.Index == index)?.Name;
+        }
 
         /*
          * 縦中横などはフィールド文字列
@@ -48,13 +61,50 @@ namespace wordxml.Models
 
         private List<string> InstrList { get; set; }
 
-        public void ProcessWordFile(string documentPath, string endnotesPath)
+        public void ProcessWordFile(string documentPath, string endnotesPath, string stylePath)
         {
+            // styles.xmlからスタイル一覧を取得する
+            ReadStylePath(stylePath);
+
             //xmlをParseする
             ParseDocumentXml(documentPath);
             if (File.Exists(endnotesPath))
                 ParseEndnotesXml(endnotesPath);
         }
+
+        /// <summary>
+        /// styles.xmlからスタイル一覧を取得する
+        /// </summary>
+        /// <param name="sb"></param>
+        void ReadStylePath(string stylePath)
+        {
+            using (var rd = XmlReader.Create(stylePath))
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(rd);
+                XmlNode root = doc.DocumentElement;
+
+                ParagraphFontSize = 210;
+                var styleList = root //w:styles
+                    .ChildNodes.Cast<XmlNode>() //w:stylesの子供
+                    .Where(s => s.Name == "w:style");
+                foreach (var style in styleList)
+                {
+                    var childNodes = style.ChildNodes.Cast<XmlNode>(); //w:styleの子供
+                    var name = childNodes
+                        .FirstOrDefault(s => s.Name == "w:name")?
+                        .Attributes["w:val"]?.Value;
+
+                    var index = childNodes
+                        .FirstOrDefault(s => s.Name == "w:link")?
+                        .Attributes["w:val"]?
+                        .Value?.toInt(0);
+
+                    StyleList.Add(new WordStyle { Name = name, Index = index });
+                }
+            }
+        }
+
 
         #region <w:t>の中のテキスト
 
@@ -122,8 +172,9 @@ namespace wordxml.Models
         {
             var fontSize = ParagraphFontSize;
             //paraのプロパティはない時もあり
-            var w_prop = getFirstOfChilds(w_para, "w:pPr");
-            if (w_prop != null)
+//            var w_prop = getFirstOfChilds(w_para, "w:pPr");
+
+            foreach(var w_prop in w_para.ChildNodes.Cast<XmlNode>().Where(m => m.Name == "w:pPr"))
             {
                 foreach (XmlNode node in w_prop.ChildNodes)
                 {
@@ -142,13 +193,17 @@ namespace wordxml.Models
                                 break;
                         }
                     }
-                    if (node.Name == "w:rPr" &&
-                        node.Cast<XmlNode>()
-                            .FirstOrDefault(m => m.Name == "w:rFonts")?
-                            .Attributes?["w:eastAsiaTheme"]?
-                            .Value == "majorEastAsia")
+
+                    // スタイルが割り当てられている→スタイル名を取得
+                    if (node.Name == "w:pStyle" && !string.IsNullOrEmpty(node.Attributes["w:val"]?.Value))
                     {
-                        ParaList.Last().IsMidashi = true;
+                        var index = node.Attributes["w:val"].Value.toInt(0);
+                        var styleName = FindStyleName(index);
+                        if (styleName.Contains("見出"))
+                        {
+                            ParaList.Last().IsParaStyle = true;
+                            ParaList.Last().StyleName = styleName;
+                        }
                     }
 
                     if (node.Name == "w:ind")
