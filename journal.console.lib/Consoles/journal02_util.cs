@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using journal.console.lib.Models;
 using kj.kihon;
 using kjlib.zip.Models;
 using Microsoft.VisualBasic.Logging;
@@ -98,7 +99,7 @@ namespace journal.console.lib.Consoles
 
             //document.xmlをParseする
             var parser = new WordXmlParser(ParagraphFontSize, Log);
-            parser.ProcessWordFile(WordXmlDocumentPath, WordXmlEndnotesPath);
+            parser.ProcessWordFile(WordXmlDocumentPath, WordXmlEndnotesPath, WordXmlStylesPath);
 
             //テキストを作成する
             sb = CreateTextFromParaList(parser.ParaList)
@@ -113,6 +114,7 @@ namespace journal.console.lib.Consoles
             {
                 buf = buf.Replace(ch, $"<書体 \"Adobe Song Std/L\">{ch}</書体>");
             }
+
             return buf;
         }
 
@@ -133,6 +135,7 @@ namespace journal.console.lib.Consoles
                 //docは移動する
                 //System.IO.File.Move(docpath,docdir.combine("out").createDirIfNotExist().combine((docpath.getFileName())));
             }
+
             util.quit();
         }
 
@@ -210,6 +213,7 @@ namespace journal.console.lib.Consoles
                     //全角SPを個数分挿入する
                     sb.Append(new string('　', para.Jisage));
                 }
+
                 _preJisage = 0;
                 _preMondo = 0;
             }
@@ -227,13 +231,13 @@ namespace journal.console.lib.Consoles
             {
                 sb.Append($"<字揃 右>");
             }
-            if (para.IsMidashi)
-                sb.Append($"<見出>");
+
+            if (para.IsParaStyle)
+                sb.Append($"<スタ \"{para.StyleName}\">");
             sb.Append($"{para.Text}");
-            if (para.IsMidashi)
-                sb.AppendLine($"</見出>");
-            if (!para.IsMidashi)
-                sb.AppendLine($"<改行>");
+            if (para.IsParaStyle)
+                sb.Append($"</スタ>");
+            sb.AppendLine($"<改行>");
             //_preJisage = para.Jisage;
             //_preMondo = para.Mondo;
             return sb.ToString();
@@ -247,6 +251,7 @@ namespace journal.console.lib.Consoles
                 var buf = CreateTextFromPara(para);
                 sb.Append(buf);
             }
+
             return sb.ToString();
         }
     }
