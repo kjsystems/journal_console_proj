@@ -11,6 +11,25 @@ using kj.kihon.Utils;
 
 namespace journal.console.lib.Consoles
 {
+    public static class StringExtensions
+    {
+        //WORDの段落スタイルを置換する
+        // <スタ "見出し 1">　　　　一　東北院供養願文、女院彰子「かな願文」</スタ>
+        // →　　<ス字 小見出し>一　東北院供養願文、女院彰子「かな願文」</ス字>
+        public static string ReplaceParaStyle(this string source, string wordStyleName, string outBefore, string outAfter)
+        {
+            var reg = new Regex($"<スタ \"{wordStyleName}\">(.*?)</スタ>");
+            if (!reg.IsMatch(source))
+                return source;
+            var match = reg.Match(source);
+            var g1 = match.Groups[1].ToString().trimZen();
+            return reg.Replace(source,$"{outBefore}{g1}{outAfter}");
+        }
+    }
+
+        
+
+    
     public class StyleItem
     {
         public enum StyleType
@@ -129,7 +148,7 @@ namespace journal.console.lib.Consoles
             foreach (var tag in taglst)
             {
                 // 省略タグ
-                string[] omit = {"選択", "字下", "問答", "字揃", "改行", "スタ", "ス字", "項段","字Ｓ"};
+                string[] omit = {/*"選択",*/ "字下", "問答", "字揃", "改行", "スタ", "ス字", "項段","字Ｓ","選択"};
                 if (Array.IndexOf(omit, tag.getName()) >= 0)
                 {
                     sb.Append($"<{tag.getName()}/>"
@@ -259,17 +278,30 @@ namespace journal.console.lib.Consoles
             {
                 Gyono = para.Gyo;
                 //<選択 ラベル名>を先に読み込み
-                var taglst = TagTextUtil.parseText(para.Text);
-                var label = taglst.FirstOrDefault(m => m.getName() == "選択");
-                if (label != null)
-                    sb.Append(label.ToString());
+//                var taglst = TagTextUtil.parseText(para.Text);
+//                var label = taglst.FirstOrDefault(m => m.getName() == "選択");
+//                if (label != null)
+//                    sb.Append(label.ToString());
 
                 //字下,問答を各段落に設定する
                 SetJisageMondo(para, ref curJisage, ref curMondo);
 
                 if (para.IsJisoroe != true)
                     sb.Append($"<字下 {para.Jisage}><問答 {para.Mondo}>");
-                sb.Append(CreateTextFromPara(para));
+
+                //WORDの段落スタイルを置換する
+                // <スタ "見出し 1">　　　　一　東北院供養願文、女院彰子「かな願文」</スタ>
+                // →　　<ス字 小見出し>一　東北院供養願文、女院彰子「かな願文」</ス字>
+                para.Text = para.Text
+                    .ReplaceParaStyle("見出し 1","　　<小見出し>","</小見出し>")
+                    .ReplaceParaStyle("見出タイトル","<選択 見出><タイトル>","</タイトル>")
+                        .ReplaceParaStyle("見出著者","<字揃 右><著者>","</著者><著者かな>（■■著者読み■■）</著者かな><改行><選択 本文><スタ 本文>")
+                        .ReplaceParaStyle("見出注記","<字下 2><問答 3>","")
+                    ;
+                
+                var buf = CreateTextFromPara(para); 
+                
+                sb.Append(buf);
                 sb.Append("\r\n");
             }
             var res = sb.ToString()
@@ -315,7 +347,7 @@ namespace journal.console.lib.Consoles
             {
                 Gyono = para.Gyo;
 
-                string[] mushi = {"字下", "問答", "選択"};
+                string[] mushi = {"字下", "問答" /*, "選択"*/};
                 if (Array.IndexOf(mushi, tag.getName()) >= 0)
                     continue;
 
@@ -434,7 +466,7 @@ namespace journal.console.lib.Consoles
 
             //  そのまま出力
             string[] valid = {"改行", "字揃", "縦横", "圏点", "下線"
-                , "スタ", "上付", "下付", "書体","項段","割"/*後で置換*/, "字Ｓ"};
+                , "スタ", "上付", "下付", "書体","項段","割"/*後で置換*/, "字Ｓ", "選択"};
             if (Array.IndexOf(valid, tag.getName()) >= 0)
                 return tag.ToString();
 
