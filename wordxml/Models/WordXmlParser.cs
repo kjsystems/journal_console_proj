@@ -16,16 +16,21 @@ namespace wordxml.Models
 {
     public class WordXmlParser : kihon_base
     {
-        public WordXmlParser(int paragraphFontSize, ILogger log) : base(log)
+        public int ParagraphFontSize { get; set; } //210とか180とか
+        private string OutMeltWordDir { get; set; }
+        private string OutMeltWordDirSubWord => OutMeltWordDir.combine("word");
+        public string WordXmlDocumentPath => OutMeltWordDirSubWord.combine("document.xml");
+        public string WordXmlEndnotesPath => OutMeltWordDirSubWord.combine("endnotes.xml");
+        public string WordXmlStylesPath => OutMeltWordDirSubWord.combine("styles.xml");
+        
+        public WordXmlParser(ILogger log) : base(log)
         {
-            ParagraphFontSize = paragraphFontSize;
             ParaList = new List<WordXmlParaItem>();
             InstrList = new List<string>();
             StyleList = new List<WordStyle>();
         }
 
         private int ChushakuIndex { get; set; } = 1;
-        private int ParagraphFontSize { get; set; }
 
         public List<WordXmlParaItem> ParaList { get; set; }
         public List<WordStyle> StyleList { get; set; }
@@ -35,7 +40,7 @@ namespace wordxml.Models
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        string FindStyleName(int index)
+        string FindStyleName(string index)
         {
             return StyleList.FirstOrDefault(m => m.Index == index)?.Name;
         }
@@ -61,15 +66,49 @@ namespace wordxml.Models
 
         private List<string> InstrList { get; set; }
 
-        public void ProcessWordFile(string documentPath, string endnotesPath, string stylePath)
+        /// <summary>
+        /// paragraphの文字サイズを取得する（字下げ用）
+        /// </summary>
+        /// <param name="stylePath"></param>
+        void GetParagraphFontSize(string stylePath)
         {
+            using (var rd = XmlReader.Create(stylePath))
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(rd);
+                XmlNode root = doc.DocumentElement;
+
+                ParagraphFontSize = 210;
+                var sz = root //w:styles
+                             .ChildNodes.Cast<XmlNode>() //w:stylesの子供
+                             .FirstOrDefault(s => s.Name == "w:style" && s.Attributes["w:type"].Value == "paragraph")?
+                             .ChildNodes.Cast<XmlNode>() //w:styleの子供
+                             .FirstOrDefault(s => s.Name == "w:rPr")?
+                             .ChildNodes.Cast<XmlNode>() //w:rPrの子供
+                             .FirstOrDefault(s => s.Name == "w:sz")?
+                             .Attributes["w:val"]
+                             .Value.toInt(0) * 10;
+                if (sz != null)
+                    ParagraphFontSize = (int) sz;
+                Console.WriteLine($"ParagraphFontSize={ParagraphFontSize}");
+            }
+        }
+
+        
+        public void ProcessWordFile(string outMeltWordDir)
+        {
+            OutMeltWordDir = outMeltWordDir;
+            
+            //paragraphの文字サイズを取得する（字下げ用）
+            GetParagraphFontSize(WordXmlStylesPath);
+            
             // styles.xmlからスタイル一覧を取得する
-            ReadStylePath(stylePath);
+            ReadStylePath(WordXmlStylesPath);
 
             //xmlをParseする
-            ParseDocumentXml(documentPath);
-            if (File.Exists(endnotesPath))
-                ParseEndnotesXml(endnotesPath);
+            ParseDocumentXml(WordXmlDocumentPath);
+            if (File.Exists(WordXmlEndnotesPath))
+                ParseEndnotesXml(WordXmlEndnotesPath);
         }
 
         /// <summary>
@@ -98,7 +137,7 @@ namespace wordxml.Models
                     var index = childNodes
                         .FirstOrDefault(s => s.Name == "w:link")?
                         .Attributes["w:val"]?
-                        .Value?.toInt(0);
+                        .Value;
 
                     StyleList.Add(new WordStyle { Name = name, Index = index });
                 }
@@ -197,12 +236,13 @@ namespace wordxml.Models
                     // スタイルが割り当てられている→スタイル名を取得
                     if (node.Name == "w:pStyle" && !string.IsNullOrEmpty(node.Attributes["w:val"]?.Value))
                     {
-                        var index = node.Attributes["w:val"].Value.toInt(0);
+                        var index = node.Attributes["w:val"].Value;
                         var styleName = FindStyleName(index);
                         if (styleName.Contains("見出"))
                         {
                             ParaList.Last().IsParaStyle = true;
-                            ParaList.Last().StyleName = styleName;
+                            // 見出し 1 (文字) --> 見出し 1
+                            ParaList.Last().StyleName = styleName.Replace(" (文字)","");  
                         }
                     }
 

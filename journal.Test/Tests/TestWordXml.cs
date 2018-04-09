@@ -33,7 +33,7 @@ namespace journal.Test
                 <w:t>レ</w:t></w:r>";
             var n = CreateDocument(xml).DocumentElement.FirstChild;
             Assert.AreEqual("w:r", n.Name);
-            var parser = new WordXmlParser(210, new ErrorLogger());
+            var parser = new WordXmlParser(new ErrorLogger());
             Assert.AreEqual("<上線 種類=点線>レ</上線>", parser.ParseRun(n));
         }
 
@@ -46,7 +46,7 @@ namespace journal.Test
                 <w:t>レ</w:t></w:r>";
             var n = CreateDocument(xml).DocumentElement.FirstChild;
             Assert.AreEqual("w:r", n.Name);
-            var parser = new WordXmlParser(210, new ErrorLogger());
+            var parser = new WordXmlParser(new ErrorLogger());
             Assert.AreEqual("<下付>レ</下付>", parser.ParseRun(n));
         }
 
@@ -58,7 +58,7 @@ namespace journal.Test
                 <w:t>レ</w:t></w:r>";
             var n = CreateDocument(xml).DocumentElement.FirstChild;
             Assert.AreEqual("w:r", n.Name);
-            var parser = new WordXmlParser(210, new ErrorLogger());
+            var parser = new WordXmlParser(new ErrorLogger());
             Assert.AreEqual("<上付>レ</上付>", parser.ParseRun(n));
         }
 
@@ -70,7 +70,7 @@ namespace journal.Test
                 <w:t>勿論</w:t></w:r>";
             var n = CreateDocument(xml).DocumentElement.FirstChild;
             Assert.AreEqual("w:r", n.Name);
-            var parser = new WordXmlParser(210, new ErrorLogger());
+            var parser = new WordXmlParser(new ErrorLogger());
             Assert.AreEqual("<圏点>勿論</圏点>", parser.ParseRun(n));
         }
 
@@ -90,7 +90,7 @@ namespace journal.Test
 </w:p>";
             var n = CreateDocument(xml).DocumentElement.FirstChild;
             Assert.AreEqual("w:p", n.Name);
-            var parser = new WordXmlParser(210, new ErrorLogger());
+            var parser = new WordXmlParser(new ErrorLogger());
             Assert.AreEqual("<上付>（＊</上付>１<上付>）</上付>", parser.ParseParagraph(n));
         }
 
@@ -105,7 +105,7 @@ namespace journal.Test
 </w:p>";
             var n = CreateDocument(xml).DocumentElement.FirstChild;
             Assert.AreEqual("w:p", n.Name);
-            var parser = new WordXmlParser(210, new ErrorLogger());
+            var parser = new WordXmlParser(new ErrorLogger());
             Assert.AreEqual("『源家長日記』（以下、『日記", parser.ParseParagraph(n));
             Assert.AreEqual(1, parser.ParaList[0].Jisage, "jisage");
             Assert.AreEqual(-1, parser.ParaList[0].Mondo, "mondo");
@@ -132,7 +132,7 @@ namespace journal.Test
 </w:r></w:p>";
             var n = CreateDocument(xml).DocumentElement.FirstChild;
             Assert.AreEqual("w:p", n.Name);
-            var parser = new WordXmlParser(210, new ErrorLogger());
+            var parser = new WordXmlParser(new ErrorLogger());
             Assert.AreEqual("これら<ruby>ま<rt>（＊にカ）</rt></ruby>", parser.ParseParagraph(n));
         }
 
@@ -153,7 +153,7 @@ namespace journal.Test
 </w:p>";
             var n = CreateDocument(xml).DocumentElement.FirstChild;
             Assert.AreEqual("w:p", n.Name);
-            var parser = new WordXmlParser(210, new ErrorLogger());
+            var parser = new WordXmlParser(new ErrorLogger());
             Assert.AreEqual("あ<ruby>青<rt>せい</rt></ruby>", parser.ParseParagraph(n));
         }
     }
