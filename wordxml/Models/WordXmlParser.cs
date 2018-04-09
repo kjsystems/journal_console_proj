@@ -22,12 +22,33 @@ namespace wordxml.Models
         public string WordXmlDocumentPath => OutMeltWordDirSubWord.combine("document.xml");
         public string WordXmlEndnotesPath => OutMeltWordDirSubWord.combine("endnotes.xml");
         public string WordXmlStylesPath => OutMeltWordDirSubWord.combine("styles.xml");
+
+/*        /// <summary>
+        /// style-word.txt
+        ##見出
+        見出し 1
+        見出タイトル
+        見出著者
+        注記
+        /// </summary> */
+        List<Rule> RuleList { get; set; }
+        bool IsRuleMidashi(string name, out string outName/*実際に出力するスタイル名*/)
+        {
+            var rule = RuleList.FirstOrDefault(m => m.Name == "見出");
+            if (rule == null)
+            {
+                throw new Exception($"style-word.txtに##見出がない");
+            }
+            outName = name.Replace(" (文字)", "");
+            return rule.ValueList.Any(m => !string.IsNullOrEmpty(name) && m == name.Replace(" (文字)",""));
+        }
         
-        public WordXmlParser(ILogger log) : base(log)
+        public WordXmlParser(List<Rule> rulelst, ILogger log) : base(log)
         {
             ParaList = new List<WordXmlParaItem>();
             InstrList = new List<string>();
             StyleList = new List<WordStyle>();
+            RuleList = rulelst;
         }
 
         private int ChushakuIndex { get; set; } = 1;
@@ -233,16 +254,16 @@ namespace wordxml.Models
                         }
                     }
 
-                    // スタイルが割り当てられている→スタイル名を取得
+                    // スタイルが割り当てられている　RuleListに該当するなら出力
                     if (node.Name == "w:pStyle" && !string.IsNullOrEmpty(node.Attributes["w:val"]?.Value))
                     {
                         var index = node.Attributes["w:val"].Value;
                         var styleName = FindStyleName(index);
-                        if (styleName.Contains("見出"))
+                        if (IsRuleMidashi(styleName, out string outStyleName))
                         {
                             ParaList.Last().IsParaStyle = true;
                             // 見出し 1 (文字) --> 見出し 1
-                            ParaList.Last().StyleName = styleName.Replace(" (文字)","");  
+                            ParaList.Last().StyleName = outStyleName;  
                         }
                     }
 

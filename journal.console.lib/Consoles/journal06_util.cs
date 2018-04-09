@@ -296,7 +296,7 @@ namespace journal.console.lib.Consoles
                     .ReplaceParaStyle("見出し 1","　　<小見出し>","</小見出し>")
                     .ReplaceParaStyle("見出タイトル","<選択 見出><タイトル>","</タイトル>")
                         .ReplaceParaStyle("見出著者","<字揃 右><著者>","</著者><著者かな>（■■著者読み■■）</著者かな><改行><選択 本文><スタ 本文>")
-                        .ReplaceParaStyle("見出注記","<字下 2><問答 3>","")
+//                        .ReplaceParaStyle("注記","<字下 2><問答 3>","")
                     ;
                 
                 var buf = CreateTextFromPara(para); 

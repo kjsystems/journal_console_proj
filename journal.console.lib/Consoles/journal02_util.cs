@@ -20,7 +20,6 @@ namespace journal.console.lib.Consoles
         private string OutMeltWordDir { get; set; }
 
         List<Rule> RuleList { get; set; }
-        bool IsRuleMidashi(string name) { return RuleList.Any(m => m.Name == name); }
 
         public journal02_util(ILogger log) : base(log)
         {
@@ -56,7 +55,7 @@ namespace journal.console.lib.Consoles
         public void ParseWordMeltDir(out string sb)
         {
             //document.xmlをParseする
-            var parser = new WordXmlParser(Log);
+            var parser = new WordXmlParser(RuleList,Log);
             parser.ProcessWordFile(OutMeltWordDir);
 
             //テキストを作成する
@@ -141,8 +140,10 @@ namespace journal.console.lib.Consoles
 
             // ルールを読み込み
             var rd = new RuleReader(Log);
-            rd.Read(jobdir.combine("style-word.txt"), out List<Rule> rulelst);
+            var stylePath = jobdir.getUpDir().combine("styles").combine("style-word.txt");
+            rd.Read(stylePath, out List<Rule> rulelst);
             RuleList = rulelst;
+            Console.WriteLine($"Rules Count={RuleList.Count} {stylePath}");
 
             foreach (var wordpath in srcfiles.Select((v, i) => new {v, i}))
             {
