@@ -37,13 +37,11 @@
       <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
     </Reference>
     <Reference Include="idml.lib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\kjp2idml.lib.1.0.34\lib\idml.lib.dll</HintPath>
+      <HintPath>..\packages\kjp2idml.lib.1.0.37\lib\idml.lib.dll</HintPath>
     </Reference>
-    <Reference Include="idmltool.lib.cs6, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\idmltool.lib.cs6.1.0.1\lib\idmltool.lib.cs6.dll</HintPath>
-    </Reference>
-    <Reference Include="InddAppLibCS6, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\InddAppLibCS6.1.0.0\lib\InddAppLibCS6.dll</HintPath>
+    <Reference Include="inddtool.lib.cs6, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\inddtool.lib.cs6.1.0.0\lib\net45\inddtool.lib.cs6.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="kjlib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>..\packages\kjsystems.kjlib.1.0.28\lib\kjlib.dll</HintPath>
@@ -52,7 +50,7 @@
       <HintPath>..\packages\kjsystems.kjlib.zip.1.0.2\lib\kjlib.zip.dll</HintPath>
     </Reference>
     <Reference Include="kjp2idml.lib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\kjp2idml.lib.1.0.34\lib\kjp2idml.lib.dll</HintPath>
+      <HintPath>..\packages\kjp2idml.lib.1.0.37\lib\kjp2idml.lib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.2.0.4\lib\net45\Microsoft.Azure.KeyVault.Core.dll</HintPath>
@@ -80,7 +78,7 @@
       <HintPath>..\packages\WindowsAzure.Storage.9.1.0\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

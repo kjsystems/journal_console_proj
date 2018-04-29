@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using idmltool.shared;
+using inddtool.shared;
 using kj.kihon;
 using kjp2idml.lib;
 
