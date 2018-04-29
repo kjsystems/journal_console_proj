@@ -25,6 +25,35 @@ namespace journal.console.lib.Consoles
             var g1 = match.Groups[1].ToString().trimZen();
             return reg.Replace(source,$"{outBefore}{g1}{outAfter}");
         }
+        
+        /// <summary>
+        /// 著者の置き換え
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="wordStyleName"></param>
+        /// <param name="outBefore"></param>
+        /// <param name="outAfter"></param>
+        /// <returns></returns>
+        public static string ReplaceParaStyleChosha(this string source)
+        {
+            var wordStyleName = "見出著者";
+            var outBefore = "<字揃 右><著者>";
+            var outCenter = "</著者><著者かな>";
+            var outAfter = "</著者かな><改行><選択 本文><スタ 本文>";
+            
+            // 著者のよみがあれば置き換え
+            var reg = new Regex($"<スタ \"{wordStyleName}\">(.*?)（(.*?)）</スタ>");
+            if (reg.IsMatch(source))
+            {
+                var match = reg.Match(source);
+                var g1 = match.Groups[1].ToString().trimZen();
+                var g2 = match.Groups[2].ToString().trimZen();
+                return reg.Replace(source,$"{outBefore}{g1}{outCenter}（{g2}）{outAfter}");
+            }
+
+            // なければ通常置換
+            return ReplaceParaStyle(source, wordStyleName, outBefore, "</著者><著者かな>（■■著者読み■■）</著者かな><改行><選択 本文><スタ 本文>");
+        }
     }
 
         
@@ -293,9 +322,10 @@ namespace journal.console.lib.Consoles
                 // <スタ "見出し 1">　　　　一　東北院供養願文、女院彰子「かな願文」</スタ>
                 // →　　<ス字 小見出し>一　東北院供養願文、女院彰子「かな願文」</ス字>
                 para.Text = para.Text
-                    .ReplaceParaStyle("見出し 1","　　<小見出し>","</小見出し>")
+                        .ReplaceParaStyle("見出し 1","　　<小見出し>","</小見出し>")
+                        .ReplaceParaStyle("見出サブタイトル","　　<サブタイトル>","</サブタイトル>")
                     .ReplaceParaStyle("見出タイトル","<選択 見出><タイトル>","</タイトル>")
-                        .ReplaceParaStyle("見出著者","<字揃 右><著者>","</著者><著者かな>（■■著者読み■■）</著者かな><改行><選択 本文><スタ 本文>")
+                        .ReplaceParaStyleChosha()
 //                        .ReplaceParaStyle("注記","<字下 2><問答 3>","")
                     ;
                 
