@@ -18,12 +18,12 @@ namespace journal.console.lib.Consoles
         // →　　<ス字 小見出し>一　東北院供養願文、女院彰子「かな願文」</ス字>
         public static string ReplaceParaStyle(this string source, string wordStyleName, string outBefore, string outAfter)
         {
-            var reg = new Regex($"<スタ \"{wordStyleName}\">(.*?)</スタ>");
+            var reg = new Regex($"<スタ \"{wordStyleName}\">(.*?)<改行>$");
             if (!reg.IsMatch(source))
                 return source;
             var match = reg.Match(source);
             var g1 = match.Groups[1].ToString().trimZen();
-            return reg.Replace(source,$"{outBefore}{g1}{outAfter}");
+            return reg.Replace(source,$"{outBefore}{g1}{outAfter}<改行>");
         }
         
         /// <summary>
@@ -42,13 +42,13 @@ namespace journal.console.lib.Consoles
             var outAfter = "</著者かな><改行><選択 本文><スタ 本文>";
             
             // 著者のよみがあれば置き換え
-            var reg = new Regex($"<スタ \"{wordStyleName}\">(.*?)（(.*?)）</スタ>");
+            var reg = new Regex($"<スタ \"{wordStyleName}\">(.*?)（(.*?)）<改行>$");
             if (reg.IsMatch(source))
             {
                 var match = reg.Match(source);
                 var g1 = match.Groups[1].ToString().trimZen();
                 var g2 = match.Groups[2].ToString().trimZen();
-                return reg.Replace(source,$"{outBefore}{g1}{outCenter}（{g2}）{outAfter}");
+                return reg.Replace(source,$"{outBefore}{g1}{outCenter}（{g2}）{outAfter}<改行>");
             }
 
             // なければ通常置換
@@ -255,6 +255,12 @@ namespace journal.console.lib.Consoles
             var sb = new StringBuilder();
             foreach (var tag in taglst)
             {
+                // 閉じのスタは無視
+                if (tag.isClose() && tag.getName() == "スタ")
+                {
+                    continue;
+                }
+                
                 // 先頭改行を削除
                 sb.Append(TrimLeftKaigyo(tag.ToString()));
                 if (tag.getName() == "改行")
