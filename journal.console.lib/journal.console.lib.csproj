@@ -33,24 +33,23 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
+    <Reference Include="DotNetZip, Version=1.11.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.11.0\lib\net20\DotNetZip.dll</HintPath>
     </Reference>
-    <Reference Include="idml.lib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\kjp2idml.lib.1.0.37\lib\idml.lib.dll</HintPath>
+    <Reference Include="inddtool.lib.cs6, Version=1.0.1.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\inddtool.lib.cs6.1.0.1\lib\net45\inddtool.lib.cs6.dll</HintPath>
     </Reference>
-    <Reference Include="inddtool.lib.cs6, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\inddtool.lib.cs6.1.0.0\lib\net45\inddtool.lib.cs6.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ionic.Zip.1.9.1.8\lib\Ionic.Zip.dll</HintPath>
     </Reference>
-    <Reference Include="kjlib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\kjsystems.kjlib.1.0.28\lib\kjlib.dll</HintPath>
+    <Reference Include="kjlib.lib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\kjlib.lib.1.0.0\lib\net45\kjlib.lib.dll</HintPath>
     </Reference>
-    <Reference Include="kjlib.zip, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\kjsystems.kjlib.zip.1.0.2\lib\kjlib.zip.dll</HintPath>
+    <Reference Include="kjlib.zip, Version=1.0.2.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\kjlib.zip.1.0.2\lib\net45\kjlib.zip.dll</HintPath>
     </Reference>
-    <Reference Include="kjp2idml.lib, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\kjp2idml.lib.1.0.37\lib\kjp2idml.lib.dll</HintPath>
+    <Reference Include="kjp2idml.lib, Version=1.0.39.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\kjp2idml.lib.1.0.39\lib\net45\kjp2idml.lib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.2.0.4\lib\net45\Microsoft.Azure.KeyVault.Core.dll</HintPath>
