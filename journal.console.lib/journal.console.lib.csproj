@@ -36,6 +36,12 @@
     <Reference Include="DotNetZip, Version=1.11.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.11.0\lib\net20\DotNetZip.dll</HintPath>
     </Reference>
+    <Reference Include="idml.lib, Version=1.0.8.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\idml.lib.1.0.8\lib\net45\idml.lib.dll</HintPath>
+    </Reference>
+    <Reference Include="InddAppLibCS6, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\InddAppLibCS6.1.0.7\lib\InddAppLibCS6.dll</HintPath>
+    </Reference>
     <Reference Include="inddtool.lib.cs6, Version=1.0.1.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>..\packages\inddtool.lib.cs6.1.0.1\lib\net45\inddtool.lib.cs6.dll</HintPath>
     </Reference>
@@ -87,6 +93,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Spatial, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.8.2\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
