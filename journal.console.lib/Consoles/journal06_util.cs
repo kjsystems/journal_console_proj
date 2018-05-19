@@ -551,7 +551,7 @@ namespace journal.console.lib.Consoles
                 .Replace(")", "）")
                 .Replace("(", "（");
             //2桁全角を変換
-            var reg = new Regex("＊([０-９]{2,3})");
+            var reg = new Regex("＊([０-９0-9]{2,3})");
             while (reg.IsMatch(txt))
             {
                 var m = reg.Match(txt);
@@ -559,7 +559,7 @@ namespace journal.console.lib.Consoles
                     "＊<ス字 ゴシ>" + ZenHanUtil.ToHankaku(RegexUtil.getGroup(m, 1)) + "</ス字>");
             }
             //1桁全角を変換
-            reg = new Regex("＊([０-９]{1})");
+            reg = new Regex("＊([０-９0-9L]{1})");
             while (reg.IsMatch(txt))
             {
                 var m = reg.Match(txt);
