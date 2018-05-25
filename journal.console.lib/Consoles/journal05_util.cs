@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using azureblob.Model;
 using azuresearch.lib.Models;
 using journal.search.lib.Models;
@@ -22,10 +23,10 @@ namespace journal.console.lib.Consoles
 
             //contents.jsonAzure Blobに登録
             var conpath = idxdir.combine(journal04_util.FILENAME_CONTENTS_JSON);
-            UploadContentsJson(conpath);
+            UploadContentsJson(conpath).Wait();
 
             var mokupath = idxdir.combine(journal04_util.FILENAME_MOKUJI_JSON);
-            UploadContentsJson(mokupath);
+            UploadContentsJson(mokupath).Wait();
 
             //Azure Searchにインデックスを登録
             var idxpath = idxdir.combine(journal04_util.FILENAME_INDEX_JSON);
@@ -37,14 +38,14 @@ namespace journal.console.lib.Consoles
 
         #region Azure Blobにアップロードする
 
-        void UploadContentsJson(string conpath)
+        async Task UploadContentsJson(string conpath)
         {
             Console.WriteLine("{0}", "Upload json to Blob ...");
             Console.WriteLine("{0}", conpath);
             var az = new AzureBlobUtil();
             az.CreateBlobClient("webtoshoConnectionString");
-            var container = az.CreateDirectory("journal");
-            az.UploadFile(container, conpath);
+            var container = await az.CreateDirectoryAsync("journal");
+            await az.UploadFile(container, conpath);
         }
 
         #endregion

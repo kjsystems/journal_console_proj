@@ -41,7 +41,8 @@ namespace journal.console.lib.Consoles
             var connectionString = "webtoshoConnectionString";
             azure.CreateBlobClient(connectionString);
 
-            var container = azure.CreateDirectory(appType.ToString());
+            var container = azure.CreateDirectoryAsync(appType.ToString());
+            container.Wait();
 
             Console.WriteLine($"XMLからZIPを作成");
             //xmlを圧縮
@@ -62,7 +63,7 @@ namespace journal.console.lib.Consoles
             foreach (var item in zipDir.getFiles("*.zip").Select((v, i) => new {v, i}))
             {
                 Console.WriteLine($"==>{item.v.getFileName()}");
-                azure.UploadFile(container, item.v);
+                azure.UploadFile(container.Result, item.v);
             }
             if (pdfDir.existDir(false))
             {
@@ -84,7 +85,7 @@ namespace journal.console.lib.Consoles
                 foreach (var item in pdfDir.getFiles("*.pdf", false).Select((v, i) => new {v, i}))
                 {
                     Console.WriteLine($"==>{item.v.getFileName()}");
-                    azure.UploadFile(container, item.v);
+                    azure.UploadFile(container.Result, item.v);
                 }
             }
             else
@@ -92,12 +93,14 @@ namespace journal.console.lib.Consoles
                 Console.WriteLine("PDFディレクトリはないのでコピーしない");
             }
 
-            var containerImage = azure.CreateDirectory(appType.ToString() + "-images");
-            Console.WriteLine($"Azureへアップロード container={containerImage.Name}");
+            var containerImage = azure.CreateDirectoryAsync(appType.ToString() + "-images");
+            containerImage.Wait();
+
+            Console.WriteLine($"Azureへアップロード container={containerImage.Result.Name}");
             foreach (var item in imageDir.getFiles("*.*", false).Select((v, i) => new {v, i}))
             {
                 Console.WriteLine($"==>{item.v.getFileName()}");
-                azure.UploadFile(containerImage, item.v);
+                azure.UploadFile(containerImage.Result, item.v);
             }
         }
     }
