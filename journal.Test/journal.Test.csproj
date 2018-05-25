@@ -102,6 +102,9 @@
       <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="wordxml.lib, Version=1.0.1.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\wordxml.lib.1.0.0\lib\net45\wordxml.lib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Tests\FilterTest.cs" />
@@ -119,10 +122,6 @@
     <ProjectReference Include="..\journal.console.lib\journal.console.lib.csproj">
       <Project>{4fb7a601-d7b8-4a7b-b783-7e9a2db005ec}</Project>
       <Name>journal.console.lib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\wordxml\wordxml.csproj">
-      <Project>{0932A1BB-6ACC-4C6D-8855-D6C00B391BFC}</Project>
-      <Name>wordxml</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
