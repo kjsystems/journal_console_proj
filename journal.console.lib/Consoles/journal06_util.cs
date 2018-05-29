@@ -130,9 +130,9 @@ namespace journal.console.lib.Consoles
             var stylePath = Path
                 .getDirectoryName()
                 .getUpDir()
-                .combine("style.txt");
+                .combine("style-short.txt");
             if (!File.Exists(stylePath))
-                throw new Exception($"style.txtがない path={stylePath}");
+                throw new Exception($"style-shortがない path={stylePath}");
             Console.WriteLine($"スタイルの読み込み");
             Console.WriteLine($"==>{stylePath}");
 
