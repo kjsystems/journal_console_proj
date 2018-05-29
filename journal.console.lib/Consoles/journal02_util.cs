@@ -201,7 +201,7 @@ namespace journal.console.lib.Consoles
             sb.Append($"{para.Text}");
             if (para.IsParaStyle)
                 sb.Append($"</スタ>");
-            sb.AppendLine($"<改行>");
+            sb.Append($"<改行>");
             //_preJisage = para.Jisage;
             //_preMondo = para.Mondo;
             return sb.ToString();
@@ -213,7 +213,31 @@ namespace journal.console.lib.Consoles
             foreach (var para in paralst)
             {
                 var buf = CreateTextFromPara(para);
-                sb.Append(buf);
+
+                //style-word.txtの##スタイル置換でタグに置き換える
+                //WORDスタイルを置き換える
+
+                //WORDの段落スタイルを置換する
+                // <スタ "見出し 1">　　　　一　東北院供養願文、女院彰子「かな願文」</スタ>
+                // →　　<ス字 小見出し>一　東北院供養願文、女院彰子「かな願文」</ス字>
+
+                var rule = RuleList.FirstOrDefault(m => m.Name == "スタイル置換");
+                if (rule != null)
+                {
+                    // カンマ区切りで3個あれば置換する
+                    // 見出し 1,　　<小見出し>,</小見出し>  ==>  Wordのスタイル"見出し 1"を<小見出し>...</小見出し>に置き換える
+                    foreach (var line in rule.ValueList)
+                    {
+                        var tokens = line.Split(',');
+                        if(tokens.Length<3) continue;
+
+                        buf = buf.ReplaceParaStyle(tokens[0], tokens[1], tokens[2]);
+                    }
+                }
+                // 著者を置き換え
+                buf = buf.ReplaceParaStyleChosha();
+
+                sb.AppendLine(buf);
             }
 
             return sb.ToString();

@@ -324,17 +324,6 @@ namespace journal.console.lib.Consoles
                 if (para.IsJisoroe != true)
                     sb.Append($"<字下 {para.Jisage}><問答 {para.Mondo}>");
 
-                //WORDの段落スタイルを置換する
-                // <スタ "見出し 1">　　　　一　東北院供養願文、女院彰子「かな願文」</スタ>
-                // →　　<ス字 小見出し>一　東北院供養願文、女院彰子「かな願文」</ス字>
-                para.Text = para.Text
-                        .ReplaceParaStyle("見出し 1","　　<小見出し>","</小見出し>")
-                        .ReplaceParaStyle("見出サブタイトル","　　<サブタイトル>","</サブタイトル>")
-                    .ReplaceParaStyle("見出タイトル","<選択 見出><タイトル>","</タイトル>")
-                        .ReplaceParaStyleChosha()
-//                        .ReplaceParaStyle("注記","<字下 2><問答 3>","")
-                    ;
-                
                 var buf = CreateTextFromPara(para); 
                 
                 sb.Append(buf);
