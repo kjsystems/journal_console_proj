@@ -94,6 +94,7 @@ namespace journal.console.lib.Consoles
             Console.WriteLine("KJPからIDMLの作成");
             var kjp2idml = new CreateIdmlFromKjpFile(log);
             var idmlTemplatePath = srcdir
+                .getUpDir()  //１つ上に上がる
                 .combine("template")
                 .combine(templateFileName);
             kjp2idml.InitTemplate(idmlTemplatePath);

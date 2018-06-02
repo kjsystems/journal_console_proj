@@ -18,6 +18,10 @@ namespace journal08
 
                 // ディレクトリで処理
                 var srcdir = lst.getText('i');
+                if (!string.IsNullOrEmpty(srcdir))
+                {
+                    srcdir.existDir();
+                }
 
                 // kjpから(TXT→KJPをSKIP)
                 var fromKjp = lst.getText('k').toInt(0) > 0 ? true : false;
