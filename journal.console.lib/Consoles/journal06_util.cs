@@ -493,7 +493,7 @@ namespace journal.console.lib.Consoles
 
             //  そのまま出力
             string[] valid = {"改行", "字揃", "縦横", "圏点", "下線"
-                , "スタ", "上付", "下付", "書体","項段","割"/*後で置換*/, "字Ｓ", "選択"};
+                , "スタ", "上付", "下付", "書体","項段","割"/*後で置換*/, "字Ｓ", "選択","割注"};
             if (Array.IndexOf(valid, tag.getName()) >= 0)
                 return tag.ToString();
 
