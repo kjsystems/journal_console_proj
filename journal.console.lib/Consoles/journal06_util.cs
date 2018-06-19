@@ -542,20 +542,20 @@ namespace journal.console.lib.Consoles
                 .Replace(")", "）")
                 .Replace("(", "（");
             //2桁全角を変換
-            var reg = new Regex("＊([０-９0-9]{2,3})");
-            while (reg.IsMatch(txt))
-            {
-                var m = reg.Match(txt);
-                txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1),
-                    "＊<ス字 ゴシ>" + ZenHanUtil.ToHankaku(RegexUtil.getGroup(m, 1)) + "</ス字>");
-            }
+//            var reg = new Regex("＊([０-９0-9]{2,3})");
+//            while (reg.IsMatch(txt))
+//            {
+//                var m = reg.Match(txt);
+//                txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1),
+//                    "＊<ス字 ゴシ>" + ZenHanUtil.ToHankaku(RegexUtil.getGroup(m, 1)) + "</ス字>");
+//            }
             //1桁全角を変換
-            reg = new Regex("＊([０-９0-9L]{1})");
-            while (reg.IsMatch(txt))
-            {
-                var m = reg.Match(txt);
-                txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1), "＊<ス字 ゴシ>" + RegexUtil.getGroup(m, 1) + "</ス字>");
-            }
+//            reg = new Regex("＊([０-９0-9L]{1})");
+//            while (reg.IsMatch(txt))
+//            {
+//                var m = reg.Match(txt);
+//                txt = txt.Replace("＊" + RegexUtil.getGroup(m, 1), "＊<ス字 ゴシ>" + RegexUtil.getGroup(m, 1) + "</ス字>");
+//            }
             sb.Append(CharUtil.sjis2utf(txt)); //namespaceをUTFに変換
             return sb.ToString();
         }
