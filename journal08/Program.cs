@@ -35,17 +35,31 @@ namespace journal08
                 if (srcdir.existDir(false))
                 {
                     util.RunForJobDir(srcdir, templateFileName, fromKjp, fromSjisKjp, log);
+                    return;
                 }
 
                 // テキスト単体で処理
                 var txtpath = lst.getText('e');
                 if (txtpath.existFile(false))
                 {
+                    srcdir= txtpath.getDirectoryName().getUpDir();
+
                     if (fromSjisKjp)
                     {
                         throw new Exception("sjisのファイル単体オプションは無効");
                     }
-                    util.RunForTextPath(txtpath, templateFileName, fromKjp, log);
+
+                    var kjpdir = srcdir.combine("kjp");
+                    kjpdir.createDirIfNotExist();
+
+                    var kjppath = kjpdir.combine(txtpath.getFileNameWithoutExtension() + ".kjp");
+                    new journal06_util(log).RunFromPath(txtpath, kjppath);
+                    if (log.ErrorCount > 0)
+                    {
+                        throw new Exception("journal08 中断します");
+                    }
+
+                    util.RunForKjpPath(kjppath, templateFileName, fromKjp, log);
                 }
             }
             catch (Exception ex)

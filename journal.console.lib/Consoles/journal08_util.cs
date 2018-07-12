@@ -70,12 +70,12 @@ namespace journal.console.lib.Consoles
             //  KJPからあと全部作る
             foreach (var kjppath in kjpdir.getFiles("*.kjp"))
             {
-                RunForTextPath(kjppath, templateFileName, false/*fromKjp*/, log);
+                RunForKjpPath(kjppath, templateFileName, false/*fromKjp*/, log);
             }
         }
 
         // ファイル1個処理
-        public void RunForTextPath(string kjppath, string templateFileName, bool fromKjp, ErrorLogger log)
+        public void RunForKjpPath(string kjppath, string templateFileName, bool fromKjp, ErrorLogger log)
         {
             var srcdir = kjppath.getDirectoryName().getUpDir();
 //            var kjpdir = srcdir.combine("kjp");
