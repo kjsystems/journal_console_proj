@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using kj.kihon;
+using System;
 using journal.console.lib.Consoles;
-using kj.kihon;
 
 namespace journal05
 {

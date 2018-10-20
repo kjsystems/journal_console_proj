@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using azureblob.Model;
-using azuresearch.lib.Models;
-using journal.search.lib.Models;
+﻿using azureblob.Model;
+using journal.console.lib.Models;
 using kj.kihon;
+using System;
+using System.Threading.Tasks;
 
 namespace journal.console.lib.Consoles
 {
