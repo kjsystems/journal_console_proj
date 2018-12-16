@@ -318,7 +318,7 @@ namespace journal.console.lib.Models
 
                 //<改行>ごとに読み込む
                 var util = new FileUtil(Log);
-                var strlst = util.CreateKaigyoListFromPath(Path, Enc, true);
+                var strlst = util.CreateKaigyoListFromPath(Path, Enc);
 
                 if (isCheckOnly)
                     return;
