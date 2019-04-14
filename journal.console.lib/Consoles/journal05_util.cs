@@ -56,8 +56,8 @@ namespace journal.console.lib.Consoles
             var ser = new AzureSearchCreateIndex();
 
             const string tblname = "journalhonbuns";
-            string searchServiceName = "webtosho-journal";
-            string adminApiKey = "64790FEA0044163D5F55563D54D1B73E";
+            string searchServiceName = "webtosho-webwaka2";
+            string adminApiKey = "8968D6CEA9ADBA5E3C43A742B8AAB369";
 
             //Indexを作成する
             ser.InitSearchServiceClient(adminApiKey, searchServiceName);
