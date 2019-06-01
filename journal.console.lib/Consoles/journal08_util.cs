@@ -27,7 +27,7 @@ namespace journal.console.lib.Consoles
 
 
         // ディレクトリで処理
-        public void RunForJobDir(string srcdir, string templateFileName, bool fromKjp, bool fromSjisKjp,
+        public void RunForJobDir(string srcdir, string templateFileName, bool fromKjp, bool fromSjisKjp,string preset,
             ErrorLogger log)
         {
             var kjpdir = srcdir.combine("kjp");
@@ -70,12 +70,12 @@ namespace journal.console.lib.Consoles
             //  KJPからあと全部作る
             foreach (var kjppath in kjpdir.getFiles("*.kjp"))
             {
-                RunForKjpPath(kjppath, templateFileName, false/*fromKjp*/, log);
+                RunForKjpPath(kjppath, templateFileName, false/*fromKjp*/,preset, log);
             }
         }
 
         // ファイル1個処理
-        public void RunForKjpPath(string kjppath, string templateFileName, bool fromKjp, ErrorLogger log)
+        public void RunForKjpPath(string kjppath, string templateFileName, bool fromKjp, string preset,ErrorLogger log)
         {
             var srcdir = kjppath.getDirectoryName().getUpDir();
 //            var kjpdir = srcdir.combine("kjp");
@@ -115,7 +115,7 @@ namespace journal.console.lib.Consoles
                 .combine("pdf")
                 .createDirIfNotExist()
                 .combine($"{kjppath.getFileNameWithoutExtension()}.pdf");
-            _inddTool.ExportPdfFromIndd(inddPath, "" /*preset*/, pdfPath);
+            _inddTool.ExportPdfFromIndd(inddPath, preset, pdfPath);
 
             FinishApp();
         }
