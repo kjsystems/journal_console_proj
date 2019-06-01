@@ -23,6 +23,12 @@ namespace journal08
                     srcdir.existDir();
                 }
 
+                var preset = lst.getText('p');
+                if (string.IsNullOrEmpty(preset))
+                {
+                    preset = "[最小ファイルサイズ]";
+                }
+
                 // kjpから(TXT→KJPをSKIP)
                 var fromKjp = lst.getText('k').toInt(0) > 0 ? true : false;
 
@@ -34,7 +40,7 @@ namespace journal08
                 var util = new journal08_util(log);
                 if (srcdir.existDir(false))
                 {
-                    util.RunForJobDir(srcdir, templateFileName, fromKjp, fromSjisKjp, log);
+                    util.RunForJobDir(srcdir, templateFileName, fromKjp, fromSjisKjp,preset, log);
                     return;
                 }
 
@@ -59,7 +65,7 @@ namespace journal08
                         throw new Exception("journal08 中断します");
                     }
 
-                    util.RunForKjpPath(kjppath, templateFileName, fromKjp, log);
+                    util.RunForKjpPath(kjppath, templateFileName, fromKjp,preset, log);
                 }
             }
             catch (Exception ex)
