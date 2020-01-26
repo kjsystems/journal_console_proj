@@ -40,7 +40,7 @@
       <HintPath>..\packages\DotNetZip.1.13.3\lib\net40\DotNetZip.dll</HintPath>
     </Reference>
     <Reference Include="kjlib.lib, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\kjlib.lib.1.0.7\lib\net45\kjlib.lib.dll</HintPath>
+      <HintPath>..\..\..\packages\kjlib.lib.1.0.8\lib\net45\kjlib.lib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Search, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.Search.5.0.2\lib\net452\Microsoft.Azure.Search.dll</HintPath>

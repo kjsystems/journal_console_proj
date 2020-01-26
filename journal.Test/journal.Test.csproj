@@ -52,7 +52,7 @@
       <HintPath>..\packages\journal.search.lib.1.0.0\lib\net45\journal.search.lib.dll</HintPath>
     </Reference>
     <Reference Include="kjlib.lib, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\kjlib.lib.1.0.7\lib\net45\kjlib.lib.dll</HintPath>
+      <HintPath>..\..\..\packages\kjlib.lib.1.0.8\lib\net45\kjlib.lib.dll</HintPath>
     </Reference>
     <Reference Include="kjlib.zip, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\kjlib.zip.1.1.1\lib\net45\kjlib.zip.dll</HintPath>
