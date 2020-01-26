@@ -6,7 +6,6 @@ using System.Text;
 using System.Xml;
 using journal.search.lib.Services;
 using kj.kihon;
-using Newtonsoft.Json.Converters;
 using NUnit.Framework;
 using wordxml.Models;
 
