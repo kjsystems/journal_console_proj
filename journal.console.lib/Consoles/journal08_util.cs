@@ -102,6 +102,8 @@ namespace journal.console.lib.Consoles
             var idmlPath = srcdir.combine("outidml").combine($"{kjppath.getFileNameWithoutExtension()}.idml");
             kjp2idml.RunFromKjpPath(kjppath, srcdir, idmlPath);
 
+            return;
+
             InitApp();
             Console.WriteLine("IDMLからINDDの作成");
             var inddPath = srcdir
