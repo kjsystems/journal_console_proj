@@ -55,9 +55,14 @@ namespace journal.console.lib.Consoles
         {
             var ser = new AzureSearchCreateIndex();
 
-            const string tblname = "journalhonbuns";
-            string searchServiceName = "webtosho-webwaka2";
-            string adminApiKey = "8968D6CEA9ADBA5E3C43A742B8AAB369";
+            // const string tblname = "journalhonbuns";
+            // string searchServiceName = "webtosho-webwaka2";
+            // string adminApiKey = "8968D6CEA9ADBA5E3C43A742B8AAB369";
+
+            // リソースグループ kjsystems.net→webtoshokan→wakajiten
+            string adminApiKey = "C92DA471242046F68D79810B56A3325F";
+            string searchServiceName = "wakajiten";
+            const string tblname = "journal-honbun";
 
             //Indexを作成する
             ser.InitSearchServiceClient(adminApiKey, searchServiceName);
