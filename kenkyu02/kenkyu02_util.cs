@@ -335,9 +335,13 @@ namespace kenkyu.lib
                 // ==> 005-01
 
                 var outFilename = srcpath.getFileNameWithoutExtension();
-                if (Regex.IsMatch(outFilename, "[0-9]{2}-[0-9]{2}"))
+                var regex = new Regex(@"^([0-9]{3})-([0-9]{2}).*?");
+                if (regex.IsMatch(outFilename))
                 {
-                    outFilename = "0"+outFilename.Substring(0, 2) + "-" + outFilename.Substring(3, 2);
+                    var match = regex.Match(outFilename);
+                    var f1 = match.Groups[1].ToString();
+                    var f2 = match.Groups[2].ToString();
+                    outFilename = $"{f1}-{f2}";
                 }
 
                 var outpath = xmldir.combine(outFilename + ".xml");
